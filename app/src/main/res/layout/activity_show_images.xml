@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="#000000">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/v_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <com.huiyun.vrxf.wight.viewpagerindicator.CirclePageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:padding="10dip" />
+  
+    <ImageView 
+        android:id="@+id/image_show_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/b_back_icon"
+        android:padding="10dp"
+        android:visibility="gone"
+        />
+</RelativeLayout>

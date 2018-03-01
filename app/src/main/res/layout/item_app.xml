@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_main_bg_selecter"
+    >
+        <com.huiyun.vrxf.view.roundimage.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_icon"
+            android:layout_width="@dimen/margin_100px"
+            android:layout_height="@dimen/margin_100px"
+            android:adjustViewBounds="false"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/demo_app_icon"
+            app:corner_radius="10dip"
+            app:oval="false" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_icon"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="恐怖医院"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txt_size_28px"/>
+        <TextView
+            android:id="@+id/size_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20.9M"
+            android:textColor="@color/gray1"
+            android:textSize="@dimen/txt_size_28px"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tag1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/txt_size_24px"
+                android:visibility="gone"
+                android:text="恐怖"/>
+            <TextView
+                android:id="@+id/content_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/txt_size_24px"
+                android:layout_marginRight="60dp"
+                android:text="内容ddddddddddddddddddddddddddddddddddddddd"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="@dimen/margin_120px"
+        android:layout_height="@dimen/margin_140px"
+        android:background="@drawable/butn_bg_selecter"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:layout_centerVertical="true"
+        android:text="下载"
+        android:drawableTop="@drawable/tv_down_load_icon"
+        android:textSize="@dimen/txt_size_28px" />
+
+</RelativeLayout>

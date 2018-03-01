@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/select_adress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white"
+                android:clickable="true"
+                android:descendantFocusability="blocksDescendants"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp">
+
+    <ImageView
+        android:id="@+id/adress_icon"
+        android:layout_width="12dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/adress_logo"/>
+
+    <RelativeLayout
+        android:visibility="visible"
+        android:layout_centerVertical="true"
+        android:id="@+id/address_have_not_layout"
+        android:layout_toRightOf="@+id/adress_icon"
+        android:layout_toLeftOf="@+id/point_raw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginLeft="16dp"
+            android:text="请选择收货地址!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:id="@+id/address_have_layout"
+        android:layout_toRightOf="@+id/adress_icon"
+        android:layout_toLeftOf="@+id/point_raw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <TextView
+        android:textSize="14sp"
+        android:id="@+id/recipient_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="收件人:"/>
+
+    <TextView
+        android:textSize="14sp"
+        android:id="@+id/recipient_person_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/recipient_person"
+        android:text=""/>
+
+    <TextView
+        android:textSize="14sp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/recipient_person"
+        android:id="@+id/recipient_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/recipient_person"
+        android:text="电话:"/>
+
+    <TextView
+        android:textSize="14sp"
+        android:id="@+id/recipient_phone_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/recipient_phone"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/recipient_phone"/>
+
+    <TextView
+        android:textSize="14sp"
+        android:id="@+id/adress_detial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/recipient_person"
+        android:layout_below="@+id/recipient_phone"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:text="qwwqew"
+        android:maxLines="2"/>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/point_raw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/right_to"/>
+
+
+</RelativeLayout>

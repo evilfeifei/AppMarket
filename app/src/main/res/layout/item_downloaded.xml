@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/vr_item_width_bg"
+     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <com.huiyun.vrxf.view.roundimage.RoundedImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/i_chat_avatar_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:adjustViewBounds="false"
+                android:scaleType="centerCrop"
+                android:src="@drawable/demo_app_icon"
+                app:corner_radius="5dip"
+                app:oval="false" />
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                >
+                <TextView 
+                    android:id="@+id/tv_app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/txt_size_28px"
+                    android:text="音悦台-音乐MV"/>
+                <LinearLayout 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                   <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/txt_size_28px"
+                    android:text="已下载"
+                    android:layout_margin="3dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            >
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                >
+	            <TextView
+			         android:id="@+id/tv_install"
+			         android:layout_width="50dp"
+			         android:layout_height="30dp"
+			         android:gravity="center"
+                    android:textSize="@dimen/txt_size_28px"
+			         android:text="安装"
+			         android:layout_gravity="center_vertical"
+			         android:textColor="@color/white"
+			         android:background="@drawable/gray_btn_selector"
+				     />
+	             <ImageView 
+	                android:id="@+id/btn_delete"
+	                android:layout_width="25dp"
+	                android:layout_height="25dp"
+	                android:src="@drawable/vr_delete_icon"
+	                android:layout_margin="15dp"
+	                android:layout_centerVertical="true"
+	                />
+             </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

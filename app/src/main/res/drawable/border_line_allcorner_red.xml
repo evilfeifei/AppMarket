@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<!-- 连框颜色值 -->
+	<item>
+		<shape>
+
+			<!-- 填充颜色 -->
+			<solid android:color="#50ffffff" >
+			</solid>
+
+			<!-- 线的宽度，颜色灰色 -->
+			<stroke
+				android:dashWidth="6dp"
+				android:width="1dp"
+				android:color="#EC8D6A" >
+			</stroke>
+
+			<corners
+				android:radius="5dp"/>
+		</shape>
+	</item>
+
+	<!-- 主体背景颜色值 -->
+	<item
+		android:bottom="1dp"
+		android:left="1dp"
+		android:right="1dp"
+		android:top="1dp">
+		<shape>
+			<solid android:color="@android:color/white" />
+
+			<!-- 矩形的圆角半径 -->
+			<corners
+				android:radius="5dp"/>
+		</shape>
+	</item>
+
+</layer-list>
