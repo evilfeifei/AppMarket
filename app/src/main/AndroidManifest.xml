@@ -127,8 +127,6 @@
         <!-- baidu location end -->
 
 
-
-
         <!-- 友盟更新 -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -137,71 +135,6 @@
             android:name="UMENG_CHANNEL"
             android:value="Wandoujia" />
 
-
-
-
-        <!--
-      商城中的类的注册
-       -->
-
-        <!--add by popovich 16/9/27-->
-        <activity
-            android:name=".shoppingmall.activitys.ShopSearachActivity"
-            android:screenOrientation="portrait"/>
-        <!--add by popovich 16/9/27-->
-        <activity
-            android:name=".shoppingmall.activitys.GoodsDetialActivity"
-            android:screenOrientation="portrait"/>
-        <!--地址选择添加界面-->
-        <activity
-            android:name=".shoppingmall.activitys.AddAddressActivity"
-            android:screenOrientation="portrait"/>
-
-        <!--支付宝 订单详情页-->
-        <activity
-            android:name=".shoppingmall.activitys.OrderDetialActivity"
-            android:screenOrientation="portrait"/>
-        <!--商城全部订单页面-->
-        <activity
-            android:name=".shoppingmall.activitys.ShopMallOrderActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".shoppingmall.activitys.ShopCartActivity"
-            android:screenOrientation="portrait"/>
-        <!--去付款页面，点击立即购买后跳转的界面-->
-        <activity
-            android:name=".shoppingmall.activitys.ToPayOrderActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".shoppingmall.activitys.AddressActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".shoppingmall.activitys.AddressMangerActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name=".shoppingmall.activitys.OrderManyDetialActivity"
-            android:screenOrientation="portrait"/>
-
-
-        <!-- alipay sdk begin  支付宝官方页面-->
-        <activity
-            android:name="com.alipay.sdk.app.H5PayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-        </activity>
-        <!-- alipay sdk end -->
-
-
-        <!--微信支付类-->
-        <activity
-            android:name=".wxapi.WXPayEntryActivity"
-            android:exported="true"
-            android:launchMode="singleTop">
-
-        </activity>
 
 
     </application>

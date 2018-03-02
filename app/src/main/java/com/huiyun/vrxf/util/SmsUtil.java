@@ -15,7 +15,7 @@ public class SmsUtil {
 
 	private static String username = "70206849";		//用户账号
 	private static String password = "Sms123.";		//密码
-	
+
 	public static String sendMsg(String phone,String ranNum){
 		MD5 getMD5 = new MD5();
 //		int num = 100000+(int)(Math.random()*1000000);
@@ -59,8 +59,8 @@ public class SmsUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return inputline;
 	}
-	
+
 }

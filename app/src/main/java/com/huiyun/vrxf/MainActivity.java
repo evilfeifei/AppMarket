@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -61,6 +62,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private int currFragmentIndex; //当前选中的fragment的序号，取值：0-3
     private long curTime;
     public int categoryIndex=0;
+    private static final int REQUEST_CODE_CAMERA = 112; //权限请求码
 
 
 
@@ -89,8 +91,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         instance = this;
         EventBus.getDefault().register(this);   //注册监听返回activity界面
         init();
-        checkServerUpdate(PhoneUtils.getVersionName(MainActivity.this));
 //        getSwipeBackLayout().setEnableGesture(false);
+
+        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.READ_PHONE_STATE)) {
+            EasyPermissions.requestPermissions(this, "应用需要拍照权限", REQUEST_CODE_CAMERA, android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.READ_PHONE_STATE);
+        }
+        checkServerUpdate(PhoneUtils.getVersionName(MainActivity.this));
     }
 
     /**
@@ -295,4 +301,20 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        if (requestCode == REQUEST_CODE_CAMERA) {
+//            LogUtils.v("权限同意了");
+        }
+    }
+
+    //权限拒绝
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+//        LogUtils.d("onPermissionsDenied:" + requestCode + ":" + perms.size());
+        if (requestCode == REQUEST_CODE_CAMERA) {
+            if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            }
+        }
+    }
 }
