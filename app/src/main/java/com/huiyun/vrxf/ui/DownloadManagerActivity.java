@@ -1,233 +1,257 @@
 package com.huiyun.vrxf.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.text.format.Formatter;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.huiyun.vrxf.MyApplication;
+import com.bumptech.glide.Glide;
 import com.huiyun.vrxf.R;
-import com.huiyun.vrxf.adapter.DownloadManagerAdapter;
-import com.huiyun.vrxf.adapter.DownloadedAdapter;
 import com.huiyun.vrxf.been.AppInfo;
-import com.huiyun.vrxf.db.buss.DBBuss;
 import com.huiyun.vrxf.fusion.Constant;
-import com.huiyun.vrxf.fusion.PreferenceCode;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.huiyun.vrxf.util.ApkUtils;
+import com.huiyun.vrxf.wight.NumberProgressBar;
+import com.lzy.okserver.download.DownloadInfo;
+import com.lzy.okserver.download.DownloadManager;
+import com.lzy.okserver.download.DownloadService;
+import com.lzy.okserver.listener.DownloadListener;
+import com.lzy.okserver.task.ExecutorWithListener;
 
-public class DownloadManagerActivity extends BaseActivity implements OnClickListener{
+import java.io.File;
+import java.util.List;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-	private ListView lv_download;
-	private List<AppInfo> mAppInfoList;
-	private DownloadManagerAdapter mDownloadManagerAdapter;
-	
-	private ListView lv_downloaded;
-	private List<AppInfo> mDownloadedAppInfoList;
-	private DownloadedAdapter mDownloadedAdapter;
-	
-	private TextView t_title;
-	public final static int PROGRESS_STATE_CHANGE = 1;
-	private AppInfo mAppInfo;
-	private LinearLayout back_left_liner;
-	
-	private MyApplication app;
-	
+public class DownloadManagerActivity extends BaseActivity implements View.OnClickListener, ExecutorWithListener.OnAllTaskEndListener {
+
+	private List<DownloadInfo> allTask;
+	private MyAdapter adapter;
+	private DownloadManager downloadManager;
+
+	@Bind(R.id.listView) ListView listView;
+	@Bind(R.id.t_title) TextView titleTv;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download_manager);
-		initView();
-		
-		app = MyApplication.getInstance();
+		ButterKnife.bind(this);
+		titleTv.setText("下载管理");
+
+		downloadManager = DownloadService.getDownloadManager();
+		allTask = downloadManager.getAllTask();
+		adapter = new MyAdapter();
+		listView.setAdapter(adapter);
+
+		downloadManager.getThreadPool().getExecutor().addOnAllTaskEndListener(this);
 	}
-	
-	@SuppressWarnings("static-access")
+
+	@Override
+	public void onAllTaskEnd() {
+		for (DownloadInfo downloadInfo : allTask) {
+			if (downloadInfo.getState() != DownloadManager.FINISH) {
+				Toast.makeText(DownloadManagerActivity.this, "所有下载线程结束，部分下载未完成", Toast.LENGTH_SHORT).show();
+				return;
+			}
+		}
+		Toast.makeText(DownloadManagerActivity.this, "所有下载任务完成", Toast.LENGTH_SHORT).show();
+	}
+
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
-		PreferenceCode.IS_DESTORY = true;
-		if(mAppInfoList != null){
-			for(AppInfo appInfo : mAppInfoList){
-				appInfo.setTag(true);
-			}
-		}
+		//记得移除，否者会回调多次
+		downloadManager.getThreadPool().getExecutor().removeOnAllTaskEndListener(this);
 	}
 
-	private void initView() {
-		t_title = findView(R.id.t_title);
-		t_title.setText("下载管理");
-		back_left_liner = findView(R.id.back_left_liner);
-		back_left_liner.setOnClickListener(this);
-		back_left_liner.setVisibility(View.VISIBLE);
-		
-		Intent intent = getIntent();
-		Bundle bundle = intent.getExtras();
-//		initBottomMenu();
-		initDownLoadListView();
-		initDownloadedData();
-		if (bundle != null) {
-			if(bundle.get(PreferenceCode.APP_INFO) != null){
-				mAppInfo = (AppInfo)bundle.get(PreferenceCode.APP_INFO);
-				initData();
-			}
-		}
-	}
-
-	private void initDownloadedData() {
-		mAppInfoList = new ArrayList<AppInfo>();
-		Intent intent = getIntent();
-		Bundle bundle = intent.getExtras();
-		if(bundle != null){
-			if(bundle.getString(PreferenceCode.DOWNLOAD_MANAGER) != null){
-				List<AppInfo> downloadingAppInfoList = DBBuss.getInstance(this).getAllDownloadingAppInfoList();
-				if(downloadingAppInfoList != null){
-					mAppInfoList.addAll(downloadingAppInfoList);
-					mDownloadManagerAdapter.notifyDataSetChanged(mAppInfoList);
-				}
-				
-				mDownloadedAppInfoList = new ArrayList<AppInfo>();
-				mDownloadedAppInfoList.addAll(DBBuss.getInstance(this).getAllDownloadedAppInfoList());
-				mDownloadedAdapter.notifyDataSetChanged(mDownloadedAppInfoList);
-//				if (mDownloadedAppInfoList.size() < 1) {
-//					findView(R.id.lin_no_data).setVisibility(View.VISIBLE);
-//				} else {
-//					findView(R.id.lin_no_data).setVisibility(View.GONE);
-//				}
-			}
-		}
-		
-	}
-
-	private void initDownLoadListView() {
-		lv_download = (ListView)findView(R.id.lv_download);
-		mDownloadManagerAdapter = new DownloadManagerAdapter(this);
-		lv_download.setAdapter(mDownloadManagerAdapter);
-		
-		lv_downloaded = (ListView)findView(R.id.lv_downloaded);
-		mDownloadedAdapter = new DownloadedAdapter(this);
-		lv_downloaded.setAdapter(mDownloadedAdapter);
-	}
-	
-	public void initData(){
-		AppInfo downloadApp = DBBuss.getInstance(this).getAllDownloadedAppInfo(mAppInfo.getId());
-		if(downloadApp == null){
-			//没有下载完成
-			AppInfo newAppInfo = DBBuss.getInstance(this).getAppInfo(mAppInfo.getId());
-			if(newAppInfo != null){
-				mAppInfo = newAppInfo;
-			}
-//			List<AppInfo> downloadingAppInfoList = DBBuss.getInstance(this).getAllDownloadingAppInfoList();
-//			if(downloadingAppInfoList != null){
-//				mAppInfoList.addAll(downloadingAppInfoList);
-//			}
-//			boolean tag = true;
-//			for(AppInfo appInfo : mAppInfoList){
-//				if(appInfo.getId().equals(mAppInfo.getId())){
-//					tag = false;
-//					break;
-//				}
-//			}
-//			if(tag){
-//				mAppInfoList.add(mAppInfo);
-//			}
-			mAppInfoList.add(mAppInfo);
-			getAddDownloadCount(mAppInfo.getId());
-		}else{
-			mDownloadedAppInfoList = new ArrayList<AppInfo>();
-			mDownloadedAppInfoList.add(downloadApp);
-			mDownloadedAdapter.notifyDataSetChanged(mDownloadedAppInfoList);
-		}
-		
-		
-		mDownloadManagerAdapter.notifyDataSetChanged(mAppInfoList);
-//		mProgressHandler.postDelayed(mProgressRunnable, 500);
-	}
-	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		adapter.notifyDataSetChanged();
+	}
+
 	public void onClick(View v) {
-		super.onClick(v);
-		switch(v.getId()){
-		case R.id.back_left_liner:
-			finish();
-			break;
+		switch (v.getId()) {
+			case R.id.removeAll:
+				downloadManager.removeAllTask();
+				adapter.notifyDataSetChanged();  //移除的时候需要调用
+				break;
+			case R.id.pauseAll:
+				downloadManager.pauseAllTask();
+				break;
+			case R.id.stopAll:
+				downloadManager.stopAllTask();
+				break;
+			case R.id.startAll:
+				downloadManager.startAllTask();
+				break;
 		}
 	}
-	
-	Runnable mProgressRunnable = new Runnable() {
-		public void run() {
-			Message msg = mProgressHandler.obtainMessage(PROGRESS_STATE_CHANGE);
-			mProgressHandler.handleMessage(msg);
-			mProgressHandler.postDelayed(this, 500);
+
+	private class MyAdapter extends BaseAdapter {
+		@Override
+		public int getCount() {
+			return allTask.size();
 		}
-	};
-	
-	private final Handler mProgressHandler = new Handler(){
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-				case PROGRESS_STATE_CHANGE:
-					AppInfo mAppInfo = new AppInfo();
-					int num = (int)(1 + Math.random() * 100);
-					mAppInfo.setDownloadProgress(num);
-					mAppInfoList.set(0, mAppInfo);
-					mDownloadManagerAdapter.notifyDataSetChanged(mAppInfoList);
-					break;
-	
-				default:
-					break;
+
+		@Override
+		public DownloadInfo getItem(int position) {
+			return allTask.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			DownloadInfo downloadInfo = getItem(position);
+			ViewHolder holder;
+			if (convertView == null) {
+				convertView = View.inflate(DownloadManagerActivity.this, R.layout.item_download_manager, null);
+				holder = new ViewHolder(convertView);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
 			}
-		};
-	};
-	
-	public void getAddDownloadCount( String appId){
-	RequestParams rp = new RequestParams();
-	rp.put("appId", appId);
-	ahc.post(this, Constant.ADDDOWNLOAD_COUNT, rp,
-		new JsonHttpResponseHandler(Constant.UNICODE) {
-			@Override
-			public void onSuccess(int statusCode, Header[] headers,
-					JSONObject response) {
-				super.onSuccess(statusCode, headers, response);
-				if (statusCode == 200) {
-					try {
-						JSONObject jsonObject = response;
-						JSONObject responseMsg = jsonObject.getJSONObject("responseMsg");
-						if (!responseMsg.getString("success").equals("S")) {
-							String error = responseMsg.getString("error");
-						}else{
-							System.out.println("下载数量加1");
-							}
-						}catch (JSONException e) {
-							e.printStackTrace();
-						}
+			holder.refresh(downloadInfo);
+
+			//对于非进度更新的ui放在这里，对于实时更新的进度ui，放在holder中
+			AppInfo apk = (AppInfo) downloadInfo.getData();
+			if (apk != null) {
+				Glide.with(DownloadManagerActivity.this).load(Constant.THUMBNAIL_URL_PREFIX + apk.getThumbnailName()).error(R.mipmap.ic_launcher).into(holder.icon);
+				holder.name.setText(apk.getName());
+			} else {
+				holder.name.setText(downloadInfo.getFileName());
+			}
+			holder.download.setOnClickListener(holder);
+			holder.remove.setOnClickListener(holder);
+			holder.restart.setOnClickListener(holder);
+
+			DownloadListener downloadListener = new MyDownloadListener();
+			downloadListener.setUserTag(holder);
+			downloadInfo.setListener(downloadListener);
+			return convertView;
+		}
+	}
+
+	private class ViewHolder implements View.OnClickListener {
+		private DownloadInfo downloadInfo;
+		private ImageView icon;
+		private TextView name;
+		private TextView downloadSize;
+		private TextView tvProgress;
+		private TextView netSpeed;
+		private NumberProgressBar pbProgress;
+		private Button download;
+		private Button remove;
+		private Button restart;
+
+		public ViewHolder(View convertView) {
+			icon = (ImageView) convertView.findViewById(R.id.icon);
+			name = (TextView) convertView.findViewById(R.id.name);
+			downloadSize = (TextView) convertView.findViewById(R.id.downloadSize);
+			tvProgress = (TextView) convertView.findViewById(R.id.tvProgress);
+			netSpeed = (TextView) convertView.findViewById(R.id.netSpeed);
+			pbProgress = (NumberProgressBar) convertView.findViewById(R.id.pbProgress);
+			download = (Button) convertView.findViewById(R.id.start);
+			remove = (Button) convertView.findViewById(R.id.remove);
+			restart = (Button) convertView.findViewById(R.id.restart);
+		}
+
+		public void refresh(DownloadInfo downloadInfo) {
+			this.downloadInfo = downloadInfo;
+			refresh();
+		}
+
+		//对于实时更新的进度ui，放在这里，例如进度的显示，而图片加载等，不要放在这，会不停的重复回调
+		//也会导致内存泄漏
+		private void refresh() {
+			String downloadLength = Formatter.formatFileSize(DownloadManagerActivity.this, downloadInfo.getDownloadLength());
+			String totalLength = Formatter.formatFileSize(DownloadManagerActivity.this, downloadInfo.getTotalLength());
+			downloadSize.setText(downloadLength + "/" + totalLength);
+			if (downloadInfo.getState() == DownloadManager.NONE) {
+				netSpeed.setText("停止");
+				download.setText("下载");
+			} else if (downloadInfo.getState() == DownloadManager.PAUSE) {
+				netSpeed.setText("暂停中");
+				download.setText("继续");
+			} else if (downloadInfo.getState() == DownloadManager.ERROR) {
+				netSpeed.setText("下载出错");
+				download.setText("出错");
+			} else if (downloadInfo.getState() == DownloadManager.WAITING) {
+				netSpeed.setText("等待中");
+				download.setText("等待");
+			} else if (downloadInfo.getState() == DownloadManager.FINISH) {
+				if (ApkUtils.isAvailable(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()))) {
+					download.setText("卸载");
+				} else {
+					download.setText("安装");
 				}
+				netSpeed.setText("下载完成");
+			} else if (downloadInfo.getState() == DownloadManager.DOWNLOADING) {
+				String networkSpeed = Formatter.formatFileSize(DownloadManagerActivity.this, downloadInfo.getNetworkSpeed());
+				netSpeed.setText(networkSpeed + "/s");
+				download.setText("暂停");
 			}
+			tvProgress.setText((Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 100) + "%");
+			pbProgress.setMax((int) downloadInfo.getTotalLength());
+			pbProgress.setProgress((int) downloadInfo.getDownloadLength());
+		}
 
-			@Override
-			public void onFailure(int statusCode, Header[] headers,
-					String responseString, Throwable throwable) {
-				super.onFailure(statusCode, headers, responseString,
-						throwable);
-				Toast.makeText(DownloadManagerActivity.this, "请检查网络!",
-						Toast.LENGTH_LONG).show();
+		@Override
+		public void onClick(View v) {
+			if (v.getId() == download.getId()) {
+				switch (downloadInfo.getState()) {
+					case DownloadManager.PAUSE:
+					case DownloadManager.NONE:
+					case DownloadManager.ERROR:
+						downloadManager.addTask(downloadInfo.getUrl(), downloadInfo.getRequest(), downloadInfo.getListener());
+						break;
+					case DownloadManager.DOWNLOADING:
+						downloadManager.pauseTask(downloadInfo.getUrl());
+						break;
+					case DownloadManager.FINISH:
+						if (ApkUtils.isAvailable(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()))) {
+							ApkUtils.uninstall(DownloadManagerActivity.this, ApkUtils.getPackageName(DownloadManagerActivity.this, downloadInfo.getTargetPath()));
+						} else {
+							ApkUtils.install(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()));
+						}
+						break;
+				}
+				refresh();
+			} else if (v.getId() == remove.getId()) {
+				downloadManager.removeTask(downloadInfo.getUrl());
+				adapter.notifyDataSetChanged();
+			} else if (v.getId() == restart.getId()) {
+				downloadManager.restartTask(downloadInfo.getUrl());
 			}
-		});
-}
-	
-	
+		}
+	}
 
+	private class MyDownloadListener extends DownloadListener {
+
+		@Override
+		public void onProgress(DownloadInfo downloadInfo) {
+			if (getUserTag() == null) return;
+			ViewHolder holder = (ViewHolder) getUserTag();
+			holder.refresh();  //这里不能使用传递进来的 DownloadInfo，否者会出现条目错乱的问题
+		}
+
+		@Override
+		public void onFinish(DownloadInfo downloadInfo) {
+			Toast.makeText(DownloadManagerActivity.this, "下载完成:" + downloadInfo.getTargetPath(), Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onError(DownloadInfo downloadInfo, String errorMsg, Exception e) {
+			if (errorMsg != null) Toast.makeText(DownloadManagerActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+		}
+	}
 }

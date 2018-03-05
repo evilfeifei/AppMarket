@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide;
 import com.huiyun.vrxf.R;
 import com.huiyun.vrxf.been.AppInfo;
 import com.huiyun.vrxf.configuration.AppmarketPreferences;
+import com.huiyun.vrxf.downLoad.LogDownloadListener;
+import com.huiyun.vrxf.downLoad.OkDownLoad;
 import com.huiyun.vrxf.fusion.Constant;
 import com.huiyun.vrxf.fusion.PreferenceCode;
 import com.huiyun.vrxf.ui.AppDettailsActivity2;
@@ -21,6 +23,8 @@ import com.huiyun.vrxf.view.roundimage.RoundedImageView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.GetRequest;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -104,9 +108,11 @@ public class AppAdapter extends BaseAdapter{
 		holder.downloadTv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(PreferenceCode.APP_INFO, appBeans.get(index));
-				switchActivity(DownloadManagerActivity.class, bundle);
+
+				GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());
+				OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName()+".apk",appBeans.get(index),appBeans.get(index).getDownloadUrl(),request, new LogDownloadListener());
+				Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+				mContext.startActivity(intent);
 
 				if(!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")){
 					receiveScore(mContext,AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
