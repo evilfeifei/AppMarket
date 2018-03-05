@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,13 +36,14 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 
 	@Bind(R.id.listView) ListView listView;
 	@Bind(R.id.t_title) TextView titleTv;
+	@Bind(R.id.back_left_liner) LinearLayout back_liner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download_manager);
 		ButterKnife.bind(this);
-		titleTv.setText("下载管理");
+		initView();
 
 		downloadManager = DownloadService.getDownloadManager();
 		allTask = downloadManager.getAllTask();
@@ -49,6 +51,13 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 		listView.setAdapter(adapter);
 
 		downloadManager.getThreadPool().getExecutor().addOnAllTaskEndListener(this);
+	}
+
+	private void initView(){
+		titleTv.setText("下载管理");
+		back_liner = findView(R.id.back_left_liner);
+		back_liner.setVisibility(View.VISIBLE);
+		back_liner.setOnClickListener(this);
 	}
 
 	@Override
@@ -89,6 +98,9 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 				break;
 			case R.id.startAll:
 				downloadManager.startAllTask();
+				break;
+			case R.id.back_left_liner:
+				finish();
 				break;
 		}
 	}
@@ -132,7 +144,6 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 			}
 			holder.download.setOnClickListener(holder);
 			holder.remove.setOnClickListener(holder);
-			holder.restart.setOnClickListener(holder);
 
 			DownloadListener downloadListener = new MyDownloadListener();
 			downloadListener.setUserTag(holder);
@@ -149,9 +160,8 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 		private TextView tvProgress;
 		private TextView netSpeed;
 		private NumberProgressBar pbProgress;
-		private Button download;
-		private Button remove;
-		private Button restart;
+		private TextView download;
+		private ImageView remove;
 
 		public ViewHolder(View convertView) {
 			icon = (ImageView) convertView.findViewById(R.id.icon);
@@ -160,9 +170,8 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 			tvProgress = (TextView) convertView.findViewById(R.id.tvProgress);
 			netSpeed = (TextView) convertView.findViewById(R.id.netSpeed);
 			pbProgress = (NumberProgressBar) convertView.findViewById(R.id.pbProgress);
-			download = (Button) convertView.findViewById(R.id.start);
-			remove = (Button) convertView.findViewById(R.id.remove);
-			restart = (Button) convertView.findViewById(R.id.restart);
+			download = (TextView) convertView.findViewById(R.id.start);
+			remove = (ImageView) convertView.findViewById(R.id.remove);
 		}
 
 		public void refresh(DownloadInfo downloadInfo) {
@@ -229,8 +238,6 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 			} else if (v.getId() == remove.getId()) {
 				downloadManager.removeTask(downloadInfo.getUrl());
 				adapter.notifyDataSetChanged();
-			} else if (v.getId() == restart.getId()) {
-				downloadManager.restartTask(downloadInfo.getUrl());
 			}
 		}
 	}

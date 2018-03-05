@@ -5,13 +5,13 @@
               android:layout_height="wrap_content"
               android:gravity="center"
               android:orientation="horizontal"
-              android:paddingBottom="10dp"
-              android:paddingTop="10dp">
+              android:paddingBottom="@dimen/margin_4px"
+              android:paddingTop="@dimen/margin_4px">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/margin_140px"
+        android:layout_height="@dimen/margin_140px"
         android:padding="5dp"
         android:src="@mipmap/ic_launcher"/>
 
@@ -77,33 +77,29 @@
             app:progress_unreached_color="#CCCCCC"/>
     </LinearLayout>
 
-    <Button
+    <TextView
         android:id="@+id/start"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="#E30"
-        android:padding="5dp"
+        android:background="@drawable/down_load_btn_bg"
+        android:paddingLeft="@dimen/margin_30px"
+        android:paddingRight="@dimen/margin_30px"
+        android:paddingTop="@dimen/margin_10px"
+        android:paddingBottom="@dimen/margin_10px"
+        android:textSize="@dimen/txt_size_24px"
         android:text="下载"
-        android:textColor="#FFF"/>
+        android:textColor="@color/live_time_color"
+        />
 
-    <Button
+    <ImageView
         android:id="@+id/remove"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="#3E0"
-        android:padding="5dp"
+        android:background="@drawable/down_load_delete"
+        android:padding="@dimen/margin_20px"
         android:text="删除"
-        android:textColor="#FFF"/>
-
-    <Button
-        android:id="@+id/restart"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="#03E"
-        android:padding="5dp"
-        android:text="重新\n下载"
+        android:layout_margin="@dimen/margin_20px"
         android:textColor="#FFF"/>
 </LinearLayout>

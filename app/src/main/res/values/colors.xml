@@ -16,6 +16,7 @@
     <color name="app_bg">#f0f0f0</color>
     <color name="text_color">#404040</color>
     <color name="text_color_net">#1f99ef</color>
+    <color name="live_time_color">#626b73</color>
     <color name="gray1">#7c7c7c</color>
     <color name="recommed_gray">#dfe8e5</color>
     <color name="recommend_blue">#1cc9e2</color>
