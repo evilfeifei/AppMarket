@@ -7,7 +7,7 @@
     android:gravity="center"  
     android:clickable="true"  
     >  
-  <com.huiyun.vrxf.view.roundimage.RoundedImageView
+  <com.huiyun.amnews.view.roundimage.RoundedImageView
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:id="@+id/img_list_item"  
       android:layout_width="70dp"  

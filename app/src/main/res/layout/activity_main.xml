@@ -23,7 +23,7 @@
             android:layout_height="1px"
             android:background="@color/line_color" />
 
-        <com.huiyun.vrxf.view.FragmentTabHost
+        <com.huiyun.amnews.view.FragmentTabHost
             android:id="@+id/tab_host"
             android:layout_width="fill_parent"
             android:layout_height="49dp"

@@ -65,7 +65,7 @@
             android:layout_gravity="center_vertical"
             android:textSize="@dimen/txt_size_32px"/>
     </LinearLayout>
-    <com.huiyun.vrxf.view.RefreshLayout
+    <com.huiyun.amnews.view.RefreshLayout
         android:layout_below="@+id/title_layout"
         android:id="@+id/refreshlayout"
         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
             android:divider="#f7f7f7"
             android:layout_height="match_parent" >
         </ListView>
-    </com.huiyun.vrxf.view.RefreshLayout>
+    </com.huiyun.amnews.view.RefreshLayout>
 
 
 </LinearLayout>

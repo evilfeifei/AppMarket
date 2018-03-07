@@ -66,7 +66,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
-        <com.huiyun.vrxf.view.LoopViewPager
+        <com.huiyun.amnews.view.LoopViewPager
             android:id="@+id/loop_vp"
             android:layout_width="match_parent"
             android:layout_height="375px" />
@@ -195,15 +195,15 @@
             android:layout_marginTop="1dp"
             android:background="@color/white"
             android:padding="12dp"/>
-        <com.huiyun.vrxf.view.AbListView
+        <com.huiyun.amnews.view.AbListView
             android:id="@+id/hot_list"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="0.5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="#e7e7e7"
-            android:dividerHeight="1dp"
+            android:dividerHeight="0.3dp"
             android:scrollbars="none">
-        </com.huiyun.vrxf.view.AbListView>
+        </com.huiyun.amnews.view.AbListView>
 
         <TextView
             android:layout_width="match_parent"
@@ -219,15 +219,15 @@
             android:background="@color/white"
             android:padding="12dp"/>
 
-        <com.huiyun.vrxf.view.AbListView
+        <com.huiyun.amnews.view.AbListView
             android:id="@+id/final_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="#e7e7e7"
-            android:layout_marginTop="1dp"
-            android:dividerHeight="1dp"
+            android:layout_marginTop="0.5dp"
+            android:dividerHeight="0.5dp"
             android:scrollbars="none">
-        </com.huiyun.vrxf.view.AbListView>
+        </com.huiyun.amnews.view.AbListView>
 
     </LinearLayout>
         

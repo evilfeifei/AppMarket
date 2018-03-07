@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <com.huiyun.vrxf.view.TagListView
+    <com.huiyun.amnews.view.TagListView
         xmlns:f="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tagview"
         android:layout_width="match_parent"

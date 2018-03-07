@@ -65,7 +65,7 @@
                 android:text="dd"/>
         </LinearLayout>
     </RelativeLayout>
-    <com.huiyun.vrxf.view.RefreshLayout
+    <com.huiyun.amnews.view.RefreshLayout
         android:layout_below="@+id/title"
         android:id="@+id/refreshlayout"
         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
             android:divider="#f7f7f7"
             android:layout_height="match_parent" >
         </ListView>
-    </com.huiyun.vrxf.view.RefreshLayout>
+    </com.huiyun.amnews.view.RefreshLayout>
 
     <LinearLayout
         android:id="@+id/lin_no_data"

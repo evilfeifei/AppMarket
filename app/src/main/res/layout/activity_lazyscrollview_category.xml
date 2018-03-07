@@ -8,7 +8,7 @@
     <include
         android:id="@+id/title_bar"
         layout="@layout/title_bar" />
-    <com.huiyun.vrxf.myview.LazyScrollView
+    <com.huiyun.amnews.myview.LazyScrollView
         android:id="@+id/sv_mycustomer_app"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,7 +41,7 @@
                 android:orientation="vertical" >
             </LinearLayout>
         </LinearLayout>
-    </com.huiyun.vrxf.myview.LazyScrollView>
+    </com.huiyun.amnews.myview.LazyScrollView>
     <TextView 
         android:id="@+id/no_date"
         android:layout_width="wrap_content"

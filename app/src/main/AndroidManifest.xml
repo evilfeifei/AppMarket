@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.huiyun.vrxf"
+    package="com.huiyun.amnews"
     android:versionCode="3"
     android:versionName="2.0.2" >
 
@@ -30,14 +30,14 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <application
-        android:name=".MyApplication"
+        android:name="com.huiyun.amnews.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/vr_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <provider
-            android:name=".util.MyProvider"
-            android:authorities="com.huiyun.vrxf.fileprovider"
+            android:name="com.huiyun.amnews.util.MyProvider"
+            android:authorities="com.huiyun.amnews.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -45,57 +45,57 @@
                 android:resource="@xml/filepaths" />
         </provider>
         <activity
-            android:name=".ui.DownloadManagerActivity"
+            android:name="com.huiyun.amnews.ui.DownloadManagerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
         </activity>
         <activity
-            android:name=".ui.SettingActivity"
+            android:name="com.huiyun.amnews.ui.SettingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.UserSettingActivity"
+            android:name="com.huiyun.amnews.ui.UserSettingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.AboutusActivity"
+            android:name="com.huiyun.amnews.ui.AboutusActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.huiyun.amnews.ui.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ui.Regist1Activity"
+            android:name="com.huiyun.amnews.ui.Regist1Activity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.Regist2Activity"
+            android:name="com.huiyun.amnews.ui.Regist2Activity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.Regist3Activity"
+            android:name="com.huiyun.amnews.ui.Regist3Activity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.ShowImagesActivity"
+            android:name="com.huiyun.amnews.ui.ShowImagesActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.SetNameActivity"
+            android:name="com.huiyun.amnews.ui.SetNameActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.SplashActivity"
+            android:name="com.huiyun.amnews.ui.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -104,22 +104,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".ui.AppDettailsActivity2"
+        <activity android:name="com.huiyun.amnews.MainActivity"/>
+        <activity android:name="com.huiyun.amnews.ui.AppDettailsActivity2"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.MyCollectActivity"
+        <activity android:name="com.huiyun.amnews.ui.MyCollectActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.MyTrampleActivity"
+        <activity android:name="com.huiyun.amnews.ui.MyTrampleActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.MyPraiseActivity"
+        <activity android:name="com.huiyun.amnews.ui.MyPraiseActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.VRCategoryActivity"
+        <activity android:name="com.huiyun.amnews.ui.VRCategoryActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.SearchActivity"
+        <activity android:name="com.huiyun.amnews.ui.SearchActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.ForgetPwdActivity"
+        <activity android:name="com.huiyun.amnews.ui.ForgetPwdActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.MyWebViewActivity"
+        <activity android:name="com.huiyun.amnews.ui.MyWebViewActivity"
                   android:screenOrientation="portrait"/>
 
         <!-- baidu location begin -->

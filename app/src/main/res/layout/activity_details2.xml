@@ -86,7 +86,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <com.huiyun.vrxf.view.DragTopLayout
+        <com.huiyun.amnews.view.DragTopLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:background="@color/white"
             android:id="@+id/drag_layout"
@@ -227,7 +227,7 @@
 
 
 
-        </com.huiyun.vrxf.view.DragTopLayout>
+        </com.huiyun.amnews.view.DragTopLayout>
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/tp_rel"

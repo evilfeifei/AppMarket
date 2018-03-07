@@ -8,11 +8,11 @@ android {
     aaptOptions.useNewCruncher = false
 
     defaultConfig {
-        applicationId "com.huiyun.vrxf"
+        applicationId "com.huiyun.amnews"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 3
-        versionName "2.0.2"
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
@@ -56,5 +56,7 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'pub.devrel:easypermissions:0.3.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.takwolf.android:hf-recyclerview:0.1.1'
+    compile 'com.pnikosis:materialish-progress:1.7'
     compile project(':okserver')
 }

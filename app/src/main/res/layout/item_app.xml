@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/item_main_bg_selecter"
     >
-        <com.huiyun.vrxf.view.roundimage.RoundedImageView
+        <com.huiyun.amnews.view.roundimage.RoundedImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/iv_icon"
             android:layout_width="@dimen/margin_100px"
@@ -63,15 +63,19 @@
 
     <TextView
         android:id="@+id/tv_download"
-        android:layout_width="@dimen/margin_120px"
-        android:layout_height="@dimen/margin_140px"
-        android:background="@drawable/butn_bg_selecter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_download"
         android:gravity="center"
         android:layout_alignParentRight="true"
-        android:padding="10dp"
+        android:paddingLeft="@dimen/margin_30px"
+        android:paddingTop="@dimen/margin_10px"
+        android:paddingBottom="@dimen/margin_10px"
+        android:paddingRight="@dimen/margin_30px"
+        android:textColor="@color/white"
         android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_20px"
         android:text="下载"
-        android:drawableTop="@drawable/tv_down_load_icon"
-        android:textSize="@dimen/txt_size_28px" />
+        android:textSize="@dimen/txt_size_24px" />
 
 </RelativeLayout>

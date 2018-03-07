@@ -29,7 +29,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.huiyun.vrxf.view.roundimage.RoundedImageView
+            <com.huiyun.amnews.view.roundimage.RoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/myaccount_headpicture_small"
                 android:layout_width="40dp"

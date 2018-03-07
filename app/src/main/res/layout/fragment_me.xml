@@ -24,7 +24,7 @@
             android:background="@drawable/title_left_but_selector"
             >
 
-            <com.huiyun.vrxf.view.roundimage.RoundedImageView
+            <com.huiyun.amnews.view.roundimage.RoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/my_header_img"
                 android:layout_width="70dp"
@@ -103,7 +103,7 @@
                 android:drawablePadding="10dp"
                 android:text="我的下载"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                 android:drawableLeft="@drawable/me_collect_icon"
                 android:drawablePadding="10dp"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -158,7 +158,7 @@
                 android:drawablePadding="10dp"
                 android:text="踩过"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -186,7 +186,7 @@
                 android:drawablePadding="10dp"
                 android:text="赞过"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -197,67 +197,6 @@
                 android:src="@drawable/right_to" />
         </RelativeLayout>
 
-
-
-        <!--add by popovich-->
-        <RelativeLayout
-            android:id="@+id/user_shop_cart"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/bg_round_selecter"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:drawableLeft="@drawable/me_shop_cart"
-                android:drawablePadding="10dp"
-                android:text="购物车"
-                android:textColor="@color/text_color"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
-        </RelativeLayout>
-
-        <!--add by popovich-->
-        <RelativeLayout
-            android:id="@+id/user_shop_order"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/bg_round_selecter"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:drawableLeft="@drawable/me_shop_order"
-                android:drawablePadding="10dp"
-                android:text="商城订单"
-                android:textColor="@color/text_color"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
-        </RelativeLayout>
 
 
         <RelativeLayout
@@ -307,7 +246,7 @@
                 android:drawablePadding="10dp"
                 android:text="设置"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
 
             <ImageView
                 android:layout_width="wrap_content"

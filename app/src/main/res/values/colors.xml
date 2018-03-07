@@ -73,4 +73,5 @@
     <color name="red">#f84644</color>
     <color name="gray_line_bg">#d8d8d8</color>
     <color name="transparent_50_percent">#7f000000</color>
+    <dimen name="app_bar_elevation">4dp</dimen>
 </resources>

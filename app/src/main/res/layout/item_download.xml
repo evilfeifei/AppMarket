@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:android_custom="http://schemas.android.com/apk/res/com.huiyun.vrxf"
+    xmlns:android_custom="http://schemas.android.com/apk/res/com.huiyun.amnews"
     android:layout_width="match_parent"
     android:layout_marginTop="10dp"
     android:layout_height="60dp"
     android:layout_margin="10dp"
     >
 
-    <com.huiyun.vrxf.myview.RectProgressView
+    <com.huiyun.amnews.myview.RectProgressView
         android:id="@+id/pv_progress"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal" >
 
-            <com.huiyun.vrxf.view.roundimage.RoundedImageView
+            <com.huiyun.amnews.view.roundimage.RoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/i_chat_avatar_icon"
                 android:layout_width="50dp"
