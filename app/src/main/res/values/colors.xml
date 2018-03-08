@@ -8,6 +8,8 @@
     <color name="app_style_color">#12c3b0</color>
     <color name="but_p_style_color">#30add2</color>
     <color name="black">#000000</color>
+    <color name="black_1">#3a3f43</color>
+    <color name="black_2">#282828</color>
     <color name="colorPrimary_p">#08a796</color>
     <color name="white">#FFFFFF</color>
     <color name="title_color">#ffffff</color>

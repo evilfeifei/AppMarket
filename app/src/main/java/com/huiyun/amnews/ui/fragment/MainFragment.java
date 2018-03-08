@@ -18,6 +18,7 @@ import com.huiyun.amnews.MainActivity;
 import com.huiyun.amnews.MyApplication;
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.adapter.AppAdapter;
+import com.huiyun.amnews.adapter.MainHotGameAdapter;
 import com.huiyun.amnews.been.AppHotAndFinalListBean;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
@@ -30,6 +31,7 @@ import com.huiyun.amnews.ui.SearchActivity;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.AbListView;
 import com.huiyun.amnews.view.LoopViewPager;
+import com.huiyun.amnews.wight.NoScrollGridView;
 import com.huiyun.amnews.wight.ObservableScrollView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -56,8 +58,12 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     private String nickname = "";
     private int pagesize;
     private List<AppInfo> mAppInfoList;
-    private AbListView hotList,finalList;
-    private AppAdapter appAdapterHot,getAppAdapterFinal;
+    private NoScrollGridView gameGridview;
+    private MainHotGameAdapter mainHotGameAdapter;
+    private List<AppInfo> appInfoListGame = new ArrayList<>();
+
+    private AbListView finalList;
+    private AppAdapter getAppAdapterFinal;
     private LoopViewPager loopViewPager;
     List<Map<String, Object>> dataList1;
     private static int width ,height;
@@ -106,12 +112,13 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         paraRight.height = (int) (width*((double)400/1080));
         loopViewPager.setLayoutParams(paraRight);
 
-        hotList = (AbListView) view.findViewById(R.id.hot_list);
         finalList = (AbListView) view.findViewById(R.id.final_list);
-        appAdapterHot = new AppAdapter(getActivity());
         getAppAdapterFinal = new AppAdapter(getActivity());
-        hotList.setAdapter(appAdapterHot);
         finalList.setAdapter(getAppAdapterFinal);
+
+        gameGridview = (NoScrollGridView) view.findViewById(R.id.game_gridview);
+        mainHotGameAdapter = new MainHotGameAdapter(getActivity(),appInfoListGame,null);
+        gameGridview.setAdapter(mainHotGameAdapter);
     }
 
     private void initListeners() {
@@ -163,7 +170,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                             AppHotAndFinalListBean appHotAndFinalListBean = (AppHotAndFinalListBean) JsonUtil.jsonToBean(response.toString(), AppHotAndFinalListBean.class);
                             if (appHotAndFinalListBean.getError().equals("")) {
                                 if (appHotAndFinalListBean.getMenu1().size() > 0) {
-                                    appAdapterHot.refreshData(appHotAndFinalListBean.getMenu1());
+                                    mainHotGameAdapter.refreshData(appHotAndFinalListBean.getMenu1());
                                     getAppAdapterFinal.refreshData(appHotAndFinalListBean.getMenu2());
                                 }
 
@@ -239,8 +246,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         avatar = AppmarketPreferences.getInstance(getActivity()).getStringKey(
                 PreferenceCode.AVATAR);
 
-        if(appAdapterHot!=null&&getAppAdapterFinal!=null){
-            appAdapterHot.notifyDataSetChanged();
+        if(getAppAdapterFinal!=null){
             getAppAdapterFinal.notifyDataSetChanged();
         }
     }
@@ -277,7 +283,6 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
-        appAdapterHot.notifyDataSetChanged();
         getAppAdapterFinal.notifyDataSetChanged();
     }
 
