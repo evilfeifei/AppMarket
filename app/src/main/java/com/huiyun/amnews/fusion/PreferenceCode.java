@@ -13,13 +13,13 @@ public class PreferenceCode {
 	 public static final String DOWNLOAD_MANAGER="download_manager";
 	 public static boolean is_open_apk=false;
 	 public static boolean IS_DESTORY = false;
-	 
+	 public static String IS_FIRST_OPEN = "is_first_open";
+
 	 public static final String TOKEN="djh_token";
 	 public static final String PHONE="djh_phone";
 	 public static final String USERID="djh_userid";
 	 public static final String AVATAR="djh_avatar";
 	 public static final String NICKNAME="djh_nickname";
 	 public static final String USER_SCORE="score";
-	 public static final String LOCATION_CITY="location_city";
 
 }

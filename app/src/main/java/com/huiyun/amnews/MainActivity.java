@@ -17,9 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huiyun.amnews.been.MainEvent;
+import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.fusion.Constant;
+import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.myview.dialogview.DialogTips;
 import com.huiyun.amnews.ui.BaseActivity;
+import com.huiyun.amnews.ui.dialog.WelcomeDialog;
 import com.huiyun.amnews.ui.fragment.CategoryAppFragment;
 import com.huiyun.amnews.ui.fragment.MainFragment;
 import com.huiyun.amnews.ui.fragment.MeFragment;
@@ -97,6 +100,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             EasyPermissions.requestPermissions(this, "应用需要拍照权限", REQUEST_CODE_CAMERA, android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.READ_PHONE_STATE);
         }
 //        checkServerUpdate(PhoneUtils.getVersionName(MainActivity.this));
+        if(AppmarketPreferences.getInstance(MainActivity.this).getBooleanKey(PreferenceCode.IS_FIRST_OPEN)) {
+            initWelcomeDialog();
+        }
     }
 
     /**
@@ -128,12 +134,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             public void onTabChanged(String tabName) {
                 if (tabName.equals(titleArray[0])) {
                     currFragmentIndex = 0;
-//
-//                    FragmentManager manager = getSupportFragmentManager();
-//                    RecommendAppFragment recommendAppFragment = (RecommendAppFragment) manager.findFragmentByTag("推荐");
-//                    if (recommendAppFragment != null && !discoverFragment.isDetached())
-//                        recommendAppFragment.query();
-
                 } else if (tabName.equals(titleArray[1])) {
                     currFragmentIndex = 1;
 
@@ -317,4 +317,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             }
         }
     }
+
+    private void initWelcomeDialog() {
+        WelcomeDialog.Builder welcomeDialog = new WelcomeDialog.Builder(MainActivity.this,ahc);
+        final WelcomeDialog welcomeDialogV = welcomeDialog.create();
+        welcomeDialogV.setCanceledOnTouchOutside(false);// 点击外部区域关闭
+        welcomeDialogV.show();
+    }
+
 }

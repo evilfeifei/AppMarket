@@ -122,19 +122,6 @@
         <activity android:name="com.huiyun.amnews.ui.MyWebViewActivity"
                   android:screenOrientation="portrait"/>
 
-        <!-- baidu location begin -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" >
-        </service>
-
-        <!-- meta-data需要写在application中 -->
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="beyy7cLUcLqMHSdrKS7GE3l1GL85Mukq" />
-        <!-- baidu location end -->
-
 
         <!-- 友盟更新 -->
         <meta-data

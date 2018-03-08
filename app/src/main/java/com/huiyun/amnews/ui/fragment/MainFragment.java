@@ -2,11 +2,13 @@ package com.huiyun.amnews.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ import com.huiyun.amnews.ui.SearchActivity;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.AbListView;
 import com.huiyun.amnews.view.LoopViewPager;
+import com.huiyun.amnews.wight.ObservableScrollView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -44,15 +47,13 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements ObservableScrollView.ScrollViewListener {
 
     View rootView;
     private String userId;
     private String avatar;
     private String token;
     private String nickname = "";
-    private String city = "";
-
     private int pagesize;
     private List<AppInfo> mAppInfoList;
     private AbListView hotList,finalList;
@@ -60,7 +61,11 @@ public class MainFragment extends BaseFragment {
     private LoopViewPager loopViewPager;
     List<Map<String, Object>> dataList1;
     private static int width ,height;
-    private TextView locationTv;
+
+    ObservableScrollView homeScrollview;
+    private int imageHeight;
+    View insearchLay;
+    LinearLayout home_search_lin;
 
 
     @Override
@@ -72,8 +77,9 @@ public class MainFragment extends BaseFragment {
         height = wm.getDefaultDisplay().getHeight();
 
         initView(rootView);
+        initListeners();
         getAllAppInfoList(1,userId);
-        getAdList(city);
+        getAdList("苏州");
         addListener();
         return rootView;
     }
@@ -87,6 +93,9 @@ public class MainFragment extends BaseFragment {
         view.findViewById(R.id.yingyin_lin).setOnClickListener(this);
         view.findViewById(R.id.youxi_lin).setOnClickListener(this);
         view.findViewById(R.id.search_edit).setOnClickListener(this);
+        homeScrollview = (ObservableScrollView) view.findViewById(R.id.home_scrollview);
+        insearchLay = view.findViewById(R.id.insearch_layout_lin);
+        home_search_lin = (LinearLayout) view.findViewById(R.id.search_home_lin);
 
         loopViewPager = (LoopViewPager) view.findViewById(R.id.loop_vp);
         loopViewPager.setPointPosition(LoopViewPager.POINT_CENTER);
@@ -94,7 +103,7 @@ public class MainFragment extends BaseFragment {
         LinearLayout.LayoutParams paraRight;
         paraRight = (LinearLayout.LayoutParams) loopViewPager.getLayoutParams();
         paraRight.width = width;
-        paraRight.height = (int) (width*((double)375/1080));
+        paraRight.height = (int) (width*((double)400/1080));
         loopViewPager.setLayoutParams(paraRight);
 
         hotList = (AbListView) view.findViewById(R.id.hot_list);
@@ -103,15 +112,19 @@ public class MainFragment extends BaseFragment {
         getAppAdapterFinal = new AppAdapter(getActivity());
         hotList.setAdapter(appAdapterHot);
         finalList.setAdapter(getAppAdapterFinal);
+    }
 
-        locationTv = (TextView) view.findViewById(R.id.location_tv);
-        if(MyApplication.getInstance().city!=null){
-            city = MyApplication.getInstance().city;
-        }else{
-            city = AppmarketPreferences.getInstance(getActivity()).getCityKey(
-                    PreferenceCode.LOCATION_CITY);
-        }
-        locationTv.setText(city);
+    private void initListeners() {
+        // 获取顶部轮播图高度后，设置滚动监听
+        ViewTreeObserver vto = loopViewPager.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                loopViewPager.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                imageHeight = loopViewPager.getHeight();
+                homeScrollview.setScrollViewListener(MainFragment.this);
+            }
+        });
     }
 
     private void addListener(){
@@ -225,8 +238,6 @@ public class MainFragment extends BaseFragment {
                 PreferenceCode.NICKNAME);
         avatar = AppmarketPreferences.getInstance(getActivity()).getStringKey(
                 PreferenceCode.AVATAR);
-        city = AppmarketPreferences.getInstance(getActivity()).getCityKey(
-                PreferenceCode.LOCATION_CITY);
 
         if(appAdapterHot!=null&&getAppAdapterFinal!=null){
             appAdapterHot.notifyDataSetChanged();
@@ -274,5 +285,21 @@ public class MainFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);//解除订阅
+    }
+
+    @Override
+    public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
+        if (y <= 0) {
+            insearchLay.setBackgroundColor(Color.argb((int) 0, 255,255,255));//AGB由相关工具获得，或者美工提供
+            home_search_lin.setBackgroundResource(R.drawable.search_home_gray_bg);
+        } else if (y > 0 && y <= imageHeight) {
+            float scale = (float) y / imageHeight;
+            float alpha = (255 * scale);
+            // 只是layout背景透明(仿知乎滑动效果)
+            insearchLay.setBackgroundColor(Color.argb((int) alpha, 255,255,255));
+        } else {
+            insearchLay.setBackgroundColor(Color.argb((int) 255, 255,255,255));
+            home_search_lin.setBackgroundResource(R.drawable.search_home_gray_bg);
+        }
     }
 }

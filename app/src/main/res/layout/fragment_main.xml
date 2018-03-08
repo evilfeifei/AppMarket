@@ -1,67 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/app_bg"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
-        android:background="@drawable/bg_title" >
-        <TextView
-            android:id="@+id/location_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_centerVertical="true"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="@dimen/txt_size_32px"/>
-        <EditText
-            android:id="@+id/search_edit"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_70px"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp"
-            android:ellipsize="end"
-            android:focusable="false"
-            android:padding="5dp"
-            android:gravity="center"
-            android:drawableLeft="@drawable/search_icon"
-            android:background="@drawable/search_edit_bg"
-            android:singleLine="true"
-            android:hint="VR应用下载排行榜"
-            android:textColor="@color/title_color"
-            android:textSize="@dimen/txt_size_28px"
-            />
-
-        <LinearLayout
-            android:id="@+id/down_right_liner"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/title_right_but_selector"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible" >
-
-            <ImageView
-                android:id="@+id/right_title_img"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/down_load_icon"
-                android:visibility="visible"/>
-
-        </LinearLayout>
-    </RelativeLayout>
-    <ScrollView 
+    <com.huiyun.amnews.wight.ObservableScrollView
+        android:id="@+id/home_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
         android:scrollbars="none"
-        >
-    
+        android:background="@color/white_p">
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -69,7 +22,7 @@
         <com.huiyun.amnews.view.LoopViewPager
             android:id="@+id/loop_vp"
             android:layout_width="match_parent"
-            android:layout_height="375px" />
+            android:layout_height="@dimen/margin_400px" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -231,5 +184,6 @@
 
     </LinearLayout>
         
-</ScrollView>
-</LinearLayout>
+</com.huiyun.amnews.wight.ObservableScrollView>
+    <include layout="@layout/insearch_layout" />
+</RelativeLayout>

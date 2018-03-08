@@ -49,6 +49,7 @@ public class AppInfo implements Serializable {
 	private String isTrample;
 	private String comment_count;
 	private String comment_score;
+	private boolean isChoiced;
 
 
 	public String getPackage_name() {
@@ -397,4 +398,11 @@ public class AppInfo implements Serializable {
 		this.comment_score = comment_score;
 	}
 
+	public boolean isChoiced() {
+		return isChoiced;
+	}
+
+	public void setChoiced(boolean choiced) {
+		isChoiced = choiced;
+	}
 }
