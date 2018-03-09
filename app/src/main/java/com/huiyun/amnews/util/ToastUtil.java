@@ -5,8 +5,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 /**
- * TOAST������
- * 
+ *
  */
 public final class ToastUtil {
 	public static void toastshort(Context context, String msg) {

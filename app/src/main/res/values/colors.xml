@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#12c3b0</color>
-    <color name="colorPrimaryDark">#12c3b0</color>
+    <color name="login_bar_color">#3a3f43</color>
+    <color name="colorPrimaryDark">#3a3f43</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorPrimary_n">#7b8084</color>
 

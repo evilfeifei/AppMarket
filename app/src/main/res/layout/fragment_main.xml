@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:layout_marginTop="0.5dp">
+            android:layout_marginTop="1dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,6 +39,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/txt_size_28px"
+                android:textStyle="bold"
                 android:background="@color/white"
                 android:padding="12dp"/>
             <TextView
@@ -59,18 +60,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:numColumns="4"/>
+            android:numColumns="5"
+            android:paddingBottom="@dimen/margin_20px"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="精品应用"
+            android:text="小编推荐精品应用"
             android:textColor="@color/black"
             android:layout_gravity="center_vertical"
-            android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:textSize="@dimen/txt_size_30px"
-            android:drawableLeft="@drawable/final_icon"
+            android:textSize="@dimen/txt_size_28px"
+            android:textStyle="bold"
             android:layout_marginTop="10dp"
             android:background="@color/white"
             android:padding="12dp"/>

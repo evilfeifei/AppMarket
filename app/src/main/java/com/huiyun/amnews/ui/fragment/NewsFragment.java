@@ -4,22 +4,32 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.huiyun.amnews.R;
+import com.huiyun.amnews.adapter.NewFragmentAdapter;
 import com.huiyun.amnews.adapter.NewsAdapter;
 import com.huiyun.amnews.been.News;
+import com.huiyun.amnews.been.NewsCategory;
+import com.huiyun.amnews.fusion.Constant;
+import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.wight.LoadMoreFooter;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Justy on 2018/3/7.
@@ -36,12 +46,21 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private LoadMoreFooter loadMoreFooter;
     private List<News> newsList = new ArrayList<>();
     private NewsAdapter newsAdapter;
+    private String category;
+    private int pageSize = 15;
+
+    private String last_id="";
 
     public void onAttach(Context context) {
         super.onAttach(context);
         WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
         height = width*506/1125;
+    }
+
+    public NewsFragment(){}
+    public NewsFragment(String category){
+        this.category = category;
     }
 
     @Override
@@ -67,46 +86,75 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         onRefresh();
     }
 
+    private void getNewsList(String category,String first_id,String last_id) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("category",category);
+        params.put("first_id",first_id);
+        params.put("last_id",last_id);
+        params.put("sizeze",pageSize);
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.NEWS_LIST_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        List<NewsCategory> newsCategories = JsonUtil.stringToArray(s, NewsCategory[].class);
+                        if(newsCategories!=null&&newsCategories.size()>0){
+                            for(NewsCategory newsCategory:newsCategories){
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
+    }
+
     @Override
     public void onRefresh() {
         refreshLayout.setRefreshing(true);
-        News news1 = new News();
-        List<String> imgs1 = new ArrayList<>();
-        imgs1.add("http://inews.gtimg.com/newsapp_match/0/2986153431/0");
-        news1.setUrls(imgs1);
-        news1.setName("骚乱扩大，斯里兰卡宣布进入为期一周全国紧急状态");
-        news1.setFrom("腾讯新闻");
-
-        News news2 = new News();
-        List<String> imgs2 = new ArrayList<>();
-        imgs2.add("http://inews.gtimg.com/newsapp_ls/0/2986099076_150120/0");
-        imgs2.add("http://inews.gtimg.com/newsapp_bt/0/2934215954/641");
-        imgs2.add("http://inews.gtimg.com/newsapp_match/0/2986153431/0");
-        news2.setUrls(imgs2);
-        news2.setName("云南省长阮成发：治理旅游乱象 去年全省问责40多名干部");
-        news2.setFrom("腾讯新闻");
-
-        News news3 = new News();
-        List<String> imgs3 = new ArrayList<>();
-        imgs3.add("http://inews.gtimg.com/newsapp_match/0/2985408704/0");
-        news3.setUrls(imgs3);
-        news3.setName("冯远征委员：中国影视剧将走向高质量 老戏骨始终是中流砥柱");
-        news3.setFrom("腾讯新闻");
-
-        News news4 = new News();
-        List<String> imgs4 = new ArrayList<>();
-        imgs4.add("http://inews.gtimg.com/newsapp_match/0/2982504313/0");
-        news4.setUrls(imgs4);
-        news4.setName("如果你常看央视新闻频道，你可能会对她很熟悉，一位央视20多年不说话的女主播，她总是出现在电视屏幕的左下角——");
-        news4.setFrom("腾讯新闻");
-
-        newsList.add(news1);
-        newsList.add(news2);
-        newsList.add(news3);
-        newsList.add(news4);
-        newsAdapter.refreshData(newsList);
-
-        refreshLayout.setRefreshing(false);
+//        News news1 = new News();
+//        List<String> imgs1 = new ArrayList<>();
+//        imgs1.add("http://inews.gtimg.com/newsapp_match/0/2986153431/0");
+//        news1.setUrls(imgs1);
+//        news1.setName("骚乱扩大，斯里兰卡宣布进入为期一周全国紧急状态");
+//        news1.setFrom("腾讯新闻");
+//
+//        News news2 = new News();
+//        List<String> imgs2 = new ArrayList<>();
+//        imgs2.add("http://inews.gtimg.com/newsapp_ls/0/2986099076_150120/0");
+//        imgs2.add("http://inews.gtimg.com/newsapp_bt/0/2934215954/641");
+//        imgs2.add("http://inews.gtimg.com/newsapp_match/0/2986153431/0");
+//        news2.setUrls(imgs2);
+//        news2.setName("云南省长阮成发：治理旅游乱象 去年全省问责40多名干部");
+//        news2.setFrom("腾讯新闻");
+//
+//        News news3 = new News();
+//        List<String> imgs3 = new ArrayList<>();
+//        imgs3.add("http://inews.gtimg.com/newsapp_match/0/2985408704/0");
+//        news3.setUrls(imgs3);
+//        news3.setName("冯远征委员：中国影视剧将走向高质量 老戏骨始终是中流砥柱");
+//        news3.setFrom("腾讯新闻");
+//
+//        News news4 = new News();
+//        List<String> imgs4 = new ArrayList<>();
+//        imgs4.add("http://inews.gtimg.com/newsapp_match/0/2982504313/0");
+//        news4.setUrls(imgs4);
+//        news4.setName("如果你常看央视新闻频道，你可能会对她很熟悉，一位央视20多年不说话的女主播，她总是出现在电视屏幕的左下角——");
+//        news4.setFrom("腾讯新闻");
+//
+//        newsList.add(news1);
+//        newsList.add(news2);
+//        newsList.add(news3);
+//        newsList.add(news4);
+//        newsAdapter.refreshData(newsList);
+//
+//        refreshLayout.setRefreshing(false);
+        last_id="";
+        getNewsList(category,"",last_id);
     }
 
     @Override

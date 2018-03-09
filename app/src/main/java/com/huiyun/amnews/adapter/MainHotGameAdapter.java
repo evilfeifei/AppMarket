@@ -2,6 +2,8 @@ package com.huiyun.amnews.adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.fusion.Constant;
+import com.huiyun.amnews.fusion.PreferenceCode;
+import com.huiyun.amnews.ui.AppDettailsActivity2;
 import com.huiyun.amnews.view.roundimage.RoundedImageView;
 
 import java.text.DecimalFormat;
@@ -23,13 +27,11 @@ public class MainHotGameAdapter extends BaseAdapter{
 	private LayoutInflater inflater;
 	private Context context;
 	List<AppInfo> appInfoList;
-	private ChoiceOnClickListener choiceOnClickListener;
 
-	public MainHotGameAdapter(Context context, List<AppInfo> appInfoList, ChoiceOnClickListener choiceOnClickListener){
+	public MainHotGameAdapter(Context context, List<AppInfo> appInfoList){
 		inflater = LayoutInflater.from(context);
 		this.context = context;
 		this.appInfoList = appInfoList;
-		this.choiceOnClickListener =choiceOnClickListener;
 	}
 
 	public void refreshData(List<AppInfo> appBeans) {
@@ -53,39 +55,27 @@ public class MainHotGameAdapter extends BaseAdapter{
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder=null;
 		final int index = position;
 		if(convertView == null){
-			convertView = LayoutInflater.from(context).inflate(R.layout.item_welcome_app, null);
+			convertView = LayoutInflater.from(context).inflate(R.layout.item_gridview_app, null);
 			holder = new ViewHolder();
 			holder.appIcon = (RoundedImageView) convertView.findViewById(R.id.iv_icon);
 			holder.nameTv = (TextView)convertView.findViewById(R.id.name_tv);
 			holder.sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
-			holder.choiceImg = (ImageView)convertView.findViewById(R.id.choice_img);
 			convertView.setTag(holder);
 		}else{
 			holder = (ViewHolder)convertView.getTag();
 		}
-
-		holder.nameTv.setText(appInfoList.get(position).getName());
-
-		if(appInfoList.get(position).isChoiced()){
-			holder.choiceImg.setImageResource(R.drawable.app_choice_icon);
-		}else{
-			holder.choiceImg.setImageResource(R.drawable.app_un_choice_icon);
-		}
-
 		holder.appIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(appInfoList.get(position).isChoiced()){
-					appInfoList.get(position).setChoiced(false);
-				}else{
-					appInfoList.get(position).setChoiced(true);
-				}
-				choiceOnClickListener.setChoiceListener();
-				notifyDataSetChanged();
+				Intent intent = new Intent(context, AppDettailsActivity2.class);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(PreferenceCode.APP_INFO, appInfoList.get(index));
+				intent.putExtras(bundle);
+				context.startActivity(intent);
 			}
 		});
 
@@ -106,11 +96,6 @@ public class MainHotGameAdapter extends BaseAdapter{
 	{
 		TextView nameTv,sizeTv;
 		RoundedImageView appIcon;
-		ImageView choiceImg;
-	}
-
-	public interface ChoiceOnClickListener{
-		void setChoiceListener();
 	}
 
 }

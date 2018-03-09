@@ -4,16 +4,12 @@ public class Constant {
 	
 	 public static final String UNICODE = "UTF-8";
 	 
-//	 public static final String SERVER_URL = "http://applicationmarket.sinaapp.com/?s=/";//新浪
-//	//截图
-//	 public static final String SCREENSHOT_URL_PREFIX = "http://applicationmarket-public.stor.sinaapp.com/djh/screenshot/";//新浪
-//	//缩略图
-//	 public static final String THUMBNAIL_URL_PREFIX = "http://applicationmarket-public.stor.sinaapp.com/djh/thumbnail/";//新浪
-	 
+
 //	 public static final String SERVER_URL = "http://www.dingjianapp.com/index.php?s=/";
 //	 public static final String SERVER_URL = "http://139.196.24.150/index.php?s=/";
 //	 public static final String SERVER_URL = "http://112.74.79.96:88/php/index.php?s=/";
 	public static final String SERVER_URL = "http://112.74.79.96:88/php/vr/index.php?s=/";
+	public static final String SERVER_URL_NEW = "http://apk.weiyucheye.com/index.php/";
 //	截图
 	 public static final String SCREENSHOT_URL_PREFIX = "http://112.74.79.96:88/php/vr/Public/djh/screenshot/";
 //	缩略图
@@ -85,4 +81,11 @@ public class Constant {
 
 	//获取更新
 	public static final String APP_UPDATE = SERVER_URL + "App/update/version/";
+
+	/**********************************************************************************************/
+	//获取新闻分类    （Api/category）
+	public static final String NEWS_CATEGORY_URL = SERVER_URL_NEW + "Api/category";
+
+	//二、 获取时事新闻    （Api/all）
+	public static final String NEWS_LIST_URL = SERVER_URL_NEW + "Api/all";
 }

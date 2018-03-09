@@ -25,6 +25,7 @@ import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
+import com.huiyun.amnews.ui.ClassifyActivity;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
 import com.huiyun.amnews.ui.MyWebViewActivity;
 import com.huiyun.amnews.ui.SearchActivity;
@@ -95,9 +96,9 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         view.findViewById(R.id.down_right_liner).setOnClickListener(this);
         view.findViewById(R.id.bibei_lin).setOnClickListener(this);
         view.findViewById(R.id.jingxuan_lin).setOnClickListener(this);
-        view.findViewById(R.id.dianyin_lin).setOnClickListener(this);
-        view.findViewById(R.id.yingyin_lin).setOnClickListener(this);
-        view.findViewById(R.id.youxi_lin).setOnClickListener(this);
+        view.findViewById(R.id.remen_lin).setOnClickListener(this);
+        view.findViewById(R.id.fenlei_lin).setOnClickListener(this);
+        view.findViewById(R.id.paihangbang_lin).setOnClickListener(this);
         view.findViewById(R.id.search_edit).setOnClickListener(this);
         homeScrollview = (ObservableScrollView) view.findViewById(R.id.home_scrollview);
         insearchLay = view.findViewById(R.id.insearch_layout_lin);
@@ -117,7 +118,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         finalList.setAdapter(getAppAdapterFinal);
 
         gameGridview = (NoScrollGridView) view.findViewById(R.id.game_gridview);
-        mainHotGameAdapter = new MainHotGameAdapter(getActivity(),appInfoListGame,null);
+        mainHotGameAdapter = new MainHotGameAdapter(getActivity(),appInfoListGame);
         gameGridview.setAdapter(mainHotGameAdapter);
     }
 
@@ -254,26 +255,42 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     @Override
     public void onClick(View v) {
         super.onClick(v);
+        Bundle bundle ;
         switch (v.getId()){
             case R.id.down_right_liner:
-                Bundle bundle = new Bundle();
+                bundle = new Bundle();
                 bundle.putString(PreferenceCode.DOWNLOAD_MANAGER, "dm");
                 switchActivity(DownloadManagerActivity.class, bundle);
                 break;
             case R.id.bibei_lin: //必备
-                MainActivity.instance.setCurrentTab(1, 0);
+//                MainActivity.instance.setCurrentTab(1, 0);
+                bundle = new Bundle();
+                bundle.putInt(PreferenceCode.CURRENTITEM, 0);
+                switchActivity(ClassifyActivity.class, bundle);
                 break;
             case R.id.jingxuan_lin: //精选
-                MainActivity.instance.setCurrentTab(1,1);
+//                MainActivity.instance.setCurrentTab(1,1);
+                bundle = new Bundle();
+                bundle.putInt(PreferenceCode.CURRENTITEM, 1);
+                switchActivity(ClassifyActivity.class, bundle);
                 break;
-            case R.id.dianyin_lin: //电影
-                MainActivity.instance.setCurrentTab(1,2);
+            case R.id.remen_lin: //热门
+//                MainActivity.instance.setCurrentTab(1,2);
+                bundle = new Bundle();
+                bundle.putInt(PreferenceCode.CURRENTITEM, 2);
+                switchActivity(ClassifyActivity.class, bundle);
                 break;
-            case R.id.yingyin_lin: //影音
-                MainActivity.instance.setCurrentTab(1,3);
+            case R.id.fenlei_lin: //分类
+//                MainActivity.instance.setCurrentTab(1,3);
+                bundle = new Bundle();
+                bundle.putInt(PreferenceCode.CURRENTITEM, 3);
+                switchActivity(ClassifyActivity.class, bundle);
                 break;
-            case R.id.youxi_lin: //游戏
-                MainActivity.instance.setCurrentTab(1,4);
+            case R.id.paihangbang_lin: //排行榜
+//                MainActivity.instance.setCurrentTab(1,4);
+                bundle = new Bundle();
+                bundle.putInt(PreferenceCode.CURRENTITEM, 4);
+                switchActivity(ClassifyActivity.class, bundle);
                 break;
             case R.id.search_edit:
                 switchActivity(SearchActivity.class,null);
