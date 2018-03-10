@@ -78,16 +78,30 @@ public class NewsAdapter extends RecyclerView.Adapter{
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder.getItemViewType() == TYPE_1) {
-            ((Type1ViewHolder) holder).titleTv.setText(newses.get(position).getName());
-            ((Type1ViewHolder) holder).fromTv.setText(newses.get(position).getFrom());
-            showHeader(activity, newses.get(position).getUrls().get(0), 0, ((Type1ViewHolder) holder).imageView);
+            ((Type1ViewHolder) holder).titleTv.setText(newses.get(position).getTitle());
+            ((Type1ViewHolder) holder).fromTv.setText(newses.get(position).getSource());
+            if(newses.get(position).getThumbnail_img().size()==0){
+                ((Type1ViewHolder) holder).imageView.setVisibility(View.GONE);
+            }else {
+                showHeader(activity, newses.get(position).getThumbnail_img().get(0), 0, ((Type1ViewHolder) holder).imageView);
+                ((Type1ViewHolder) holder).imageView.setVisibility(View.VISIBLE);
+            }
+
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ((Type1ViewHolder) holder).imageView.getLayoutParams();
+            params.width = (width-SystemUtils.dip2px(activity,20));
+            params.height = params.width*3/5;
+            ((Type1ViewHolder) holder).imageView.setLayoutParams(params);
+//
+//            LinearLayout.LayoutParams paramsTV = (LinearLayout.LayoutParams) ((Type1ViewHolder) holder).titleTv.getLayoutParams();
+//            params.width = (width-SystemUtils.dip2px(activity,20));
+//            ((Type1ViewHolder) holder).titleTv.setLayoutParams(paramsTV);
 
         }else if (holder.getItemViewType() == TYPE_3) {
-            ((Type3ViewHolder) holder).titleTv.setText(newses.get(position).getName());
-            ((Type3ViewHolder) holder).fromTv.setText(newses.get(position).getFrom());
-            showHeader(activity, newses.get(position).getUrls().get(0), 0, ((Type3ViewHolder) holder).imageView1);
-            showHeader(activity, newses.get(position).getUrls().get(1), 0, ((Type3ViewHolder) holder).imageView2);
-            showHeader(activity, newses.get(position).getUrls().get(2), 0, ((Type3ViewHolder) holder).imageView3);
+            ((Type3ViewHolder) holder).titleTv.setText(newses.get(position).getTitle());
+            ((Type3ViewHolder) holder).fromTv.setText(newses.get(position).getSource());
+            showHeader(activity, newses.get(position).getThumbnail_img().get(0), 0, ((Type3ViewHolder) holder).imageView1);
+            showHeader(activity, newses.get(position).getThumbnail_img().get(1), 0, ((Type3ViewHolder) holder).imageView2);
+            showHeader(activity, newses.get(position).getThumbnail_img().get(2), 0, ((Type3ViewHolder) holder).imageView3);
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ((Type3ViewHolder) holder).imageView1.getLayoutParams();
             params.width = (width-SystemUtils.dip2px(activity,40))/3;
@@ -101,9 +115,9 @@ public class NewsAdapter extends RecyclerView.Adapter{
     @Override
     public int getItemViewType(int position) {
         // TODO Auto-generated method stub
-        if (newses.get(position).getUrls().size()== 1) {
+        if (newses.get(position).getThumbnail_img().size()== 1||newses.get(position).getThumbnail_img().size()==0) {
             return TYPE_1;
-        } else if (newses.get(position).getUrls().size()== 3) {
+        } else if (newses.get(position).getThumbnail_img().size()== 3) {
             return TYPE_3;
         }else{
             return TYPE_1;

@@ -9,40 +9,85 @@ import java.util.List;
 
 public class News implements Serializable {
 
-    private List<String> urls ;
-    private String name;
-    private String from;
-    private String content;
+    private List<String> category ;
+    private List<String> thumbnail_img ;
+    private String news_id;
+    private String title;
+    private String source;
+    private long gmt_publish;
+    private int hot_index;
+    public boolean selection;
+    public String url;
 
-    public List<String> getUrls() {
-        return urls;
+    public List<String> getCategory() {
+        return category;
     }
 
-    public void setUrls(List<String> urls) {
-        this.urls = urls;
+    public void setCategory(List<String> category) {
+        this.category = category;
     }
 
-    public String getName() {
-        return name;
+    public List<String> getThumbnail_img() {
+        return thumbnail_img;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setThumbnail_img(List<String> thumbnail_img) {
+        this.thumbnail_img = thumbnail_img;
     }
 
-    public String getFrom() {
-        return from;
+    public String getNews_id() {
+        return news_id;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setNews_id(String news_id) {
+        this.news_id = news_id;
     }
 
-    public String getContent() {
-        return content;
+    public String getTitle() {
+        return title;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public long getGmt_publish() {
+        return gmt_publish;
+    }
+
+    public void setGmt_publish(long gmt_publish) {
+        this.gmt_publish = gmt_publish;
+    }
+
+    public int getHot_index() {
+        return hot_index;
+    }
+
+    public void setHot_index(int hot_index) {
+        this.hot_index = hot_index;
+    }
+
+    public boolean isSelection() {
+        return selection;
+    }
+
+    public void setSelection(boolean selection) {
+        this.selection = selection;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

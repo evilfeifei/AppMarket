@@ -103,7 +103,7 @@ public class NewsContainersFragment extends BaseFragment {
 
                                 newFragmentAdapter = new NewFragmentAdapter(getActivity().getSupportFragmentManager(),fragmentList,titles);
                                 viewPager.setAdapter(newFragmentAdapter);
-                                viewPager.setOffscreenPageLimit(newFragmentAdapter.getCount());
+                                viewPager.setOffscreenPageLimit(2);
                                 tabLayout.setupWithViewPager(viewPager);
                             }
                         }

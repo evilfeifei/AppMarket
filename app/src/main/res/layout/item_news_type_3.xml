@@ -6,7 +6,7 @@
     android:background="@color/white">
     <TextView
         android:id="@+id/new_title_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:padding="@dimen/margin_20px"
