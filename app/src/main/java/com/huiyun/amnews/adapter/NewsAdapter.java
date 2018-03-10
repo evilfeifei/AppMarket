@@ -61,11 +61,11 @@ public class NewsAdapter extends RecyclerView.Adapter{
         switch (viewType) {
 
             case TYPE_1:
-                View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type_1, null);
+                View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type_1,parent, false);
                 holder = new Type1ViewHolder(myView);
                 break;
             case TYPE_3:
-                View serviceView = LayoutInflater.from(activity).inflate(R.layout.item_news_type_3, null);
+                View serviceView = LayoutInflater.from(activity).inflate(R.layout.item_news_type_3 ,parent, false);
                 holder = new Type3ViewHolder(serviceView);
                 break;
             default:
