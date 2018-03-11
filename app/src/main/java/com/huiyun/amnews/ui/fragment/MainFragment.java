@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import com.huiyun.amnews.adapter.AppAdapter;
 import com.huiyun.amnews.adapter.MainHotGameAdapter;
 import com.huiyun.amnews.been.AppHotAndFinalListBean;
 import com.huiyun.amnews.been.AppInfo;
+import com.huiyun.amnews.been.News;
+import com.huiyun.amnews.been.NewsData;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
@@ -32,10 +35,13 @@ import com.huiyun.amnews.ui.SearchActivity;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.AbListView;
 import com.huiyun.amnews.view.LoopViewPager;
+import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.huiyun.amnews.wight.NoScrollGridView;
 import com.huiyun.amnews.wight.ObservableScrollView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import org.apache.http.Header;
 import org.greenrobot.eventbus.EventBus;
@@ -44,8 +50,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2016/4/17 0017.
@@ -86,6 +96,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         initView(rootView);
         initListeners();
         getAllAppInfoList(1,userId);
+        getGameList();
         getAdList("苏州");
         addListener();
         return rootView;
@@ -142,14 +153,45 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                 if(dataList1!=null&&dataList1.size()>0){
                     Intent intent = new Intent(getActivity(), MyWebViewActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("html_url",dataList1.get(clickPosition).get("content").toString());
-                    bundle.putString("title",dataList1.get(clickPosition).get("title").toString());
+                    bundle.putInt("type",1);
+                    bundle.putString("title_name",dataList1.get(clickPosition).get("title").toString());
+                    bundle.putString("html_data",dataList1.get(clickPosition).get("content").toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             }
         });
     }
+
+
+    /**
+     * 获取首页推荐精品应用(精品游戏)
+     */
+    private void
+    getGameList() {
+        HashMap<String, Object> params = new HashMap<>();
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.HOME_GAME_APP_LIST_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(s);
+                        if (dataMap == null) {
+                            return;
+                        }
+                        List<AppInfo> appInfoGames = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("games")),AppInfo[].class);
+                        mainHotGameAdapter.refreshData(appInfoGames);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
+    }
+
 
     public void getAllAppInfoList(int pageNo ,String userId){
         RequestParams rp = new RequestParams();
@@ -163,15 +205,9 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                         Log.e("response", response.toString());
                         super.onSuccess(statusCode, headers, response);
                         if (statusCode == 200) {
-
-//                            Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(response.toString());
-//                            if (dataMap == null) {
-//                                return;
-//                            }
                             AppHotAndFinalListBean appHotAndFinalListBean = (AppHotAndFinalListBean) JsonUtil.jsonToBean(response.toString(), AppHotAndFinalListBean.class);
                             if (appHotAndFinalListBean.getError().equals("")) {
                                 if (appHotAndFinalListBean.getMenu1().size() > 0) {
-                                    mainHotGameAdapter.refreshData(appHotAndFinalListBean.getMenu1());
                                     getAppAdapterFinal.refreshData(appHotAndFinalListBean.getMenu2());
                                 }
 
@@ -188,8 +224,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                                           String responseString, Throwable throwable) {
                         super.onFailure(statusCode, headers, responseString,
                                 throwable);
-                        Toast.makeText(getActivity(), "请检查网络!",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "请检查网络!", Toast.LENGTH_LONG).show();
                     }
                 });
     }

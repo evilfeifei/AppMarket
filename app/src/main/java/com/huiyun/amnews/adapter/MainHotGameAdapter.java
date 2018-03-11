@@ -78,14 +78,14 @@ public class MainHotGameAdapter extends BaseAdapter{
 				context.startActivity(intent);
 			}
 		});
-
+		holder.nameTv.setText(appInfoList.get(position).getName());
 		DecimalFormat df = new DecimalFormat("#.0");
 		double x = Double.valueOf(appInfoList.get(position).getSize()) / 1024 / 1024;
 		String size = df.format(x);
 		holder.sizeTv.setText(size + "M");
 
 		Glide.with(context)
-				.load(Constant.THUMBNAIL_URL_PREFIX + appInfoList.get(position).getThumbnailName())
+				.load(appInfoList.get(position).getThumbnailName())
 				.placeholder(R.drawable.vr_default_img)
 				.dontAnimate()
 				.into(holder.appIcon);

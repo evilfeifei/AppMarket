@@ -16,6 +16,7 @@
     <color name="title_color">#ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="gray">#E7E7E7</color>
+    <color name="gray_3">#bfbfbf</color>
     <color name="app_bg">#f0f0f0</color>
     <color name="text_color">#404040</color>
     <color name="text_color_net">#1f99ef</color>

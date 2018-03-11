@@ -3,6 +3,8 @@ package com.huiyun.amnews.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.been.News;
+import com.huiyun.amnews.ui.MyWebViewActivity;
 import com.huiyun.amnews.util.SystemUtils;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class NewsAdapter extends RecyclerView.Adapter{
 	protected LayoutInflater mInflater;
     int width,height;
     private static final int TYPE_1 = 1;
+    private static final int TYPE_2 = 2;
     private static final int TYPE_3 = 3;
 
     public NewsAdapter(Activity activity, List<News> newses) {
@@ -61,22 +65,25 @@ public class NewsAdapter extends RecyclerView.Adapter{
         switch (viewType) {
 
             case TYPE_1:
-                View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type_1, null);
+                View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type_1,parent, false);
                 holder = new Type1ViewHolder(myView);
                 break;
+            case TYPE_2:
+                View myView2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type_2,parent, false);
+                holder = new Type2ViewHolder(myView2);
+                break;
             case TYPE_3:
-                View serviceView = LayoutInflater.from(activity).inflate(R.layout.item_news_type_3, null);
+                View serviceView = LayoutInflater.from(activity).inflate(R.layout.item_news_type_3 ,parent, false);
                 holder = new Type3ViewHolder(serviceView);
                 break;
             default:
                 break;
         }
-
         return holder;
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
+	public void onBindViewHolder(ViewHolder holder, final int position) {
         if (holder.getItemViewType() == TYPE_1) {
             ((Type1ViewHolder) holder).titleTv.setText(newses.get(position).getTitle());
             ((Type1ViewHolder) holder).fromTv.setText(newses.get(position).getSource());
@@ -91,11 +98,32 @@ public class NewsAdapter extends RecyclerView.Adapter{
             params.width = (width-SystemUtils.dip2px(activity,20));
             params.height = params.width*3/5;
             ((Type1ViewHolder) holder).imageView.setLayoutParams(params);
-//
-//            LinearLayout.LayoutParams paramsTV = (LinearLayout.LayoutParams) ((Type1ViewHolder) holder).titleTv.getLayoutParams();
-//            params.width = (width-SystemUtils.dip2px(activity,20));
-//            ((Type1ViewHolder) holder).titleTv.setLayoutParams(paramsTV);
+            ((Type1ViewHolder) holder).item_new_lin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoWebView(newses.get(position));
+                }
+            });
 
+
+        }else if (holder.getItemViewType() == TYPE_2) {
+            ((Type2ViewHolder) holder).titleTv.setText(newses.get(position).getTitle());
+            ((Type2ViewHolder) holder).fromTv.setText(newses.get(position).getSource());
+            showHeader(activity, newses.get(position).getThumbnail_img().get(0), 0, ((Type2ViewHolder) holder).imageView1);
+            showHeader(activity, newses.get(position).getThumbnail_img().get(1), 0, ((Type2ViewHolder) holder).imageView2);
+
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ((Type2ViewHolder) holder).imageView1.getLayoutParams();
+            params.width = (width-SystemUtils.dip2px(activity,30))/2;
+            params.setMargins(0,0,SystemUtils.dip2px(activity,10),0);
+            ((Type2ViewHolder) holder).imageView1.setLayoutParams(params);
+            ((Type2ViewHolder) holder).imageView2.setLayoutParams(params);
+
+            ((Type2ViewHolder) holder).item_new_lin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoWebView(newses.get(position));
+                }
+            });
         }else if (holder.getItemViewType() == TYPE_3) {
             ((Type3ViewHolder) holder).titleTv.setText(newses.get(position).getTitle());
             ((Type3ViewHolder) holder).fromTv.setText(newses.get(position).getSource());
@@ -109,6 +137,13 @@ public class NewsAdapter extends RecyclerView.Adapter{
             ((Type3ViewHolder) holder).imageView1.setLayoutParams(params);
             ((Type3ViewHolder) holder).imageView2.setLayoutParams(params);
             ((Type3ViewHolder) holder).imageView3.setLayoutParams(params);
+
+            ((Type3ViewHolder) holder).item_new_lin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoWebView(newses.get(position));
+                }
+            });
         }
 	}
 
@@ -127,12 +162,30 @@ public class NewsAdapter extends RecyclerView.Adapter{
     class Type1ViewHolder extends ViewHolder {
         TextView titleTv,fromTv;
         ImageView imageView;
+        LinearLayout item_new_lin;
 
         public Type1ViewHolder(View itemView) {
             super(itemView);
             titleTv = (TextView) itemView.findViewById(R.id.new_title_tv);
             fromTv = (TextView) itemView.findViewById(R.id.new_from_tv);
             imageView = (ImageView) itemView.findViewById(R.id.image);
+            item_new_lin = (LinearLayout) itemView.findViewById(R.id.item_new_lin);
+        }
+
+    }
+
+    class Type2ViewHolder extends ViewHolder {
+        TextView titleTv,fromTv;
+        ImageView imageView1,imageView2;
+        LinearLayout item_new_lin;
+
+        public Type2ViewHolder(View itemView) {
+            super(itemView);
+            titleTv = (TextView) itemView.findViewById(R.id.new_title_tv);
+            fromTv = (TextView) itemView.findViewById(R.id.new_from_tv);
+            imageView1 = (ImageView) itemView.findViewById(R.id.image1);
+            imageView2 = (ImageView) itemView.findViewById(R.id.image2);
+            item_new_lin = (LinearLayout) itemView.findViewById(R.id.item_new_lin);
         }
 
     }
@@ -140,6 +193,7 @@ public class NewsAdapter extends RecyclerView.Adapter{
     class Type3ViewHolder extends ViewHolder {
         TextView titleTv,fromTv;
         ImageView imageView1,imageView2,imageView3;
+        LinearLayout item_new_lin;
 
         public Type3ViewHolder(View itemView) {
             super(itemView);
@@ -148,8 +202,20 @@ public class NewsAdapter extends RecyclerView.Adapter{
             imageView1 = (ImageView) itemView.findViewById(R.id.image1);
             imageView2 = (ImageView) itemView.findViewById(R.id.image2);
             imageView3 = (ImageView) itemView.findViewById(R.id.image3);
+            item_new_lin = (LinearLayout) itemView.findViewById(R.id.item_new_lin);
         }
 
+    }
+
+    private void gotoWebView(News news){
+        if(news==null)return;
+        Intent intent = new Intent(activity, MyWebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type",1);
+        bundle.putString("title_name",news.getTitle());
+        bundle.putString("html_data",news.getUrl());
+        intent.putExtras(bundle);
+        activity.startActivity(intent);
     }
 
     public void showHeader(Context activity,String path,int defaultImg,ImageView avatarImg){

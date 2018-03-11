@@ -88,4 +88,7 @@ public class Constant {
 
 	//二、 获取时事新闻    （Api/all）
 	public static final String NEWS_LIST_URL = SERVER_URL_NEW + "Api/all";
+
+	//五、 获取首页推荐精品应用    （Api/home_selection）
+	public static final String HOME_GAME_APP_LIST_URL = SERVER_URL_NEW + "Api/home_selection";
 }
