@@ -12,6 +12,7 @@ import com.huiyun.amnews.been.CategorySecond;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.fragment.CategoryChildAppFragment;
 import com.huiyun.amnews.ui.fragment.NewsFragment;
+import com.huiyun.amnews.ui.fragment.RankingListContainersFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class ClassifyActivity extends BaseActivity {
         fragmentList.add(new CategoryChildAppFragment(1,category));
         fragmentList.add(new CategoryChildAppFragment(1,category));
         fragmentList.add(new CategoryChildAppFragment(1,category));
-        fragmentList.add(new CategoryChildAppFragment(1,category));
+        fragmentList.add(new RankingListContainersFragment());
         titles.add("必备");
         titles.add("精选");
         titles.add("热门");
