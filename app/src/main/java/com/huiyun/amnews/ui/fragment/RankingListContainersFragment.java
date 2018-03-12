@@ -45,7 +45,7 @@ public class RankingListContainersFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_ranking_containers, container, false);
 
-        ButterKnife.bind(rootView);
+        ButterKnife.bind(this,rootView);
         initMyView();
         addListener();
         return rootView;

@@ -19,20 +19,24 @@
         android:background="@color/white_p">
     <RadioGroup
         android:id="@+id/ass_radioGroup"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:layout_marginBottom="@dimen/margin_20px"
+        android:layout_marginLeft="@dimen/margin_60px"
+        android:layout_marginRight="@dimen/margin_60px"
+        android:layout_marginTop="@dimen/margin_20px"
         android:background="@drawable/radiogroup_bg"
         >
 
         <RadioButton
             android:id="@+id/rb_sign"
             android:layout_height="wrap_content"
-            android:layout_width="@dimen/margin_180px"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:checked="true"
-            android:text="订单"
+            android:text="应用榜单"
             android:button="@null"
             android:textColor="@color/rad_btn_color"
             android:textSize="@dimen/txt_size_28px"
@@ -45,8 +49,9 @@
         <RadioButton
             android:id="@+id/rb_task"
             android:layout_height="wrap_content"
-            android:layout_width="@dimen/margin_180px"
-            android:text="积分记录"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="游戏榜单"
             android:textColor="@color/rad_btn_color"
             android:button="@null"
             android:textSize="@dimen/txt_size_28px"

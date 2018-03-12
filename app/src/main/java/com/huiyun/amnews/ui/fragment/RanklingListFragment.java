@@ -12,6 +12,8 @@ import android.view.WindowManager;
 
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.adapter.NewsAdapter;
+import com.huiyun.amnews.adapter.RankingAdapter;
+import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.News;
 import com.huiyun.amnews.been.NewsData;
 import com.huiyun.amnews.fusion.Constant;
@@ -36,37 +38,23 @@ import okhttp3.Response;
 
 public class RanklingListFragment extends BaseFragment {
 
-    int width,height;
-    @Bind(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
-
     @Bind(R.id.recycler_view)
     HeaderAndFooterRecyclerView recyclerView;
-    private List<News> newsList = new ArrayList<>();
-    private NewsAdapter newsAdapter;
-    private String category;
-    private int pageSize = 15;
-    private boolean noMore;
-    private int page = 1;
-
-    private String lastId="";
+    private List<AppInfo> appInfoList = new ArrayList<>();
+    private RankingAdapter rankingAdapter;
 
     public void onAttach(Context context) {
         super.onAttach(context);
-        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        width = wm.getDefaultDisplay().getWidth();
-        height = width*506/1125;
     }
 
-    public RanklingListFragment(){}
-    public RanklingListFragment(String category){
-        this.category = category;
+    public RanklingListFragment(List<AppInfo> appInfoList){
+        this.appInfoList = appInfoList;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_ranking_app, container, false);
         ButterKnife.bind(this, rootView);
         initMyView();
         return rootView;
@@ -75,51 +63,9 @@ public class RanklingListFragment extends BaseFragment {
     private void initMyView(){
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+        rankingAdapter = new RankingAdapter(getActivity(), appInfoList);
+        recyclerView.setAdapter(rankingAdapter);
 
-        newsList = new ArrayList<>();
-
-        newsAdapter = new NewsAdapter(getActivity(), newsList);
-        recyclerView.setAdapter(newsAdapter);
-
-    }
-
-    private void getNewsList(String category, String first_id, final String last_id) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("category",category);
-        params.put("first_id",first_id);
-        params.put("last_id",last_id);
-        params.put("sizeze",pageSize);
-        String jsonData = JsonUtil.objectToJson(params);
-        OkGo.post(Constant.NEWS_LIST_URL)
-                .tag(this)
-                .upJson(jsonData)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        refreshLayout.setRefreshing(false);
-                        if (TextUtils.isEmpty(s)) return;
-                        NewsData newsData = (NewsData) JsonUtil.jsonToBean(s,NewsData.class);
-                        if(!TextUtils.isEmpty(newsData.getLast_id())){
-                            lastId = newsData.getLast_id();
-                        }else{
-                            noMore = true;
-                        }
-                        if(newsData.getCount()<1){
-                            noMore = true;
-                        }
-                        if (page==1) { //刷新
-                            newsList = new ArrayList<News>();
-                        }
-
-                        newsList.addAll(newsData.getNews());
-                        newsAdapter.refreshData(newsList);
-
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                    }
-                });
     }
 
 }
