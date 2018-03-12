@@ -97,4 +97,7 @@ public class Constant {
 
 	//三、 获取首页推荐应用    （Api/home_recommend）
 	public static final String FIRST_INSTALL_APP_LIST_URL = SERVER_URL_NEW + "Api/home_recommend";
+
+	//八、榜单页面    （Api/billboard_page）
+	public static final String RANKING_APP_LIST_URL = SERVER_URL_NEW + "Api/billboard_page";
 }

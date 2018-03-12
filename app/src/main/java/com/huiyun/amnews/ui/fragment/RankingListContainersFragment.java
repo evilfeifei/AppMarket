@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,21 @@ import android.widget.RadioGroup;
 
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.adapter.MyFragmentPagerAdapter;
+import com.huiyun.amnews.been.AppInfo;
+import com.huiyun.amnews.fusion.Constant;
+import com.huiyun.amnews.util.JsonUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Justy on 2018/3/12.
@@ -48,16 +58,13 @@ public class RankingListContainersFragment extends BaseFragment {
         ButterKnife.bind(this,rootView);
         initMyView();
         addListener();
+        getGameList();
         return rootView;
     }
 
     private void initMyView(){
-        alFragment.add(new RanklingListFragment());
-        alFragment.add(new RanklingListFragment());
-        //ViewPager设置适配器
-        assignmentViewPager.setAdapter(new MyFragmentPagerAdapter(getActivity().getSupportFragmentManager(), alFragment));
-        //ViewPager显示第一个Fragment
-        assignmentViewPager.setCurrentItem(currentItem);
+
+
         if(currentItem==0){
             rb_sign.setChecked(true);
             rb_task.setChecked(false);
@@ -88,6 +95,15 @@ public class RankingListContainersFragment extends BaseFragment {
         });
     }
 
+    private void setData(List<AppInfo> appInfos,List<AppInfo> games){
+        alFragment.add(new RanklingListFragment(appInfos));
+        alFragment.add(new RanklingListFragment(games));
+        //ViewPager设置适配器
+        assignmentViewPager.setAdapter(new MyFragmentPagerAdapter(getActivity().getSupportFragmentManager(), alFragment));
+        //ViewPager显示第一个Fragment
+        assignmentViewPager.setCurrentItem(currentItem);
+    }
+
     private void addListener(){
         //RadioGroup选中状态改变监听
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -103,5 +119,30 @@ public class RankingListContainersFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private void getGameList() {
+        HashMap<String, Object> params = new HashMap<>();
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.RANKING_APP_LIST_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(s);
+                        if (dataMap == null) {
+                            return;
+                        }
+                        List<AppInfo> appInfos = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("app_rank")),AppInfo[].class);
+                        List<AppInfo> appInfoGames = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("game_rank")),AppInfo[].class);
+                        setData(appInfos,appInfoGames);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
     }
 }

@@ -3,10 +3,13 @@ package com.huiyun.amnews.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -38,7 +41,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RankingAdapter extends BaseAdapter{
+public class RankingAdapter extends  RecyclerView.Adapter<RankingAdapter.ViewHolder>{
 
 	private List<AppInfo> appBeans;
 	private Context mContext;
@@ -65,36 +68,29 @@ public class RankingAdapter extends BaseAdapter{
 		notifyDataSetChanged();
 	}
 
-	public int getCount() {
+	@Override
+	public int getItemCount() {
 		return appBeans.size();
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return null;
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+		return position;
 	}
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		ViewHolder holder = null;
+		View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type_1, parent, false);
+		holder = new ViewHolder(myView);
+		return holder;
+	}
+
+
 
 	@Override
-	public long getItemId(int position) {
-		return 0;
-	}
-
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder=null;
+	public void onBindViewHolder(ViewHolder holder, int position) {
 		final int index = position;
-		if(convertView == null){
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.item_app, null);
-			holder = new ViewHolder();
-			holder.appIcon = (RoundedImageView) convertView.findViewById(R.id.iv_icon);
-			holder.nameTv = (TextView)convertView.findViewById(R.id.name_tv);
-			holder.sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
-			holder.contentTv = (TextView)convertView.findViewById(R.id.content_tv);
-			holder.downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
-			convertView.setTag(holder);
-		}else{
-			holder = (ViewHolder)convertView.getTag();
-		}
-
 		holder.nameTv.setText(appBeans.get(position).getName());
 		holder.contentTv.setText(appBeans.get(position).getIntroduction());
 
@@ -152,7 +148,7 @@ public class RankingAdapter extends BaseAdapter{
 			}
 		});
 
-		convertView.setOnClickListener(new View.OnClickListener() {
+		/*convertView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, AppDettailsActivity2.class);
@@ -161,15 +157,24 @@ public class RankingAdapter extends BaseAdapter{
 				intent.putExtras(bundle);
 				mContext.startActivity(intent);
 			}
-		});
+		});*/
 
-		return convertView;
 	}
 
-	private static class ViewHolder
-	{
+
+	class ViewHolder extends RecyclerView.ViewHolder {
 		TextView nameTv,sizeTv,contentTv,downloadTv;
 		RoundedImageView appIcon;
+
+		public ViewHolder(View convertView) {
+			super(convertView);
+			appIcon = (RoundedImageView) convertView.findViewById(R.id.iv_icon);
+			nameTv = (TextView)convertView.findViewById(R.id.name_tv);
+			sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
+			contentTv = (TextView)convertView.findViewById(R.id.content_tv);
+			downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
+		}
+
 	}
 
 	public void addData(List<AppInfo> appList) {
