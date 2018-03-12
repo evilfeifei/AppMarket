@@ -25,6 +25,7 @@ import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.News;
 import com.huiyun.amnews.been.NewsData;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
+import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
@@ -35,25 +36,21 @@ import com.huiyun.amnews.ui.SearchActivity;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.AbListView;
 import com.huiyun.amnews.view.LoopViewPager;
-import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.huiyun.amnews.wight.NoScrollGridView;
 import com.huiyun.amnews.wight.ObservableScrollView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
-
 import org.apache.http.Header;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -68,13 +65,14 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     private String token;
     private String nickname = "";
     private int pagesize;
-    private List<AppInfo> mAppInfoList;
     private NoScrollGridView gameGridview;
     private MainHotGameAdapter mainHotGameAdapter;
     private List<AppInfo> appInfoListGame = new ArrayList<>();
 
     private AbListView finalList;
+    private List<AppInfo> mAppInfoList = new ArrayList<>();
     private AppAdapter getAppAdapterFinal;
+
     private LoopViewPager loopViewPager;
     List<Map<String, Object>> dataList1;
     private static int width ,height;
@@ -83,6 +81,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     private int imageHeight;
     View insearchLay;
     LinearLayout home_search_lin;
+    int page  = 1;
 
 
     @Override
@@ -95,8 +94,9 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
 
         initView(rootView);
         initListeners();
-        getAllAppInfoList(1,userId);
+//        getAllAppInfoList(1,userId);
         getGameList();
+        getAppMoreList(page, DefaultValues.APP_TYPE_APPLICATION);
         getAdList("苏州");
         addListener();
         return rootView;
@@ -125,7 +125,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         loopViewPager.setLayoutParams(paraRight);
 
         finalList = (AbListView) view.findViewById(R.id.final_list);
-        getAppAdapterFinal = new AppAdapter(getActivity());
+        getAppAdapterFinal = new AppAdapter(getActivity(),mAppInfoList);
         finalList.setAdapter(getAppAdapterFinal);
 
         gameGridview = (NoScrollGridView) view.findViewById(R.id.game_gridview);
@@ -167,8 +167,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     /**
      * 获取首页推荐精品应用(精品游戏)
      */
-    private void
-    getGameList() {
+    private void getGameList() {
         HashMap<String, Object> params = new HashMap<>();
         String jsonData = JsonUtil.objectToJson(params);
         OkGo.post(Constant.HOME_GAME_APP_LIST_URL)
@@ -184,6 +183,34 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                         }
                         List<AppInfo> appInfoGames = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("games")),AppInfo[].class);
                         mainHotGameAdapter.refreshData(appInfoGames);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
+    }
+
+    /**
+     * 更多精品应用
+     * @param page
+     * @param type:更多类型 1：精品应用 2：精品游戏
+     */
+    private void getAppMoreList(int page,int type) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page",page);
+        params.put("type",type);
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.MORE_APP_LIST_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        List<AppInfo> appInfos = JsonUtil.stringToArray(s,AppInfo[].class);
+                        mAppInfoList.addAll(appInfos);
+                        getAppAdapterFinal.refreshData(appInfos);
                     }
 
                     @Override

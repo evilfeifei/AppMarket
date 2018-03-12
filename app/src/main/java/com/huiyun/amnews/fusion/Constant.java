@@ -91,4 +91,10 @@ public class Constant {
 
 	//五、 获取首页推荐精品应用    （Api/home_selection）
 	public static final String HOME_GAME_APP_LIST_URL = SERVER_URL_NEW + "Api/home_selection";
+
+	//更多精品应用    （Api/more）
+	public static final String MORE_APP_LIST_URL = SERVER_URL_NEW + "Api/more";
+
+	//三、 获取首页推荐应用    （Api/home_recommend）
+	public static final String FIRST_INSTALL_APP_LIST_URL = SERVER_URL_NEW + "Api/home_recommend";
 }

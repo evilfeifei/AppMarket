@@ -96,7 +96,7 @@ public class WelcomeAdapter extends BaseAdapter{
 		holder.sizeTv.setText(size + "M");
 
 		Glide.with(context)
-				.load(Constant.THUMBNAIL_URL_PREFIX + appInfoList.get(position).getThumbnailName())
+				.load(appInfoList.get(position).getThumbnailName())
 				.placeholder(R.drawable.vr_default_img)
 				.dontAnimate()
 				.into(holder.appIcon);

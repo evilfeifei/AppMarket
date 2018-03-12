@@ -119,7 +119,7 @@ public class AppAdapter extends BaseAdapter{
 		}
 
 		Glide.with(mContext)
-				.load(Constant.THUMBNAIL_URL_PREFIX + appBeans.get(position).getThumbnailName())
+				.load(appBeans.get(position).getThumbnailName())
 				.placeholder(R.drawable.vr_default_img)
 				.dontAnimate()
 				.into(holder.appIcon);

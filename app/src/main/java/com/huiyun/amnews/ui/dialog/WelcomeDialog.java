@@ -3,6 +3,7 @@ package com.huiyun.amnews.ui.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.GetRequest;
 
 import org.apache.http.Header;
@@ -36,7 +38,11 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by admin on 2016/9/20.
@@ -112,7 +118,8 @@ public class WelcomeDialog extends Dialog {
                 }
             });
 
-            getAllAppInfoList(1,"");
+//            getAllAppInfoList(1,"");
+            getAppWelcomeList();
             return dialog;
         }
 
@@ -154,6 +161,34 @@ public class WelcomeDialog extends Dialog {
                                     throwable);
                             Toast.makeText(context, "请检查网络!",
                                     Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+
+        //首次安装为你推荐
+        private void getAppWelcomeList() {
+            HashMap<String, Object> params = new HashMap<>();
+            String jsonData = JsonUtil.objectToJson(params);
+            OkGo.post(Constant.FIRST_INSTALL_APP_LIST_URL)
+                    .tag(this)
+                    .upJson(jsonData)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            if (TextUtils.isEmpty(s)) return;
+                            List<AppInfo> appInfos = JsonUtil.stringToArray(s,AppInfo[].class);
+                            if(appInfos!=null&&appInfos.size()>0){
+                                appInfoList.addAll(appInfos);
+                                for(AppInfo appInfo:appInfoList){
+                                    appInfo.setChoiced(true);
+                                }
+                                choiceNum();
+                                welcomeAdapter.refreshData(appInfoList);
+                            }
+                        }
+
+                        @Override
+                        public void onError(Call call, Response response, Exception e) {
                         }
                     });
         }
