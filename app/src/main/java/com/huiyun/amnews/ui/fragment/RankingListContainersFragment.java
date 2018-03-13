@@ -63,8 +63,6 @@ public class RankingListContainersFragment extends BaseFragment {
     }
 
     private void initMyView(){
-
-
         if(currentItem==0){
             rb_sign.setChecked(true);
             rb_task.setChecked(false);
@@ -138,6 +136,7 @@ public class RankingListContainersFragment extends BaseFragment {
                         List<AppInfo> appInfos = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("app_rank")),AppInfo[].class);
                         List<AppInfo> appInfoGames = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("game_rank")),AppInfo[].class);
                         setData(appInfos,appInfoGames);
+                        addListener();
                     }
 
                     @Override

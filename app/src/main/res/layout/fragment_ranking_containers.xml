@@ -27,7 +27,6 @@
         android:layout_marginLeft="@dimen/margin_60px"
         android:layout_marginRight="@dimen/margin_60px"
         android:layout_marginTop="@dimen/margin_20px"
-        android:background="@drawable/radiogroup_bg"
         >
 
         <RadioButton
@@ -39,7 +38,7 @@
             android:text="应用榜单"
             android:button="@null"
             android:textColor="@color/rad_btn_color"
-            android:textSize="@dimen/txt_size_28px"
+            android:textSize="@dimen/txt_size_24px"
             android:gravity="center"
             android:background="@drawable/rad_but_left_seleter"
             android:layout_gravity="center"
@@ -54,7 +53,7 @@
             android:text="游戏榜单"
             android:textColor="@color/rad_btn_color"
             android:button="@null"
-            android:textSize="@dimen/txt_size_28px"
+            android:textSize="@dimen/txt_size_24px"
             android:background="@drawable/rad_but_right_seleter"
             android:gravity="center"
             android:layout_gravity="center"

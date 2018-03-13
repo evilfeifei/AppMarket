@@ -81,7 +81,7 @@ public class RankingAdapter extends  RecyclerView.Adapter<RankingAdapter.ViewHol
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		ViewHolder holder = null;
-		View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type_1, parent, false);
+		View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false);
 		holder = new ViewHolder(myView);
 		return holder;
 	}
