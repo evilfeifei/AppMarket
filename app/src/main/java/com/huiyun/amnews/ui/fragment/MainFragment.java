@@ -12,23 +12,18 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.huiyun.amnews.MainActivity;
-import com.huiyun.amnews.MyApplication;
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.adapter.AppAdapter;
 import com.huiyun.amnews.adapter.MainHotGameAdapter;
 import com.huiyun.amnews.been.AppHotAndFinalListBean;
 import com.huiyun.amnews.been.AppInfo;
-import com.huiyun.amnews.been.News;
-import com.huiyun.amnews.been.NewsData;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
+import com.huiyun.amnews.ui.CategoryListActivity;
 import com.huiyun.amnews.ui.ClassifyActivity;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
 import com.huiyun.amnews.ui.MyWebViewActivity;
@@ -111,6 +106,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         view.findViewById(R.id.fenlei_lin).setOnClickListener(this);
         view.findViewById(R.id.paihangbang_lin).setOnClickListener(this);
         view.findViewById(R.id.search_edit).setOnClickListener(this);
+        view.findViewById(R.id.more_game_tv).setOnClickListener(this);
         homeScrollview = (ObservableScrollView) view.findViewById(R.id.home_scrollview);
         insearchLay = view.findViewById(R.id.insearch_layout_lin);
         home_search_lin = (LinearLayout) view.findViewById(R.id.search_home_lin);
@@ -354,8 +350,13 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                 bundle.putInt(PreferenceCode.CURRENTITEM, 4);
                 switchActivity(ClassifyActivity.class, bundle);
                 break;
-            case R.id.search_edit:
+            case R.id.search_edit: //搜索
                 switchActivity(SearchActivity.class,null);
+                break;
+            case R.id.more_game_tv://更多游戏
+                bundle = new Bundle();
+                bundle.putString(PreferenceCode.CATEGORY_TITLE, "游戏");
+                switchActivity(CategoryListActivity.class, bundle);
                 break;
         }
     }

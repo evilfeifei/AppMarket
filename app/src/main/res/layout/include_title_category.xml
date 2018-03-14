@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/title_bg" >
+
+        <LinearLayout
+            android:id="@+id/back_left_liner"
+            android:layout_width="@dimen/margin_100px"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/title_left_gray_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:orientation="vertical"
+            android:visibility="visible" >
+            <ImageView
+                android:layout_width="@dimen/margin_36px"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back1_icon"  />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/t_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:ellipsize="end"
+            android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textColor="@color/black_1"
+            android:textSize="@dimen/txt_size_28px"
+            />
+
+        <LinearLayout
+            android:id="@+id/refresh_right_liner"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/title_right_but_selector"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/right_title_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_title_refresh_default"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/right_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:text="dd"/>
+        </LinearLayout>
+    </RelativeLayout>

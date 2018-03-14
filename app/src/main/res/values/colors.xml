@@ -81,4 +81,5 @@
     <color name="transparent_black_80_color">#4D000000</color>
     <color name="transparent_black_20_color">#26000000</color>
     <color name="white_p">#f4f4f4</color>
+    <color name="title_bg">#f3f3f3</color>
 </resources>

@@ -22,5 +22,6 @@ public class PreferenceCode {
 	 public static final String NICKNAME="djh_nickname";
 	 public static final String USER_SCORE="score";
 	 public static final String CURRENTITEM="currentItem";
+	 public static final String CATEGORY_TITLE="name";
 
 }

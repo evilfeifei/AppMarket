@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/title_height"
+    android:orientation="horizontal"
+    android:background="@color/white">
+    <LinearLayout
+        android:id="@+id/back_left_liner"
+        android:layout_width="@dimen/margin_100px"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:orientation="vertical"
+        android:visibility="visible" >
+        <ImageView
+            android:layout_width="@dimen/margin_36px"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back1_icon"  />
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_weight="1"
+    android:layout_height="@dimen/margin_50px"
+    android:layout_gravity="center_vertical"
+    android:orientation="horizontal"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_marginRight="@dimen/margin_20px"
+    android:background="@drawable/search_circle_gray_bg">
+
+    <EditText
+        android:id="@+id/search_et"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="@dimen/margin_20px"
+        android:layout_toLeftOf="@+id/tt_msg_iv"
+        android:layout_toRightOf="@+id/tt_scan_iv"
+        android:textColorHint="#9F9F9F"
+        android:hint="请搜索"
+        android:maxLines="1"
+        android:textSize="@dimen/txt_size_24px" />
+    <ImageView
+        android:id="@+id/delete_img"
+        android:layout_width="@dimen/margin_70px"
+        android:layout_height="@dimen/margin_36px"
+        android:onClick="onClick"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/delete_search_icon"
+        android:visibility="gone"/>
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
+    <ImageView
+        android:id="@+id/search_img"
+        android:layout_width="@dimen/margin_40px"
+        android:layout_height="@dimen/margin_40px"
+        android:layout_marginLeft="@dimen/margin_20px"
+        android:layout_marginRight="@dimen/margin_20px"
+        android:layout_gravity="center_vertical"
+        android:onClick="onClick"
+        android:layout_centerVertical="true"
+        android:src="@drawable/search_blue_icon" />
+</LinearLayout>
+</LinearLayout>

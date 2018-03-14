@@ -3,75 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/app_bg"
     >
-
-    <RelativeLayout
+    <include
         android:id="@+id/title_lin"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/bg_title" >
-
-        <LinearLayout
-            android:id="@+id/back_left_liner"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/title_left_but_selector"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible" >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/vr_back_icon"  />
-        </LinearLayout>
-
-
-        <EditText
-            android:id="@+id/search_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:ellipsize="end"
-            android:layout_centerVertical="true"
-            android:textColorHint="@color/gray1"
-            android:background="@drawable/search_edit_bg"
-            android:singleLine="true"
-            android:layout_marginRight="20dp"
-            android:padding="5dp"
-            android:drawableLeft="@drawable/search_icon"
-            android:drawablePadding="10dp"
-            android:hint="请输入您要搜索的应用名字"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txt_size_28px"
-             />
-
-        <LinearLayout
-            android:id="@+id/refresh_right_liner"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/title_right_but_selector"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone" >
-
-            <ImageView
-                android:id="@+id/right_title_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_title_refresh_default"
-                android:visibility="gone"/>
-            <TextView
-                android:id="@+id/right_title_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:text="dd"/>
-        </LinearLayout>
-    </RelativeLayout>
-        <ListView
+        layout="@layout/include_title_search"/>
+        <com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:dividerHeight="1dp"
@@ -79,8 +16,89 @@
             android:listSelector="@android:color/transparent"
             android:scrollbars="none"
             android:divider="#f7f7f7"
-            android:layout_height="match_parent" >
-        </ListView>
+            android:layout_height="match_parent"
+            android:visibility="gone">
+        </com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView>
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/title_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginTop="@dimen/margin_20px"
+        android:layout_marginRight="@dimen/margin_20px">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="@dimen/margin_100px"
+                android:layout_height="wrap_content"
+                android:text="HOT"
+                android:gravity="center_horizontal"
+                android:textSize="@dimen/txt_size_28px"
+                android:layout_marginTop="@dimen/margin_16px"
+                android:textColor="@color/red"/>
+            <com.huiyun.amnews.wight.NoScrollGridView
+                android:id="@+id/hot_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:verticalSpacing="0.5dp"
+                android:horizontalSpacing="0.5dp"
+                android:numColumns="3"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_20px"
+            >
+            <TextView
+                android:layout_width="@dimen/margin_100px"
+                android:layout_height="wrap_content"
+                android:text="软件"
+                android:gravity="center_horizontal"
+                android:textSize="@dimen/txt_size_28px"
+                android:layout_marginTop="@dimen/margin_16px"
+                android:textColor="@color/black_1"/>
+            <com.huiyun.amnews.wight.NoScrollGridView
+                android:id="@+id/app_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:verticalSpacing="0.5dp"
+                android:horizontalSpacing="0.5dp"
+                android:numColumns="3"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_20px"
+            >
+            <TextView
+                android:layout_width="@dimen/margin_100px"
+                android:layout_height="wrap_content"
+                android:text="游戏"
+                android:gravity="center_horizontal"
+                android:textSize="@dimen/txt_size_28px"
+                android:layout_marginTop="@dimen/margin_16px"
+                android:textColor="@color/black_1"/>
+            <com.huiyun.amnews.wight.NoScrollGridView
+                android:id="@+id/game_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:verticalSpacing="0.5dp"
+                android:horizontalSpacing="0.5dp"
+                android:numColumns="3"/>
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
     <LinearLayout
         android:id="@+id/lin_no_data"
         android:layout_width="wrap_content"

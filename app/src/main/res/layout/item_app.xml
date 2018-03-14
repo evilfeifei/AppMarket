@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/item_main_bg_selecter"
+    android:layout_marginBottom="0.5dp"
     >
         <com.huiyun.amnews.view.roundimage.RoundedImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,7 +12,7 @@
             android:layout_height="@dimen/margin_100px"
             android:adjustViewBounds="false"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp"
+            android:layout_margin="12dp"
             android:scaleType="centerCrop"
             android:src="@drawable/demo_app_icon"
             app:corner_radius="10dip"
