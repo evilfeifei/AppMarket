@@ -209,6 +209,7 @@ public class SearchActivity extends BaseActivity {
             case R.id.delete_img: //删除搜索
                 searchEt.setText("");
                 appInfoList.clear();
+                findView(R.id.lin_no_data).setVisibility(View.GONE);
                 appAdapter.refreshData(appInfoList);
                 scrollView.setVisibility(View.VISIBLE);
                 break;

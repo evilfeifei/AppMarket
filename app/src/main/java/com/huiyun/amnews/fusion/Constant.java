@@ -103,4 +103,7 @@ public class Constant {
 
 	//、搜索页面    （Api/search_page）
 	public static final String SEARCH_PAGE_URL = SERVER_URL_NEW + "Api/search_page";
+
+	//六、分类页面    （Api/category_page）
+	public static final String CATEGORY_URL = SERVER_URL_NEW + "Api/category_page";
 }
