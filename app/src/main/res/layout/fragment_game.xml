@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.huiyun.amnews.wight.ObservableScrollView
+        android:id="@+id/home_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:background="@color/white_p">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+        <com.huiyun.amnews.view.LoopViewPager
+            android:id="@+id/loop_vp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_400px" />
+
+        <com.huiyun.amnews.wight.NoScrollGridView
+            android:id="@+id/categories_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:verticalSpacing="@dimen/margin_10px"
+            android:horizontalSpacing="@dimen/margin_10px"
+            android:numColumns="4"
+            android:layout_margin="@dimen/margin_20px"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="1dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="热门精选"
+                android:textColor="@color/black"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/txt_size_28px"
+                android:textStyle="bold"
+                android:background="@color/white"
+                android:padding="12dp"/>
+            <TextView
+                android:id="@+id/more_game_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black_1"
+                android:text="更多"
+                android:textSize="@dimen/txt_size_24px"
+                android:drawablePadding="@dimen/margin_10px"
+                android:drawableRight="@drawable/xiangyou_icon"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:padding="12dp"/>
+        </RelativeLayout>
+
+        <com.huiyun.amnews.wight.NoScrollGridView
+            android:id="@+id/game_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:numColumns="5"
+            android:paddingBottom="@dimen/margin_20px"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="精品推荐"
+            android:textColor="@color/black"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/txt_size_28px"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:padding="12dp"/>
+
+        <com.huiyun.amnews.view.AbListView
+            android:id="@+id/final_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#e7e7e7"
+            android:layout_marginTop="0.5dp"
+            android:dividerHeight="0.5dp"
+            android:scrollbars="none">
+        </com.huiyun.amnews.view.AbListView>
+
+    </LinearLayout>
+        
+</com.huiyun.amnews.wight.ObservableScrollView>
+    <include layout="@layout/insearch_layout" />
+</RelativeLayout>

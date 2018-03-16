@@ -24,6 +24,7 @@ import com.huiyun.amnews.myview.dialogview.DialogTips;
 import com.huiyun.amnews.ui.BaseActivity;
 import com.huiyun.amnews.ui.dialog.WelcomeDialog;
 import com.huiyun.amnews.ui.fragment.CategoryAppFragment;
+import com.huiyun.amnews.ui.fragment.GameFragment;
 import com.huiyun.amnews.ui.fragment.MainFragment;
 import com.huiyun.amnews.ui.fragment.MeFragment;
 import com.huiyun.amnews.ui.fragment.NewsContainersFragment;
@@ -56,8 +57,9 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 
 public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks{
-    private Class fragmentArray[] ={MainFragment.class, CategoryAppFragment.class, NewsContainersFragment.class, MeFragment.class};
-    private String[] titleArray = {"推荐", "资源", "头条", "我的"};
+//    private Class fragmentArray[] ={MainFragment.class, CategoryAppFragment.class, NewsContainersFragment.class, MeFragment.class};
+    private Class fragmentArray[] ={MainFragment.class, GameFragment.class, NewsContainersFragment.class, MeFragment.class};
+    private String[] titleArray = {"推荐", "游戏", "头条", "我的"};
     private int[] tabsImage ={R.drawable.icon_recommend_selector,R.drawable.icon_category_selector,R.drawable.icon_small_selector,R.drawable.icon_me_selector};
     private FragmentTabHost mTabHost;
     public static MainActivity instance;

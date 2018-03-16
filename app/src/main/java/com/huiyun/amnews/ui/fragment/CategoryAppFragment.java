@@ -34,6 +34,7 @@ import github.chenupt.multiplemodel.viewpager.ModelPagerAdapter;
 import github.chenupt.multiplemodel.viewpager.PagerModelManager;
 
 /**
+ * 资源（暂时不用）
  * Created by Administrator on 2016/4/17 0017.
  */
 public class CategoryAppFragment extends BaseFragment {

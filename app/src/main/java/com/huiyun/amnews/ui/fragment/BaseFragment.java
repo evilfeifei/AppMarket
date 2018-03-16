@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.fusion.PreferenceCode;
@@ -20,11 +21,16 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
     protected int x, y;
     protected AsyncHttpClient ahc;
     protected String userPhoneNum;
+    protected static int width ,height;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ahc = new AsyncHttpClient();
         userPhoneNum = AppmarketPreferences.getInstance(getActivity()).getStringKey(PreferenceCode.PHONE);
+
+        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        width = wm.getDefaultDisplay().getWidth();
+        height = wm.getDefaultDisplay().getHeight();
     }
 
     protected void loadNext(Class<?> cls) {

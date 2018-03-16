@@ -106,4 +106,7 @@ public class Constant {
 
 	//六、分类页面    （Api/category_page）
 	public static final String CATEGORY_URL = SERVER_URL_NEW + "Api/category_page";
+
+	//七、游戏页面    （Api/game_page）
+	public static final String GAME_FRAGMENT_DATA = SERVER_URL_NEW + "Api/game_page";
 }
