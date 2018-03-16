@@ -23,11 +23,16 @@ public class ClassifyGridviewAdapter extends BaseAdapter{
 	private List<Classify> classifyList;
 	private Context mContext;
 	private AdapterOnItemClickListener adapterOnItemClickListener;
+	private int type;
 
 
 	public ClassifyGridviewAdapter(Context context, List<Classify> classifyList){
 		this.classifyList = classifyList;
 		this.mContext = context;
+	}
+
+	public void setType(int type){
+		this.type = type;
 	}
 
 	public void setAdapterOnItemClickListener(AdapterOnItemClickListener adapterOnItemClickListener){
@@ -70,7 +75,7 @@ public class ClassifyGridviewAdapter extends BaseAdapter{
 			@Override
 			public void onClick(View v) {
 				if(adapterOnItemClickListener!=null){
-					adapterOnItemClickListener.onItemClickListener(classifyList.get(position));
+					adapterOnItemClickListener.onItemClickListener(classifyList.get(position),type);
 				}
 			}
 		});

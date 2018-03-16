@@ -5,5 +5,5 @@ package com.huiyun.amnews.event;
  */
 
 public interface AdapterOnItemClickListener<T> {
-    void onItemClickListener(T clazz);
+    void onItemClickListener(T clazz,int type);
 }

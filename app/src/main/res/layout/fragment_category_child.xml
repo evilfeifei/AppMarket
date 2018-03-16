@@ -5,27 +5,24 @@
     android:orientation="vertical" 
     >
 
-    <View
-        android:id="@+id/line_view"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#d6d6d6" 
-        android:visibility="visible"/>
-    <com.huiyun.amnews.view.RefreshLayout
-        android:layout_below="@+id/line_view"
-        android:id="@+id/refreshlayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ListView
-            android:id="@+id/list"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0.5dp">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:dividerHeight="1dp"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="none"
-            android:divider="#f7f7f7"
-            android:layout_height="match_parent" >
-        </ListView>
-    </com.huiyun.amnews.view.RefreshLayout>
+            android:layout_height="match_parent">
+
+            <com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:overScrollMode="never"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.design.widget.CoordinatorLayout>
     <LinearLayout
         android:id="@+id/lin_no_data"
         android:layout_width="wrap_content"

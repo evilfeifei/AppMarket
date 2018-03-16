@@ -1,4 +1,4 @@
-package com.huiyun.amnews.ui;
+package com.huiyun.amnews.ui.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,13 +8,11 @@ import android.view.View;
 
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.adapter.NewFragmentAdapter;
-import com.huiyun.amnews.been.CategorySecond;
-import com.huiyun.amnews.configuration.DefaultValues;
+import com.huiyun.amnews.been.Classify;
 import com.huiyun.amnews.fusion.PreferenceCode;
-import com.huiyun.amnews.ui.fragment.CategoryChildAppFragment;
-import com.huiyun.amnews.ui.fragment.ClassifyFragment;
-import com.huiyun.amnews.ui.fragment.NewsFragment;
-import com.huiyun.amnews.ui.fragment.RankingListContainersFragment;
+import com.huiyun.amnews.ui.BaseActivity;
+import com.huiyun.amnews.ui.DownloadManagerActivity;
+import com.huiyun.amnews.ui.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +21,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by Justy on 2018/3/9.
+ * 资源（暂时不用）
+ * Created by Administrator on 2016/4/17 0017.
  */
-
-public class ClassifyActivity extends BaseActivity {
+public class CategoryAppActivity extends BaseActivity {
 
     @Bind(R.id.tab_layout_news)
     TabLayout tabLayout;
@@ -36,45 +34,54 @@ public class ClassifyActivity extends BaseActivity {
     private NewFragmentAdapter newFragmentAdapter;
     private final List<Fragment> fragmentList = new ArrayList<>();
     private List<String> titles = new ArrayList<>();
+    private List<Classify> classifyList = new ArrayList<>();
+    private String currentClassifyId;
+    private int type;
 
     private int currentItem = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_classify);
+        setContentView(R.layout.fragment_category);
         ButterKnife.bind(this);
 
         if(getIntent()!=null){
-            currentItem = getIntent().getExtras().getInt("currentItem");
+            currentClassifyId = getIntent().getExtras().getString("currentClassifyId");
+            type = getIntent().getExtras().getInt("type");
+            classifyList = (List<Classify>) getIntent().getSerializableExtra("classifyList");
         }
 
-        initMyView();
+        initView();
+        initData();
     }
 
-    private void initMyView(){
+    private void initView(){
         findViewById(R.id.down_right_liner).setOnClickListener(this);
         findViewById(R.id.search_edit).setOnClickListener(this);
         findViewById(R.id.back_img).setOnClickListener(this);
-        List<CategorySecond> category = new ArrayList<>();
-        fragmentList.add(new CategoryChildAppFragment("", DefaultValues.APP_TYPE_APPLICATION));
-        fragmentList.add(new CategoryChildAppFragment("", DefaultValues.APP_TYPE_APPLICATION));
-        fragmentList.add(new CategoryChildAppFragment("", DefaultValues.APP_TYPE_APPLICATION));
-        fragmentList.add(new ClassifyFragment());
-        fragmentList.add(new RankingListContainersFragment());
-        titles.add("必备");
-        titles.add("精选");
-        titles.add("热门");
-        titles.add("分类");
-        titles.add("排行榜");
 
-        newFragmentAdapter = new NewFragmentAdapter(ClassifyActivity.this.getSupportFragmentManager(),fragmentList,titles);
+    }
+
+
+    private void initData() {
+        for(int i=0;i<classifyList.size();i++){
+            fragmentList.add(new CategoryChildAppFragment(classifyList.get(i).getId(),type));
+            titles.add(classifyList.get(i).getName());
+            if(classifyList.get(i).getId().equals(currentClassifyId)){
+                currentItem = i;
+            }
+        }
+        newFragmentAdapter = new NewFragmentAdapter(CategoryAppActivity.this.getSupportFragmentManager(),fragmentList,titles);
         viewPager.setAdapter(newFragmentAdapter);
         viewPager.setOffscreenPageLimit(newFragmentAdapter.getCount());
         tabLayout.setupWithViewPager(viewPager);
 
         viewPager.setCurrentItem(currentItem);
+
     }
+
+
 
     public void onClick(View v) {
         super.onClick(v);
@@ -93,5 +100,4 @@ public class ClassifyActivity extends BaseActivity {
                 break;
         }
     }
-
 }

@@ -125,6 +125,7 @@
         <!--/***********************************新加***************************************/-->
         <activity android:name="com.huiyun.amnews.ui.ClassifyActivity"/>
         <activity android:name="com.huiyun.amnews.ui.CategoryListActivity"/>
+        <activity android:name="com.huiyun.amnews.ui.fragment.CategoryAppActivity"/>
 
 
         <!-- 友盟更新 -->

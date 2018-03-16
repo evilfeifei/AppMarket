@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import com.huiyun.amnews.adapter.ClassifyGridviewAdapter;
 import com.huiyun.amnews.adapter.MyFragmentPagerAdapter;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.Classify;
+import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.event.AdapterOnItemClickListener;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.util.JsonUtil;
@@ -23,6 +25,7 @@ import com.huiyun.amnews.wight.NoScrollGridView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,8 +68,10 @@ public class ClassifyFragment extends BaseFragment implements AdapterOnItemClick
     private void initMyView(){
         classifyGridviewAdapterApp = new ClassifyGridviewAdapter(getActivity(),classifyListApp);
         gridviewApp.setAdapter(classifyGridviewAdapterApp);
+        classifyGridviewAdapterApp.setType(DefaultValues.APP_TYPE_APPLICATION_LIST);
         classifyGridviewAdapterGame = new ClassifyGridviewAdapter(getActivity(),classifyListGame);
         gridviewGame.setAdapter(classifyGridviewAdapterGame);
+        classifyGridviewAdapterGame.setType(DefaultValues.APP_TYPE_GAME_LIST);
         classifyGridviewAdapterGame.setAdapterOnItemClickListener(this);
         classifyGridviewAdapterApp.setAdapterOnItemClickListener(this);
     }
@@ -101,8 +106,20 @@ public class ClassifyFragment extends BaseFragment implements AdapterOnItemClick
     }
 
     @Override
-    public void onItemClickListener(Object clazz) {
+    public void onItemClickListener(Object clazz,int type) {
         Classify classify = (Classify) clazz;
-        ToastUtil.toastshort(getActivity(),classify.getName());
+//        ToastUtil.toastshort(getActivity(),classify.getName());
+
+        Intent intent = new Intent(getActivity(),CategoryAppActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("currentClassifyId",classify.getId());
+        bundle.putInt("type",type);
+        if(type == DefaultValues.APP_TYPE_APPLICATION_LIST) {
+            bundle.putSerializable("classifyList", (Serializable) classifyListApp);
+        }else{
+            bundle.putSerializable("classifyList", (Serializable) classifyListGame);
+        }
+        intent.putExtras(bundle);
+        getActivity().startActivity(intent);
     }
 }

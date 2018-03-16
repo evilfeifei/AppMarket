@@ -73,7 +73,9 @@ public class CommentFragment extends BaseFragment implements SwipeRefreshLayout.
 
         zhpTtv.setText("综合评分"+AppDettailsActivity2.appDettailsActivity.appBean.getComment_score());
         cyrsTv.setText(AppDettailsActivity2.appDettailsActivity.appBean.getComment_count()+"人参与");
-        ratingBar.setRating(Float.valueOf(AppDettailsActivity2.appDettailsActivity.appBean.getComment_score()));
+        if(AppDettailsActivity2.appDettailsActivity.appBean.getComment_score()!=null) {
+            ratingBar.setRating(Float.valueOf(AppDettailsActivity2.appDettailsActivity.appBean.getComment_score()));
+        }
 
         refreshLayout = (RefreshLayout)view.findViewById(R.id.refreshlayout);
         listView = (ListView)view.findViewById(R.id.list);

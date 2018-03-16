@@ -89,10 +89,9 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
 
         initView(rootView);
         initListeners();
-//        getAllAppInfoList(1,userId);
         getGameList();
         getAppMoreList(page, DefaultValues.APP_TYPE_APPLICATION);
-        getAdList("苏州");
+        getAdList();
         addListener();
         return rootView;
     }
@@ -216,44 +215,44 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     }
 
 
-    public void getAllAppInfoList(int pageNo ,String userId){
-        RequestParams rp = new RequestParams();
-        rp.put("pageNo", pageNo);
-        rp.put("userId", userId);
-        ahc.post(getActivity(), Constant.HOT_FINAL_URL, rp,
-                new JsonHttpResponseHandler(Constant.UNICODE) {
+
+    public void getAdList(){
+        HashMap<String, Object> params = new HashMap<>();
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.APP_AD)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers,
-                                          JSONObject response) {
-                        Log.e("response", response.toString());
-                        super.onSuccess(statusCode, headers, response);
-                        if (statusCode == 200) {
-                            AppHotAndFinalListBean appHotAndFinalListBean = (AppHotAndFinalListBean) JsonUtil.jsonToBean(response.toString(), AppHotAndFinalListBean.class);
-                            if (appHotAndFinalListBean.getError().equals("")) {
-                                if (appHotAndFinalListBean.getMenu1().size() > 0) {
-                                    getAppAdapterFinal.refreshData(appHotAndFinalListBean.getMenu2());
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(s);
+                        if (dataMap == null) {
+                            return;
+                        }
+                        String error = (String) dataMap.get("error");
+                        if (error == null || error.equals("")) {
+                            dataList1 = (List<Map<String, Object>>) dataMap.get("list");
+                            if (dataList1 != null) {
+                                List<String> listPics = new ArrayList<String>();
+                                for (int i = 0; i < dataList1.size(); i++) {
+                                    Map<String, Object> map = dataList1.get(i);
+                                    listPics.add(map.get("image").toString());
                                 }
-
-
-                            } else {
-                                Toast.makeText(getActivity(), appHotAndFinalListBean.getError(), Toast.LENGTH_SHORT).show();
+                                loopViewPager.initPageView(listPics, null, false, R.drawable.top_main_bg);
                             }
 
+                        } else {
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers,
-                                          String responseString, Throwable throwable) {
-                        super.onFailure(statusCode, headers, responseString,
-                                throwable);
-                        Toast.makeText(getActivity(), "请检查网络!", Toast.LENGTH_LONG).show();
+                    public void onError(Call call, Response response, Exception e) {
                     }
                 });
-    }
 
-    public void getAdList(String city){
-        RequestParams rp = new RequestParams();
+      /*  RequestParams rp = new RequestParams();
         ahc.post(getActivity(), Constant.APP_AD+city, rp,
                 new JsonHttpResponseHandler(Constant.UNICODE) {
                     @Override
@@ -292,7 +291,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                         Toast.makeText(getActivity(), "请检查网络!",
                                 Toast.LENGTH_LONG).show();
                     }
-                });
+                });*/
     }
 
     @Override

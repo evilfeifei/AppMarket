@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,8 +16,11 @@ import com.huiyun.amnews.adapter.ClassifyGridviewAdapter;
 import com.huiyun.amnews.adapter.MainHotGameAdapter;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.Classify;
+import com.huiyun.amnews.configuration.DefaultValues;
+import com.huiyun.amnews.event.AdapterOnItemClickListener;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
+import com.huiyun.amnews.ui.CategoryListActivity;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
 import com.huiyun.amnews.ui.SearchActivity;
 import com.huiyun.amnews.util.JsonUtil;
@@ -27,6 +31,7 @@ import com.huiyun.amnews.wight.ObservableScrollView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +47,7 @@ import okhttp3.Response;
  * Created by Justy on 2018/3/16.
  */
 
-public class GameFragment extends BaseFragment implements ObservableScrollView.ScrollViewListener {
+public class GameFragment extends BaseFragment implements ObservableScrollView.ScrollViewListener,AdapterOnItemClickListener {
 
     View rootView;
 
@@ -90,6 +95,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
         loopViewPager.setPointPosition(LoopViewPager.POINT_CENTER);
         rootView.findViewById(R.id.search_edit).setOnClickListener(this);
         rootView.findViewById(R.id.down_right_liner).setOnClickListener(this);
+        rootView.findViewById(R.id.more_game_tv).setOnClickListener(this);
 
         LinearLayout.LayoutParams paraRight;
         paraRight = (LinearLayout.LayoutParams) loopViewPager.getLayoutParams();
@@ -107,6 +113,8 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
 
         classifyGridviewAdapterApp = new ClassifyGridviewAdapter(getActivity(),classifyList);
         categoriesGridview.setAdapter(classifyGridviewAdapterApp);
+        classifyGridviewAdapterApp.setType(DefaultValues.APP_TYPE_GAME);
+        classifyGridviewAdapterApp.setAdapterOnItemClickListener(this);
 
         getAppDataList();
     }
@@ -193,6 +201,23 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
             case R.id.search_edit: //搜索
                 switchActivity(SearchActivity.class,null);
                 break;
+            case R.id.more_game_tv://更多游戏
+                bundle = new Bundle();
+                bundle.putString(PreferenceCode.CATEGORY_TITLE, "游戏");
+                switchActivity(CategoryListActivity.class, bundle);
+                break;
         }
+    }
+
+    @Override
+    public void onItemClickListener(Object clazz, int type) {
+        Classify classify = (Classify) clazz;
+        Intent intent = new Intent(getActivity(),CategoryAppActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("currentClassifyId",classify.getId());
+        bundle.putInt("type",type);
+        bundle.putSerializable("classifyList", (Serializable) classifyList);
+        intent.putExtras(bundle);
+        getActivity().startActivity(intent);
     }
 }

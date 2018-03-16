@@ -8,7 +8,8 @@ public class Constant {
 //	 public static final String SERVER_URL = "http://www.dingjianapp.com/index.php?s=/";
 //	 public static final String SERVER_URL = "http://139.196.24.150/index.php?s=/";
 //	 public static final String SERVER_URL = "http://112.74.79.96:88/php/index.php?s=/";
-	public static final String SERVER_URL = "http://112.74.79.96:88/php/vr/index.php?s=/";
+//	public static final String SERVER_URL = "http://112.74.79.96:88/php/vr/index.php?s=/";
+	public static final String SERVER_URL = "http://apk.weiyucheye.com/index.php/";
 	public static final String SERVER_URL_NEW = "http://apk.weiyucheye.com/index.php/";
 //	截图
 	 public static final String SCREENSHOT_URL_PREFIX = "http://112.74.79.96:88/php/vr/Public/djh/screenshot/";
@@ -67,8 +68,7 @@ public class Constant {
 	public static final String USER_SEND_SMS = SERVER_URL + "User/sendSMS";
 	//忘记密码
 	public static final String USER_FIND_PWD = SERVER_URL + "User/findPassword";
-	//广告轮播图
-	public static final String APP_AD = SERVER_URL + "App/ad/type/1/city/";
+
 
     //	下载送积分：User/receiveScore，参数：userId，token
     public static final String RECEIVE_SCORE = SERVER_URL + "User/receiveScore";
@@ -109,4 +109,7 @@ public class Constant {
 
 	//七、游戏页面    （Api/game_page）
 	public static final String GAME_FRAGMENT_DATA = SERVER_URL_NEW + "Api/game_page";
+
+	//广告轮播图
+	public static final String APP_AD = SERVER_URL_NEW + "App/ad/type/1";
 }

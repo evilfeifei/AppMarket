@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/item_main_bg_selecter"
     android:layout_marginBottom="0.5dp"
+    android:id="@+id/item_app_rel"
     >
         <com.huiyun.amnews.view.roundimage.RoundedImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"

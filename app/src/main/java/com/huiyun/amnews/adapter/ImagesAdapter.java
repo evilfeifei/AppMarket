@@ -52,7 +52,7 @@ public class ImagesAdapter extends BaseAdapter{
 		}
 
 		Glide.with(mContext)
-				.load(Constant.SCREENSHOT_URL_PREFIX + imageNames[position])
+				.load(imageNames[position])
 				.placeholder(R.drawable.vr_default_img)
 //				.override(200, 200)
 //				.crossFade()

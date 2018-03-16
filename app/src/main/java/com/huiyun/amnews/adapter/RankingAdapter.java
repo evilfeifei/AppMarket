@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -148,7 +149,7 @@ public class RankingAdapter extends  RecyclerView.Adapter<RankingAdapter.ViewHol
 			}
 		});
 
-		/*convertView.setOnClickListener(new View.OnClickListener() {
+		holder.item_app_rel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, AppDettailsActivity2.class);
@@ -157,7 +158,7 @@ public class RankingAdapter extends  RecyclerView.Adapter<RankingAdapter.ViewHol
 				intent.putExtras(bundle);
 				mContext.startActivity(intent);
 			}
-		});*/
+		});
 
 	}
 
@@ -165,6 +166,7 @@ public class RankingAdapter extends  RecyclerView.Adapter<RankingAdapter.ViewHol
 	class ViewHolder extends RecyclerView.ViewHolder {
 		TextView nameTv,sizeTv,contentTv,downloadTv;
 		RoundedImageView appIcon;
+		RelativeLayout item_app_rel;
 
 		public ViewHolder(View convertView) {
 			super(convertView);
@@ -173,6 +175,7 @@ public class RankingAdapter extends  RecyclerView.Adapter<RankingAdapter.ViewHol
 			sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
 			contentTv = (TextView)convertView.findViewById(R.id.content_tv);
 			downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
+			item_app_rel = (RelativeLayout) convertView.findViewById(R.id.item_app_rel);
 		}
 
 	}

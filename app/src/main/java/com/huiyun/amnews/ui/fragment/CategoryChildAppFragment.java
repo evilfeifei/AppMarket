@@ -2,6 +2,8 @@ package com.huiyun.amnews.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +13,25 @@ import android.widget.Toast;
 
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.adapter.AppAdapter;
+import com.huiyun.amnews.adapter.AppAdapterNew;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.CategorySecond;
+import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
+import com.huiyun.amnews.ui.CategoryListActivity;
 import com.huiyun.amnews.ui.VRCategoryActivity;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.RefreshLayout;
 import com.huiyun.amnews.view.Tag;
 import com.huiyun.amnews.view.TagListView;
 import com.huiyun.amnews.view.TagView;
+import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView;
 
 import org.apache.http.Header;
 import org.greenrobot.eventbus.EventBus;
@@ -31,42 +40,45 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
-public class CategoryChildAppFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
-        RefreshLayout.OnLoadListener{
+public class CategoryChildAppFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, LoadMoreFooter.OnLoadMoreListener{
 
     View rootView;
-    private RefreshLayout refreshLayout;
-    private ListView listView;
+    @Bind(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
 
-    private List<AppInfo> appBeans;
-    private int page = 1;
+    @Bind(R.id.recycler_view)
+    HeaderAndFooterRecyclerView recyclerView;
+    private LoadMoreFooter loadMoreFooter;
+    private List<AppInfo> appInfoList ;
+    private AppAdapterNew appAdapter;
     private boolean noMore;
-    private static int pagesize = 20;
-    private AppAdapter appAdapter;
-    private int seniorCategoryId;
-    List<CategorySecond> category;
+    private int page = 1;
+    private String categoryId;
+    private int type;
 
-    private View headView;
-    private TagListView mTagListView;
-    private final List<Tag> mTags = new ArrayList<Tag>();
-
-    public CategoryChildAppFragment(int seniorCategoryId,List<CategorySecond> category){
-        this.seniorCategoryId = seniorCategoryId;
-        this.category = category;
+    public CategoryChildAppFragment(String categoryId,int type){
+        this.categoryId = categoryId;
+        this.type = type;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_category_child,container,false);
+        ButterKnife.bind(this,rootView);
 
         initView(rootView);
-        setListener();
 
         return rootView;
     }
@@ -74,113 +86,60 @@ public class CategoryChildAppFragment extends BaseFragment implements SwipeRefre
     private void initView(View view){
         EventBus.getDefault().register(this);//订阅
         view.findViewById(R.id.lin_no_data).setVisibility(View.GONE);
-        refreshLayout = (RefreshLayout)view.findViewById(R.id.refreshlayout);
-        listView = (ListView)view.findViewById(R.id.list);
-        refreshLayout.setColorSchemeResources(R.color.black, R.color.app_blue);
-        refreshLayout.post(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        }));
-        appAdapter = new AppAdapter(getActivity());
-        listView.setAdapter(appAdapter);
-        onRefresh();
+        final LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(manager);
 
-        headView = LayoutInflater.from(getActivity()).inflate(R.layout.select_tag_view, null);
-        mTagListView = (TagListView) headView.findViewById(R.id.tagview);
-        setUpData();
-        if(category!=null&&category.size()>1){
-            setUpData();
-            mTagListView.setTags(mTags);
-            listView.addHeaderView(headView);
-        }
+        loadMoreFooter = new LoadMoreFooter(getActivity(), recyclerView, this);
+        loadMoreFooter.setState(LoadMoreFooter.STATE_DISABLED);
+        appInfoList = new ArrayList<>();
 
-    }
-
-    private void setUpData() {
-        mTags.clear();
-        for (int i = 0; i < category.size(); i++) {
-            Tag tag = new Tag();
-            tag.setId(Integer.valueOf(category.get(i).getId()));
-            tag.setChecked(true);
-            tag.setTitle(category.get(i).getName());
-            mTags.add(tag);
-        }
-    }
-
-    private void setListener() {
+        appAdapter = new AppAdapterNew(getActivity(), appInfoList);
+        recyclerView.setAdapter(appAdapter);
         refreshLayout.setOnRefreshListener(this);
-        refreshLayout.setOnLoadListener(this);
 
-        mTagListView.setOnTagClickListener(new TagListView.OnTagClickListener() {
-            @Override
-            public void onTagClick(TagView tagView, Tag tag) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("seniorCategoryId",tag.getId());
-                bundle.putString("name", tag.getTitle());
-                switchActivity(VRCategoryActivity.class,bundle);
-            }
-        });
+        onRefresh();
     }
 
-    public void getMAppInfoByCategoryId(int pageNo){
-        RequestParams rp = new RequestParams();
-        rp.put("seniorCategoryId", seniorCategoryId);
-        rp.put("pageNo", pageNo);
-        ahc.post(getActivity(), Constant.GET_APPINFO_BY_CATEGORYID, rp,
-                new JsonHttpResponseHandler(Constant.UNICODE) {
+    /**
+     * 更多精品应用
+     * @param page
+     * @param type:更多类型 1：精品应用 2：精品游戏
+     */
+    private void getAppMoreList(final int page, int type) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page",page);
+        params.put("type",type);
+        params.put("category_id",categoryId);
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.MORE_APP_LIST_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers,
-                                          JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d("response",response.toString());
-                        if (statusCode == 200) {
-                            refreshLayout.setRefreshing(false);
-                            Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(response.toString());
-                            if (dataMap == null) {
-                                return;
-                            }
-                            Map<String, Object> responseMsg = (Map<String, Object>) dataMap.get("responseMsg");
-                            if(responseMsg.get("error").toString().equals("")){
-
-                                List<AppInfo> appBeanList = JsonUtil.stringToArray(JsonUtil.objectToJson(responseMsg.get("categoryList")), AppInfo[].class);
-                                if (appBeanList.size() % pagesize != 0) {
-                                    noMore = true;
-                                }
-
-                                if (page == 1) {
-                                    appBeans = new ArrayList<AppInfo>();
-                                }
-
-                                appBeans.addAll(appBeanList);
-
-                                if (appAdapter == null) {
-                                    appAdapter = new AppAdapter(getActivity(), appBeans);
-                                }
-
-                                if (page > 1) {
-                                    appAdapter.refreshData(appBeans);
-                                    return;
-                                }
-
-                                listView.setAdapter(appAdapter);
-                                appAdapter.refreshData(appBeans);
-                                appAdapter.notifyDataSetInvalidated();
-                                if(appBeans.size()<1){
-                                    rootView.findViewById(R.id.lin_no_data).setVisibility(View.VISIBLE);
-                                }else{
-                                    rootView.findViewById(R.id.lin_no_data).setVisibility(View.GONE);
-                                }
+                    public void onSuccess(String s, Call call, Response response) {
+                        refreshLayout.setRefreshing(false);
+                        if (TextUtils.isEmpty(s)) return;
+                        List<AppInfo> appInfos = JsonUtil.stringToArray(s,AppInfo[].class);
+                        if(appInfos==null){
+                            return;
                         }
+                        if(appInfos.size()==0){
+                            noMore = true;
+                        }
+                        if (page==1) { //刷新
+                            appInfoList = new ArrayList<>();
+                        }
+                        appInfoList.addAll(appInfos);
+                        appAdapter.refreshData(appInfoList);
+                        if(noMore){
+                            loadMoreFooter.setState(LoadMoreFooter.STATE_FINISHED);
+                        }else{
+                            loadMoreFooter.setState(LoadMoreFooter.STATE_ENDLESS);
                         }
                     }
+
                     @Override
-                    public void onFailure(int statusCode, Header[] headers,
-                                          String responseString, Throwable throwable) {
-                        super.onFailure(statusCode, headers, responseString,
-                                throwable);
-                        Toast.makeText(getActivity(), "请检查网络!",Toast.LENGTH_LONG).show();
+                    public void onError(Call call, Response response, Exception e) {
                     }
                 });
     }
@@ -193,33 +152,21 @@ public class CategoryChildAppFragment extends BaseFragment implements SwipeRefre
     }
 
     @Override
-    public void onLoad() {
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setLoading(false);
-                if(!noMore){
-                    page++;
-//                    getOrderList(page);
-                }else{
-
-                }
-            }
-        }, 0);
+    public void onRefresh() {
+        refreshLayout.setRefreshing(true);
+        page = 1;
+        noMore = false;
+        getAppMoreList(page, DefaultValues.APP_TYPE_GAME);
     }
 
     @Override
-    public void onRefresh() {
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                noMore = false;
-                page = 1;
-                getMAppInfoByCategoryId(page);
-
-            }
-        }, 0);
+    public void onLoadMore() {
+        if(!noMore){
+            page = page+1;
+            getAppMoreList(page, DefaultValues.APP_TYPE_GAME);
+        }
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
