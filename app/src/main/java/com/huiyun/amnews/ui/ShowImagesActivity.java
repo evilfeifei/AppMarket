@@ -103,7 +103,7 @@ public class ShowImagesActivity extends BaseActivity {
 //			ImageLoaderUtil.getInstance().displayImg(image,
 //					Constant.SCREENSHOT_URL_PREFIX + mIntroduceImageIds[position], options);
 			Glide.with(ShowImagesActivity.this)
-					.load(Constant.SCREENSHOT_URL_PREFIX + mIntroduceImageIds[position])
+					.load(mIntroduceImageIds[position])
 					.placeholder(R.drawable.vr_default_img)
 					.dontAnimate()
 					.into(image);

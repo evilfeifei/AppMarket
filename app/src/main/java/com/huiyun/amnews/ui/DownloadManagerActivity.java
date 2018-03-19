@@ -140,7 +140,7 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 			//对于非进度更新的ui放在这里，对于实时更新的进度ui，放在holder中
 			AppInfo apk = (AppInfo) downloadInfo.getData();
 			if (apk != null) {
-				Glide.with(DownloadManagerActivity.this).load(Constant.THUMBNAIL_URL_PREFIX + apk.getThumbnailName()).error(R.mipmap.ic_launcher).into(holder.icon);
+				Glide.with(DownloadManagerActivity.this).load(apk.getThumbnailName()).error(R.mipmap.ic_launcher).into(holder.icon);
 				holder.name.setText(apk.getName());
 			} else {
 				holder.name.setText(downloadInfo.getFileName());

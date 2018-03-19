@@ -45,6 +45,8 @@
     <dimen name="margin_10px">5dp</dimen>
     <dimen name="margin_6px">3dp</dimen>
     <dimen name="margin_4px">2dp</dimen>
+    <dimen name="margin_2px">1dp</dimen>
+    <dimen name="margin_1px">0.5dp</dimen>
     <dimen name="margin_minus_6px">-3dp</dimen>
 
     <dimen name="txt_size_130px">65sp</dimen>

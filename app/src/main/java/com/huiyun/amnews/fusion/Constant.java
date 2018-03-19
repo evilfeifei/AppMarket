@@ -12,11 +12,11 @@ public class Constant {
 	public static final String SERVER_URL = "http://apk.weiyucheye.com/index.php/";
 	public static final String SERVER_URL_NEW = "http://apk.weiyucheye.com/index.php/";
 //	截图
-	 public static final String SCREENSHOT_URL_PREFIX = "http://112.74.79.96:88/php/vr/Public/djh/screenshot/";
+//	 public static final String SCREENSHOT_URL_PREFIX = "http://112.74.79.96:88/php/vr/Public/djh/screenshot/";
 //	缩略图
 //	 public static final String THUMBNAIL_URL_PREFIX = "http://www.dingjianapp.com/Public/djh/thumbnail/";
 //	 public static final String THUMBNAIL_URL_PREFIX = "http://139.196.24.150/Public/djh/thumbnail/";
-	 public static final String THUMBNAIL_URL_PREFIX = "http://112.74.79.96:88/php/vr/Public/djh/thumbnail/";
+//	 public static final String THUMBNAIL_URL_PREFIX = "http://112.74.79.96:88/php/vr/Public/djh/thumbnail/";
 
 	 public static final String HEAD_URL = "http://freefood.qiniudn.com/";
 	 public static final String QINIU_TOKEN = SERVER_URL + "User/gerQiniuToken";

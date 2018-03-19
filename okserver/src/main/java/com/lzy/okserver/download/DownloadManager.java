@@ -115,6 +115,8 @@ public class DownloadManager {
             downloadInfo.setData(data);
             DownloadDBManager.INSTANCE.replace(downloadInfo);
             mDownloadInfoList.add(downloadInfo);
+
+//            http://1252617679.vod2.myqcloud.com/99a972d5vodtransgzp1252617679/6c29cb8b9031868223379716425/v.f30.mp4
         }
         //无状态，暂停，错误才允许开始下载
         if (downloadInfo.getState() == DownloadManager.NONE || downloadInfo.getState() == DownloadManager.PAUSE || downloadInfo.getState() == DownloadManager.ERROR) {

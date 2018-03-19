@@ -156,14 +156,14 @@ public class CategoryChildAppFragment extends BaseFragment implements SwipeRefre
         refreshLayout.setRefreshing(true);
         page = 1;
         noMore = false;
-        getAppMoreList(page, DefaultValues.APP_TYPE_GAME);
+        getAppMoreList(page, type);
     }
 
     @Override
     public void onLoadMore() {
         if(!noMore){
             page = page+1;
-            getAppMoreList(page, DefaultValues.APP_TYPE_GAME);
+            getAppMoreList(page, type);
         }
     }
 

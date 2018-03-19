@@ -6,6 +6,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.cookie.store.PersistentCookieStore;
+import com.lzy.okgo.request.HeadRequest;
+import com.squareup.okhttp.Request;
+
 import java.util.logging.Level;
 
 public class MyApplication extends Application{
@@ -52,7 +55,7 @@ public class MyApplication extends Application{
 					//如果不想让框架管理cookie（或者叫session的保持）,以下不需要
 //              .setCookieStore(new MemoryCookieStore())            //cookie使用内存缓存（app退出后，cookie消失）
 					.setCookieStore(new PersistentCookieStore())        //cookie持久化存储，如果cookie不过期，则一直有效
-
+//			        Request request = new Request.Builder().addHeader("Accept-Encoding", "identity")
 					//可以设置https的证书,以下几种方案根据需要自己设置
 					.setCertificates();                                  //方法一：信任所有证书,不安全有风险
 //              .setCertificates(new SafeTrustManager())            //方法二：自定义信任规则，校验服务端证书
