@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import butterknife.ButterKnife;
  * 资源（暂时不用）
  * Created by Administrator on 2016/4/17 0017.
  */
+@SuppressLint("ValidFragment")
 public class CategoryAppActivity extends BaseActivity {
 
     @Bind(R.id.tab_layout_news)

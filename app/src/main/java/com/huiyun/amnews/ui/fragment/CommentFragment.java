@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
+@SuppressLint("ValidFragment")
 public class CommentFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
         RefreshLayout.OnLoadListener {
 

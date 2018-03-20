@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.huiyun.amnews.ui.AppDettailsActivity2;
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
+@SuppressLint("ValidFragment")
 public class IntroduceFragment extends BaseFragment {
 
     View rootView;

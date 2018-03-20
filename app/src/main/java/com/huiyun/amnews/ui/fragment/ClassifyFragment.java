@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,7 +41,7 @@ import okhttp3.Response;
  * 分类
  * Created by Justy on 2018/3/12.
  */
-
+@SuppressLint("ValidFragment")
 public class ClassifyFragment extends BaseFragment implements AdapterOnItemClickListener {
 
     @Bind(R.id.app_gridview)

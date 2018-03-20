@@ -16,6 +16,7 @@
             android:layout_alignParentLeft="true"
             android:background="@drawable/item_main_bg_selecter"
             android:gravity="center"
+            android:onClick="onClick"
             android:orientation="vertical"
             android:visibility="gone" >
             <ImageView

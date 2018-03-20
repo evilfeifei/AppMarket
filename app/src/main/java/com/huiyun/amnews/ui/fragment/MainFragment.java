@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -52,6 +53,7 @@ import okhttp3.Response;
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
+@SuppressLint("ValidFragment")
 public class MainFragment extends BaseFragment implements ObservableScrollView.ScrollViewListener {
 
     View rootView;

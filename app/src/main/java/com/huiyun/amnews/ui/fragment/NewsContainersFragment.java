@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -34,7 +35,7 @@ import okhttp3.Response;
 /**
  * Created by Justy on 2018/3/1.
  */
-
+@SuppressLint("ValidFragment")
 public class NewsContainersFragment extends BaseFragment {
 
     int width,height;

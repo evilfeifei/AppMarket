@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,7 +34,7 @@ import okhttp3.Response;
 /**
  * Created by Justy on 2018/3/12.
  */
-
+@SuppressLint("ValidFragment")
 public class RankingListContainersFragment extends BaseFragment {
 
     @Bind(R.id.assignment_viewPager)

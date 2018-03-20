@@ -111,7 +111,6 @@
             android:layout_height="wrap_content"
             android:padding="13dp"
             android:layout_marginLeft="100dp"
-            android:layout_toRightOf="@id/left"
             android:background="@null"
             android:textSize="@dimen/margin_30px"
             android:gravity="center_vertical"

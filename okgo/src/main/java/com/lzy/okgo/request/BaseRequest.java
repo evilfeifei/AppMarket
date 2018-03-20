@@ -69,6 +69,10 @@ public abstract class BaseRequest<R extends BaseRequest> {
         //添加公共请求参数
         if (go.getCommonParams() != null) params.put(go.getCommonParams());
         if (go.getCommonHeaders() != null) headers.put(go.getCommonHeaders());
+
+        //okhttp 无法获取文件长度问题,给出了解决方案，在请求头中添加,requestBuilder.addHeader("Accept-Encoding", "identity");
+        go.addCommonHeaders(new HttpHeaders("Accept-Encoding", "identity"));
+
         //添加缓存模式
         if (go.getCacheMode() != null) cacheMode = go.getCacheMode();
         cacheTime = go.getCacheTime();

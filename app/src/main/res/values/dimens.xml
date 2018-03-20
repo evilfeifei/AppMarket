@@ -17,6 +17,7 @@
 
   <dimen name="margin_400px">200dp</dimen>
   <dimen name="margin_380px">190dp</dimen>
+  <dimen name="margin_300px">150dp</dimen>
   <dimen name="margin_200px">100dp</dimen>
   <dimen name="margin_180px">90dp</dimen>
   <dimen name="margin_160px">80dp</dimen>
@@ -81,5 +82,4 @@
   <dimen name="margin_250px">125dp</dimen>
   <dimen name="margin_62px">31dp</dimen>
   <dimen name="margin_56px">28dp</dimen>
-  <dimen name="margin_300px">150dp</dimen>
 </resources>

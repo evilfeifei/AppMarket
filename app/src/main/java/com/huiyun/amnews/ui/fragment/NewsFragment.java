@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,7 +36,7 @@ import okhttp3.Response;
 /**
  * Created by Justy on 2018/3/7.
  */
-
+@SuppressLint("ValidFragment")
 public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, LoadMoreFooter.OnLoadMoreListener{
 
     int width,height;

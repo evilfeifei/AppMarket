@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.loopj.android.http.AsyncHttpClient;
 /**
  * 基类fragment
  */
+@SuppressLint("ValidFragment")
 public class BaseFragment extends Fragment implements View.OnClickListener{
 
     protected int x, y;

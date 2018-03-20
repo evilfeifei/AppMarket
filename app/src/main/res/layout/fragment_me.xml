@@ -229,6 +229,34 @@
                 android:src="@drawable/right_to" />
         </RelativeLayout>
         <RelativeLayout
+            android:id="@+id/user_idea_relate"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/bg_round_selecter"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/me_settings_icon"
+                android:drawablePadding="10dp"
+                android:text="意见反馈"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/txt_size_28px" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/right_to" />
+        </RelativeLayout>
+        <RelativeLayout
             android:id="@+id/user_set_relate"
             android:layout_width="fill_parent"
             android:layout_height="50dp"

@@ -6,6 +6,8 @@ package com.huiyun.amnews.configuration;
 
 public class DefaultValues {
 
+    public static final String UPDATE_SAVENAME="vr_update_app";
+
     /**
      * type:更多类型 1：精品应用 2：精品游戏 3:游戏列表 4:应用列表 5:首页必备 6:首页更多精选  7：首页热门
      */

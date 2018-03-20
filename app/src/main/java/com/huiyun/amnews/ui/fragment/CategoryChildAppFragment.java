@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,6 +53,7 @@ import okhttp3.Response;
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
+@SuppressLint("ValidFragment")
 public class CategoryChildAppFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, LoadMoreFooter.OnLoadMoreListener{
 
     View rootView;
@@ -67,6 +69,8 @@ public class CategoryChildAppFragment extends BaseFragment implements SwipeRefre
     private int page = 1;
     private String categoryId;
     private int type;
+
+    public CategoryChildAppFragment(){}
 
     public CategoryChildAppFragment(String categoryId,int type){
         this.categoryId = categoryId;

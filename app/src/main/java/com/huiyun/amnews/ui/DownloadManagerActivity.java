@@ -247,6 +247,7 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 			} else if (v.getId() == remove.getId()) {
 				downloadManager.removeTask(downloadInfo.getUrl());
 				adapter.notifyDataSetChanged();
+				EventBus.getDefault().post(new DownLoadFinishEvent());
 			}
 		}
 	}
@@ -269,6 +270,8 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 			DownloadDBManager.INSTANCE.replace(downloadInfo);
 			Toast.makeText(DownloadManagerActivity.this, "下载完成:" + downloadInfo.getTargetPath(), Toast.LENGTH_SHORT).show();
 			EventBus.getDefault().post(new DownLoadFinishEvent());
+
+			ApkUtils.install(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()));
 		}
 
 		@Override

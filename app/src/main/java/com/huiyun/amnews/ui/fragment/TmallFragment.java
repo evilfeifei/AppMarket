@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
+@SuppressLint("ValidFragment")
 public class TmallFragment extends BaseFragment {
 
     View rootView;

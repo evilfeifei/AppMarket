@@ -112,4 +112,7 @@ public class Constant {
 
 	//广告轮播图
 	public static final String APP_AD = SERVER_URL_NEW + "App/ad/type/1";
+
+	//九、意见反馈    （Api/feedback）
+	public static final String FEED_BACK_URL =SERVER_URL_NEW  + "Api/feedback";
 }

@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
+import com.huiyun.amnews.ui.IdeaFeedBackActivity;
 import com.huiyun.amnews.ui.LoginActivity;
 import com.huiyun.amnews.ui.MyCollectActivity;
 import com.huiyun.amnews.ui.MyPraiseActivity;
@@ -32,6 +34,7 @@ import org.json.JSONObject;
 /**
  * 我的
  */
+@SuppressLint("ValidFragment")
 public class MeFragment extends BaseFragment {
 
     View rootView;
@@ -59,6 +62,7 @@ public class MeFragment extends BaseFragment {
         view.findViewById(R.id.user_collect_relate).setOnClickListener(this);
         view.findViewById(R.id.user_caiguo_relate).setOnClickListener(this);
         view.findViewById(R.id.user_zanguo_relate).setOnClickListener(this);
+        view.findViewById(R.id.user_idea_relate).setOnClickListener(this);
         my_header_img = (RoundedImageView) view.findViewById(R.id.my_header_img);
 
 
@@ -188,6 +192,9 @@ public class MeFragment extends BaseFragment {
                 } else {
                     loadNext(MyPraiseActivity.class);
                 }
+                break;
+            case R.id.user_idea_relate: //意见反馈
+                loadNext(IdeaFeedBackActivity.class);
                 break;
         }
     }

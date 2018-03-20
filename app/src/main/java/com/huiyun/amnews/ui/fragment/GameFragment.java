@@ -1,5 +1,6 @@
 package com.huiyun.amnews.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.Classify;
 import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.event.AdapterOnItemClickListener;
+import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.CategoryListActivity;
@@ -30,6 +32,10 @@ import com.huiyun.amnews.wight.NoScrollGridView;
 import com.huiyun.amnews.wight.ObservableScrollView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,7 +52,7 @@ import okhttp3.Response;
  * 游戏
  * Created by Justy on 2018/3/16.
  */
-
+@SuppressLint("ValidFragment")
 public class GameFragment extends BaseFragment implements ObservableScrollView.ScrollViewListener,AdapterOnItemClickListener {
 
     View rootView;
@@ -92,6 +98,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
     }
 
     private void initView(){
+        EventBus.getDefault().register(this);//订阅
         loopViewPager.setPointPosition(LoopViewPager.POINT_CENTER);
         rootView.findViewById(R.id.search_edit).setOnClickListener(this);
         rootView.findViewById(R.id.down_right_liner).setOnClickListener(this);
@@ -220,4 +227,16 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
         intent.putExtras(bundle);
         getActivity().startActivity(intent);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
+    public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
+        getAppAdapterFinal.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);//解除订阅
+    }
+
 }
