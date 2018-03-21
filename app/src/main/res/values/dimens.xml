@@ -68,6 +68,7 @@
     <dimen name="txt_size_10px">5sp</dimen>
     <dimen name="txt_size_20px">10sp</dimen>
     <dimen name="txt_size_18px">9sp</dimen>
+  <dimen name="grid_expected_size">120dp</dimen>
 
   <dimen name="tag_corner_radius">20.0dip</dimen>
   <dimen name="tag_horizontal_spacing">5.0dip</dimen>

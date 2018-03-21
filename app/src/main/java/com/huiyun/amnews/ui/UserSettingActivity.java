@@ -1,6 +1,7 @@
 package com.huiyun.amnews.ui;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -21,8 +22,14 @@ import com.loopj.android.http.RequestParams;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -62,12 +69,13 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 	private Button security_new_ok;
 	private RoundedImageView imgHeadpictureSmall;
 	public String key;
-	private Bitmap bitmap;
+	private String path = "";
 	private PopupWindow selectPopupWindow;
 	private View mPopView;
 	private TextView myaccount_phone_num;       //电话号码
 	private RelativeLayout myaccount_user_phone;
 	private RelativeLayout myaccount_shop_adress;   //收货地址
+	private static final int REQUEST_CODE_CHOOSE = 23;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +128,6 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 		imgHeadpictureSmall = (RoundedImageView) findViewById(R.id.myaccount_headpicture_small);
 		txtNickName = (TextView) findViewById(R.id.myaccount_nickname);
 
-//		ImageLoaderUtil.getInstance().displayImg(imgHeadpictureSmall,
-//				Constant.HEAD_URL + avatar, options);
-
 		Glide.with(UserSettingActivity.this)
 				.load(Constant.HEAD_URL + avatar)
 				.placeholder(R.drawable.touxiang)
@@ -151,7 +156,7 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 			switchActivity(SetNameActivity.class,null);
 			break;
 		case R.id.myaccount_btn1:
-			showSelectPhPopupWindow();
+			startCamcer();
 			break;
 			case R.id.myaccount_shop_adress:    //收货地址
 				break;
@@ -160,52 +165,36 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
+	private void startCamcer(){
+		Matisse.from(UserSettingActivity.this)
+			.choose(MimeType.of(MimeType.JPEG, MimeType.PNG))//选择mime的类型
+//                    .choose(MimeType.allOf())
+			.countable(true)//设置从1开始的数字
+				.maxSelectable(1)//选择图片的最大数量限制
+				.capture(true)//启用相机
+				.captureStrategy(new CaptureStrategy(true, "com.huiyun.amnews.fileprovider"))//自定义FileProvider
+			.restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)//屏幕显示方向
+				.gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size)) // 列表中显示的图片大小
+			.thumbnailScale(0.85f) // 缩略图的比例
+				.imageEngine(new PicassoEngine()) // 使用的图片加载引擎
+			.theme(R.style.Matisse_Zhihu) // 黑色背景
+				.forResult(REQUEST_CODE_CHOOSE); // 设置作为标记的请求码
+}
 
-	// 从相册选择
-	RelativeLayout layout_choose;
-	PopupWindow layout_pop;
-
-	private void showAvatarPop() {
-		View viewLayoutView = LayoutInflater.from(this).inflate(
-				R.layout.my_choice_head, null);
-		layout_choose = (RelativeLayout) viewLayoutView
-				.findViewById(R.id.layout_choose);
-		// 从相册选择
-		layout_choose.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				layout_choose.setBackgroundColor(Color.WHITE);
-				// layout_choose.setBackgroundDrawable(getResources().getDrawable(
-				// R.drawable.pop_bg_press));
-				Intent intent = new Intent(Intent.ACTION_PICK, null);
-				intent.setDataAndType(
-						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-				startActivityForResult(intent, 2);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
+			List<String> paths = Matisse.obtainPathResult(data);
+			if(paths!=null&&paths.size()>0){
+				path = paths.get(0);
+				showImg(UserSettingActivity.this,path,imgHeadpictureSmall,0);
+				getToken(userId);
 			}
-		});
-		layout_pop = new PopupWindow(viewLayoutView, LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
-		layout_pop.setTouchInterceptor(new OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-					layout_pop.dismiss();
-					return true;
-				}
-				return false;
-			}
-		});
-		layout_pop.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
-		layout_pop.setHeight(WindowManager.LayoutParams.MATCH_PARENT);
-		layout_pop.setTouchable(true);
-		layout_pop.setFocusable(true);
-		layout_pop.setOutsideTouchable(true);
-		layout_pop.setBackgroundDrawable(new BitmapDrawable());
-		layout_pop.showAtLocation(myaccount_btn1, Gravity.CENTER, 0, 0);
+		}
 	}
 
-
-	private void getToken(final String userId, final Bitmap bitmap) {
+	private void getToken(final String userId) {
 		RequestParams rp = new RequestParams();
 		ahc.post(this, Constant.QINIU_TOKEN, rp, new JsonHttpResponseHandler(
 				Constant.UNICODE) {
@@ -221,11 +210,9 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 						if (responseMsg.getString("success").equals("S")) {
 							String qiniutoken = responseMsg
 									.getString("qiniuToken");
-							byte[] data = FormatTools.getInstance()
-									.Bitmap2Bytes(bitmap);
 							key = GetUuid.getUuid().toString();
 							if (NetworkUtil.isNetworkConnected(UserSettingActivity.this)) {
-								uploadImage(data, key, qiniutoken, context);
+								uploadImage(path, key, qiniutoken, context);
 							} else {
 								ToastUtil.toastshort(UserSettingActivity.this, "当前无网络");
 							}
@@ -251,7 +238,7 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 		});
 	}
 
-	public void uploadImage(byte[] data, String key, final String qiniutoken,
+	public void uploadImage(String data, String key, final String qiniutoken,
 			final Context context) {
 		UploadManager uploadManager = new UploadManager();
 		uploadManager.put(data, key, qiniutoken, new UpCompletionHandler() {
@@ -324,147 +311,4 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 				});
 	}
 
-
-	public void showSelectPhPopupWindow(){
-		if(mPopView != null){
-			mPopView = null;
-		}
-		mPopView=LayoutInflater.from(this).inflate(R.layout.popup_select_photo, null);
-		if(selectPopupWindow == null){
-			selectPopupWindow = new PopupWindow(mPopView,LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		}
-		selectPopupWindow.setOutsideTouchable(true);
-		selectPopupWindow.setFocusable(true);
-		selectPopupWindow.setTouchable(true);
-		selectPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-		selectPopupWindow.showAtLocation(mPopView, Gravity.CENTER, 0, 0);
-		
-		RelativeLayout selectPhBtn = (RelativeLayout)mPopView.findViewById(R.id.select_photos_btn);
-		RelativeLayout takePhBtn = (RelativeLayout)mPopView.findViewById(R.id.take_photos_btn);
-		selectPhBtn.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				selectPopupWindow.dismiss();
-				Intent intent = new Intent(Intent.ACTION_PICK, null);
-				intent.setDataAndType(
-						MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-						"image/*");
-				startActivityForResult(intent, 1);
-			}
-		});
-		takePhBtn.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				selectPopupWindow.dismiss();
-				Intent intent = new Intent(
-						MediaStore.ACTION_IMAGE_CAPTURE);
-				//下面这句指定调用相机拍照后的照片存储的路径
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-						.fromFile(new File(Environment
-								.getExternalStorageDirectory(),
-								"xiaoma.jpg")));
-				startActivityForResult(intent, 2);
-			}
-		});
-	}
-	
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		// 如果是直接从相册获取
-		case 1:
-			if(data.getData()!=null){
-				startPhotoZoom(data.getData());
-			}
-			break;
-		// 如果是调用相机拍照时
-		case 2:
-			File temp = new File(Environment.getExternalStorageDirectory()
-					+ "/xiaoma.jpg");
-			startPhotoZoom(Uri.fromFile(temp));
-			break;
-		// 取得裁剪后的图片
-		case 3:
-			/**
-			 * 非空判断大家一定要验证，如果不验证的话，
-			 * 在剪裁之后如果发现不满意，要重新裁剪，丢弃
-			 * 当前功能时，会报NullException，小马只
-			 * 在这个地方加下，大家可以根据不同情况在合适的
-			 * 地方做判断处理类似情况
-			 * 
-			 */
-			if(data != null){
-				setPicToView(data);
-			}
-			break;
-		default:
-			break;
-
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-	
-	/**
-	 * 裁剪图片方法实现
-	 * @param uri
-	 */
-	public void startPhotoZoom(Uri uri) {
-		/*
-		 * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
-		 * yourself_sdk_path/docs/reference/android/content/Intent.html
-		 * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
-		 * 是直接调本地库的，小马不懂C C++  这个不做详细了解去了，有轮子就用轮子，不再研究轮子是怎么
-		 * 制做的了...吼吼
-		 */
-		Intent intent = new Intent("com.android.camera.action.CROP");
-		intent.setDataAndType(uri, "image/*");
-		//下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-		intent.putExtra("crop", "true");
-		// aspectX aspectY 是宽高的比例
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 150);
-		intent.putExtra("outputY", 150);
-		intent.putExtra("return-data", true);
-		startActivityForResult(intent, 3);
-	}
-	
-	/**
-	 * 保存裁剪之后的图片数据
-	 * @param picdata
-	 */
-	private void setPicToView(Intent picdata) {
-		Bundle extras = picdata.getExtras();
-		if (extras != null) {
-			bitmap = extras.getParcelable("data");
-			//Drawable drawable = new BitmapDrawable(photo);
-			
-			/**
-			 * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
-			 * 传到服务器，QQ头像上传采用的方法跟这个类似
-			 */
-			
-			/*ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			photo.compress(Bitmap.CompressFormat.JPEG, 60, stream);
-			byte[] b = stream.toByteArray();
-			// 将图片流以字符串形式存储下来
-			
-			tp = new String(Base64Coder.encodeLines(b));
-			这个地方大家可以写下给服务器上传图片的实现，直接把tp直接上传就可以了，
-			服务器处理的方法是服务器那边的事了，吼吼
-			
-			如果下载到的服务器的数据还是以Base64Coder的形式的话，可以用以下方式转换
-			为我们可以用的图片类型就OK啦...吼吼
-			Bitmap dBitmap = BitmapFactory.decodeFile(tp);
-			Drawable drawable = new BitmapDrawable(dBitmap);
-			*/
-			imgHeadpictureSmall.setImageBitmap(bitmap);
-			if(NetworkUtil.isNetworkConnected(this)){
-				beginLoading(UserSettingActivity.this);
-				getToken(userId, bitmap);
-			}else{
-				ToastUtil.toastshort(this, "当前无网络");
-			}
-		}
-	}
 }

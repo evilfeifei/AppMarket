@@ -1,1 +1,1 @@
-include ':app', ':okserver', ':okgo'
+include ':app', ':okserver', ':okgo', ':matisse'

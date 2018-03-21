@@ -14,7 +14,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 import com.huiyun.amnews.Constants;
+import com.huiyun.amnews.R;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.myview.LoadingDialog;
@@ -120,6 +124,13 @@ public class BaseActivity extends FragmentActivity implements OnClickListener{
 		}
 	}
 
+	protected void showImg(Context mContext, String path, ImageView imageView,int defaultId){
+		Glide.with(mContext)
+				.load(path)
+				.placeholder(defaultId)
+				.dontAnimate()
+				.into(imageView);
+	}
 
 
 	@Override
