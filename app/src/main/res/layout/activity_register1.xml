@@ -22,8 +22,8 @@
             android:id="@+id/phone_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/margin_30px"
-            android:textColor="@color/black"
+            android:textSize="@dimen/txt_size_28px"
+            android:textColor="@color/black_1"
             android:layout_centerVertical="true"
             android:padding="13dp"
             android:text="手机号"/>
@@ -54,8 +54,8 @@
             android:id="@+id/certify_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/margin_30px"
-            android:textColor="@color/black"
+            android:textSize="@dimen/txt_size_28px"
+            android:textColor="@color/black_1"
             android:layout_centerVertical="true"
             android:padding="13dp"
             android:text="验证码"/>
@@ -68,7 +68,7 @@
             android:layout_alignParentRight="true"
             android:padding="8dp"
             android:text="获取验证码"
-            android:textSize="@dimen/txt_size_28px"
+            android:textSize="@dimen/txt_size_24px"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:textColor="#ffffff"
@@ -100,8 +100,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/margin_30px"
-            android:textColor="@color/black"
+            android:textSize="@dimen/txt_size_28px"
+            android:textColor="@color/black_1"
             android:layout_centerVertical="true"
             android:padding="13dp"
             android:text="设置密码"/>
@@ -138,8 +138,8 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/gray_btn_selector"
         android:text="下一步"
-        android:padding="13dp"
+        android:padding="10dp"
         android:textColor="#ffffff"
-        android:textSize="@dimen/txt_size_32px" />
+        android:textSize="@dimen/txt_size_28px" />
 
 </LinearLayout>

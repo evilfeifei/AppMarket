@@ -112,8 +112,8 @@ public class WelcomeDialog extends Dialog {
                     AppmarketPreferences.getInstance(context).putBooleanKey(PreferenceCode.IS_FIRST_OPEN,false);
                     dialog.dismiss();
                     if(hasCh) {
-                        Intent intent = new Intent(context, DownloadManagerActivity.class);
-                        context.startActivity(intent);
+//                        Intent intent = new Intent(context, DownloadManagerActivity.class);
+//                        context.startActivity(intent);
                     }
                 }
             });

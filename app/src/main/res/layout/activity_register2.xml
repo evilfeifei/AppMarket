@@ -124,6 +124,6 @@
         android:gravity="center"
         android:text="下一步"
         android:textColor="#ffffff"
-        android:textSize="20sp" />
+        android:textSize="@dimen/txt_size_28px" />
 
 </LinearLayout>

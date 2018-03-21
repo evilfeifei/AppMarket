@@ -38,6 +38,6 @@
         android:gravity="center"
         android:text="上传头像"
         android:textColor="#ffffff"
-        android:textSize="@dimen/txt_size_32px" />
+        android:textSize="@dimen/txt_size_28px" />
 
 </LinearLayout>

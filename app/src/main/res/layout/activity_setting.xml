@@ -22,7 +22,7 @@
         <RelativeLayout
             android:id="@+id/user_set_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/title_height"
             android:layout_marginTop="1dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
@@ -35,13 +35,13 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/text_user_setting"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/update_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -53,7 +53,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="检查更新"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
             <TextView
                 android:id="@+id/version_tv"
                 android:layout_width="wrap_content"
@@ -68,8 +68,8 @@
         <RelativeLayout
             android:id="@+id/wifi_set_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -81,12 +81,12 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/wifi_set_text"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
 
             <CheckBox
                 android:id="@+id/wifi_set_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/margin_60px"
+                android:layout_height="@dimen/margin_36px"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10sp"
@@ -137,7 +137,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/right_to" />
+                    android:src="@drawable/xiangyou_icon" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -148,7 +148,8 @@
             android:layout_marginTop="1sp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/cache_clean_check"
@@ -211,7 +212,8 @@
             android:layout_marginTop="1sp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/install_check"
@@ -242,7 +244,8 @@
             android:layout_marginTop="1sp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -358,9 +361,9 @@
         android:gravity="center"
         android:background="@drawable/gray_btn_selector"
         android:text="退出登录"
-            android:padding="12dp"
+            android:padding="@dimen/margin_20px"
         android:textColor="#ffffff"
-        android:textSize="@dimen/txt_size_32px" />
+        android:textSize="@dimen/txt_size_28px" />
     </LinearLayout>
         
     </LinearLayout>

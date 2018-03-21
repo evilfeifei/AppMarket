@@ -214,8 +214,11 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 				download.setText("暂停");
 			}
 			tvProgress.setText((Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 100) + "%");
-			pbProgress.setMax((int) downloadInfo.getTotalLength());
-			pbProgress.setProgress((int) downloadInfo.getDownloadLength());
+//			pbProgress.setMax((int) downloadInfo.getTotalLength());
+//			pbProgress.setProgress((int) downloadInfo.getDownloadLength());
+
+			pbProgress.setMax(10000);
+			pbProgress.setProgress((int) (Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 1));
 		}
 
 		@Override

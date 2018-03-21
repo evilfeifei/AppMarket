@@ -23,7 +23,7 @@
         <RelativeLayout
             android:id="@+id/myaccount_btn1"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/title_height"
             android:layout_marginTop="0dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
@@ -32,8 +32,8 @@
             <com.huiyun.amnews.view.roundimage.RoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/myaccount_headpicture_small"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/margin_70px"
+                android:layout_height="@dimen/margin_70px"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="35dp"
@@ -51,13 +51,13 @@
                 android:gravity="center"
                 android:text="头像"
                 android:textColor="@color/text_color"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/txt_size_28px"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/myaccount_btn2"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/title_height"
             android:layout_below="@+id/myaccount_btn1"
             android:layout_marginTop="2dp"
             android:background="@drawable/bg_round_selecter"
@@ -72,7 +72,7 @@
                 android:gravity="center"
                 android:text="昵称"
                 android:textColor="@color/text_color"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/txt_size_28px"/>
 
             <TextView
                 android:id="@+id/myaccount_nickname"
@@ -84,7 +84,7 @@
                 android:gravity="center"
                 android:text="昵称xx"
                 android:textColor="@color/text_color"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/txt_size_28px"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -124,7 +124,7 @@
         <RelativeLayout
             android:id="@+id/myaccount_user_phone"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/title_height"
             android:layout_below="@+id/myaccount_btn3"
             android:layout_marginTop="2dp"
             android:background="@drawable/bg_round_selecter"
@@ -140,7 +140,7 @@
                 android:gravity="center"
                 android:text="手机号码"
                 android:textColor="@color/text_color"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/txt_size_28px"/>
 
             <TextView
                 android:id="@+id/myaccount_phone_num"
@@ -151,7 +151,7 @@
                 android:layout_marginRight="35dp"
                 android:gravity="center"
                 android:text="18888888888"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/txt_size_28px"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -163,7 +163,7 @@
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

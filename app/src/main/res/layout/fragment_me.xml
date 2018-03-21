@@ -88,8 +88,8 @@
         <RelativeLayout
             android:id="@+id/user_download_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -110,13 +110,13 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
+                android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/user_collect_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -138,13 +138,13 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
+                android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/user_caiguo_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -166,13 +166,13 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
+                android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/user_zanguo_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -194,7 +194,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
+                android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
 
 
@@ -202,8 +202,8 @@
         <RelativeLayout
             android:id="@+id/user_tmall_order_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -226,13 +226,13 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
+                android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/user_idea_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -242,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:drawableLeft="@drawable/me_settings_icon"
+                android:drawableLeft="@drawable/feedback_icon"
                 android:drawablePadding="10dp"
                 android:text="意见反馈"
                 android:textColor="@color/text_color"
@@ -254,13 +254,13 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
+                android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/user_set_relate"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -282,7 +282,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/right_to" />
+                android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
 
 

@@ -48,7 +48,7 @@ public class LogDownloadListener extends DownloadListener {
     @Override
     public void onError(DownloadInfo downloadInfo, String errorMsg, Exception e) {
         Log.e("errorMsg=","下载出错");
-        Log.e("errorMsg=",errorMsg);
+//        Log.e("errorMsg=",errorMsg);
     }
 
 

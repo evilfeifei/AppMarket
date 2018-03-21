@@ -15,12 +15,17 @@ import com.huiyun.amnews.adapter.NewsAdapter;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.News;
 import com.huiyun.amnews.configuration.DefaultValues;
+import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +70,7 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
     }
 
     private void initMyView(){
+        EventBus.getDefault().register(this);//订阅
         titleTv.setText(titleName);
         final LinearLayoutManager manager = new LinearLayoutManager(CategoryListActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
@@ -147,4 +153,16 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
             getAppMoreList(page, DefaultValues.APP_TYPE_GAME);
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
+    public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
+        appAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);//解除订阅
+    }
+
 }
