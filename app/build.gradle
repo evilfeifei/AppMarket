@@ -33,8 +33,17 @@ android {
             zipAlignEnabled true
             //移除无用资源
             shrinkResources false
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled false
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('appmarket.jks')
+            storePassword "appmarketpwd"
+            keyAlias "appmarket_alias"
+            keyPassword "appmarket_a_pwd"
         }
     }
 
