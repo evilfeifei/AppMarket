@@ -67,6 +67,7 @@
                         android:background="@drawable/vr_money_button"
                         android:textColor="@color/gray"
                         android:textSize="12sp"
+                        android:visibility="gone"
                         />
 
 
