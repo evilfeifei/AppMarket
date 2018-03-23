@@ -21,6 +21,7 @@ import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.AppDettailsActivity2;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
 import com.huiyun.amnews.util.ApkUtils;
+import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.roundimage.RoundedImageView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;

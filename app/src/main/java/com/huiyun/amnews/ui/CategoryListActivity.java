@@ -17,6 +17,7 @@ import com.huiyun.amnews.been.News;
 import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
+import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.lzy.okgo.OkGo;
@@ -46,6 +47,7 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
     @Bind(R.id.t_title)
     TextView titleTv;
     private String titleName="";
+    private int type = 0;
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
 
@@ -64,7 +66,9 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
         ButterKnife.bind(this);
 
         if(getIntent()!=null){
-            titleName = getIntent().getExtras().getString("name");
+            titleName = getIntent().getExtras().getString(PreferenceCode.CATEGORY_TITLE);
+            type = getIntent().getExtras().getInt(PreferenceCode.CATEGORY_TYPE);
+
         }
         initMyView();
     }
@@ -143,14 +147,14 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
         refreshLayout.setRefreshing(true);
         page = 1;
         noMore = false;
-        getAppMoreList(page, DefaultValues.APP_TYPE_GAME);
+        getAppMoreList(page, type);
     }
 
     @Override
     public void onLoadMore() {
         if(!noMore){
             page = page+1;
-            getAppMoreList(page, DefaultValues.APP_TYPE_GAME);
+            getAppMoreList(page, type);
         }
     }
 

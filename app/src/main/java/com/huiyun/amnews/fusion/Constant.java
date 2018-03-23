@@ -115,4 +115,7 @@ public class Constant {
 
 	//九、意见反馈    （Api/feedback）
 	public static final String FEED_BACK_URL =SERVER_URL_NEW  + "Api/feedback";
+
+	//十、搜索    （Api/search）
+	public static final String SEARCH_APP_URL =SERVER_URL_NEW  + "Api/search";
 }

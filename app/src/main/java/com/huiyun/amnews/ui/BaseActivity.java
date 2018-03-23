@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.huiyun.amnews.Constants;
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
@@ -143,5 +144,20 @@ public class BaseActivity extends FragmentActivity implements OnClickListener{
 	protected void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
+	}
+
+	protected void showImg(Activity activity, String path, ImageView imageView, int defaultId) {
+		if(activity==null){
+			return;
+		}
+		try {
+			if (Util.isOnMainThread()) {
+				Glide.with(activity)
+						.load(path)
+						.placeholder(defaultId)
+						.dontAnimate()
+						.into(imageView);
+			}
+		}catch (Exception m){}
 	}
 }

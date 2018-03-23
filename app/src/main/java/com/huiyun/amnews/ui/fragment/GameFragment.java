@@ -211,6 +211,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
             case R.id.more_game_tv://更多游戏
                 bundle = new Bundle();
                 bundle.putString(PreferenceCode.CATEGORY_TITLE, "游戏");
+                bundle.putInt(PreferenceCode.CATEGORY_TYPE, DefaultValues.APP_TYPE_GAME);
                 switchActivity(CategoryListActivity.class, bundle);
                 break;
         }
@@ -219,13 +220,19 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
     @Override
     public void onItemClickListener(Object clazz, int type) {
         Classify classify = (Classify) clazz;
-        Intent intent = new Intent(getActivity(),CategoryAppActivity.class);
+//        Intent intent = new Intent(getActivity(),CategoryAppActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("currentClassifyId",classify.getId());
+//        bundle.putInt("type",type);
+//        bundle.putSerializable("classifyList", (Serializable) classifyList);
+//        intent.putExtras(bundle);
+//        getActivity().startActivity(intent);
+
+        int typeId = (int) (double) (Double.parseDouble(classify.getId()));
         Bundle bundle = new Bundle();
-        bundle.putString("currentClassifyId",classify.getId());
-        bundle.putInt("type",type);
-        bundle.putSerializable("classifyList", (Serializable) classifyList);
-        intent.putExtras(bundle);
-        getActivity().startActivity(intent);
+        bundle.putString(PreferenceCode.CATEGORY_TITLE, classify.getName());
+        bundle.putInt(PreferenceCode.CATEGORY_TYPE, typeId);
+        switchActivity(CategoryListActivity.class, bundle);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表

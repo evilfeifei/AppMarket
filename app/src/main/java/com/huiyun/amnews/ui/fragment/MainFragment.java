@@ -253,47 +253,6 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                     public void onError(Call call, Response response, Exception e) {
                     }
                 });
-
-      /*  RequestParams rp = new RequestParams();
-        ahc.post(getActivity(), Constant.APP_AD+city, rp,
-                new JsonHttpResponseHandler(Constant.UNICODE) {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers,
-                                          JSONObject response) {
-                        Log.e("response", response.toString());
-                        super.onSuccess(statusCode, headers, response);
-                        if (statusCode == 200) {
-                            Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(response.toString());
-                            if (dataMap == null) {
-                                return;
-                            }
-                            String error = (String) dataMap.get("error");
-                            if (error == null || error.equals("")) {
-                                    dataList1 = (List<Map<String, Object>>) dataMap.get("list");
-                                    if (dataList1 != null) {
-                                        List<String> listPics = new ArrayList<String>();
-                                        for (int i = 0; i < dataList1.size(); i++) {
-                                            Map<String, Object> map = dataList1.get(i);
-                                            listPics.add(map.get("image").toString());
-                                        }
-                                        loopViewPager.initPageView(listPics, null, false, R.drawable.top_main_bg);
-                                    }
-
-                            } else {
-                                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers,
-                                          String responseString, Throwable throwable) {
-                        super.onFailure(statusCode, headers, responseString,
-                                throwable);
-                        Toast.makeText(getActivity(), "请检查网络!",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });*/
     }
 
     @Override
@@ -357,6 +316,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
             case R.id.more_game_tv://更多游戏
                 bundle = new Bundle();
                 bundle.putString(PreferenceCode.CATEGORY_TITLE, "游戏");
+                bundle.putInt(PreferenceCode.CATEGORY_TYPE, DefaultValues.APP_TYPE_GAME);
                 switchActivity(CategoryListActivity.class, bundle);
                 break;
         }

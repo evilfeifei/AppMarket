@@ -1,6 +1,7 @@
 package com.huiyun.amnews.ui;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -20,7 +21,9 @@ import com.huiyun.amnews.adapter.AppSearchGridviewAdapter;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.util.JsonUtil;
+import com.huiyun.amnews.util.KeybordSUtils;
 import com.huiyun.amnews.util.ToastUtil;
+import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.huiyun.amnews.wight.NoScrollGridView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -49,8 +52,9 @@ import okhttp3.Response;
 public class SearchActivity extends BaseActivity {
 
     public static SearchActivity myCollectActivity;
-    @Bind(R.id.list)
+    @Bind(R.id.list_search)
     HeaderAndFooterRecyclerView listView;
+
     @Bind(R.id.back_left_liner)
     LinearLayout back_liner;
     @Bind(R.id.delete_img)
@@ -91,10 +95,10 @@ public class SearchActivity extends BaseActivity {
 
     private void initView(){
         findView(R.id.lin_no_data).setVisibility(View.GONE);
-        appAdapter = new AppAdapterNew(SearchActivity.this);
+        final LinearLayoutManager manager = new LinearLayoutManager(SearchActivity.this, LinearLayoutManager.VERTICAL, false);
+        listView.setLayoutManager(manager);
+        appAdapter = new AppAdapterNew(SearchActivity.this,appInfoList);
         listView.setAdapter(appAdapter);
-//        searchEt.setFocusableInTouchMode(true);
-//        searchEt.requestFocus();
 
         hotSearchGridviewAdapter = new AppSearchGridviewAdapter(SearchActivity.this,hots);
         hotGridview.setAdapter(hotSearchGridviewAdapter);
@@ -119,6 +123,7 @@ public class SearchActivity extends BaseActivity {
                 String name = searchEt.getText().toString();
                 if(TextUtils.isEmpty(name)){
                     deleteImg.setVisibility(View.GONE);
+                    scrollView.setVisibility(View.VISIBLE);
                 }else{
                     deleteImg.setVisibility(View.VISIBLE);
                 }
@@ -156,43 +161,38 @@ public class SearchActivity extends BaseActivity {
     }
 
     public void searchApp(String name){
-        RequestParams rp = new RequestParams();
-        rp.put("name", name);
-        ahc.post(SearchActivity.this, Constant.APP_SEARCH, rp,
-                new JsonHttpResponseHandler(Constant.UNICODE) {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("name",name);
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.SEARCH_APP_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers,
-                                          JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
+                    public void onSuccess(String s, Call call, Response response) {
                         scrollView.setVisibility(View.GONE);
-                        if (statusCode == 200) {
-                            Log.e("dd",response.toString());
-                            Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(response.toString());
-                            if (dataMap == null) {
-                                return;
-                            }
-                            Map<String, Object> responseMsg = (Map<String, Object>) dataMap.get("responseMsg");
-                            if (responseMsg.get("error").toString().equals("")) {
-                                findView(R.id.lin_no_data).setVisibility(View.GONE);
-                                List<AppInfo> appBeans = JsonUtil.stringToArray(JsonUtil.objectToJson(responseMsg.get("categoryList")), AppInfo[].class);
-                                if(appBeans!=null&&appBeans.size()>0){
-                                    appInfoList.addAll(appBeans);
-                                    appAdapter.refreshData(appInfoList);
-                                }
-                            }else{
-                                List<AppInfo> appBeanList = new ArrayList<AppInfo>();
-                                appAdapter.refreshData(appBeanList);
+                        if (TextUtils.isEmpty(s)) {
+                            findView(R.id.lin_no_data).setVisibility(View.VISIBLE);
+                        }else{
+                            if(s.equals("null")){
                                 findView(R.id.lin_no_data).setVisibility(View.VISIBLE);
+                            }else {
+                                List<AppInfo> appInfos = JsonUtil.stringToArray(s, AppInfo[].class);
+                                if (appInfos != null && appInfos.size() > 0) {
+                                    KeybordSUtils.closeKeybord(searchEt,SearchActivity.this);
+                                    findView(R.id.lin_no_data).setVisibility(View.GONE);
+                                    appInfoList.addAll(appInfos);
+                                    appAdapter.refreshData(appInfoList);
+                                } else {
+                                    findView(R.id.lin_no_data).setVisibility(View.VISIBLE);
+                                }
                             }
                         }
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers,
-                                          String responseString, Throwable throwable) {
-                        super.onFailure(statusCode, headers, responseString,
-                                throwable);
-                        Toast.makeText(SearchActivity.this, "请检查网络!", Toast.LENGTH_LONG).show();
+                    public void onError(Call call, Response response, Exception e) {
                     }
                 });
     }
