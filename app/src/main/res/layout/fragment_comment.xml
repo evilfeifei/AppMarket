@@ -77,7 +77,8 @@
             android:listSelector="@android:color/transparent"
             android:scrollbars="none"
             android:divider="#f7f7f7"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/margin_100px">
         </ListView>
     </com.huiyun.amnews.view.RefreshLayout>
 

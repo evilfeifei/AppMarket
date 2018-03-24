@@ -20,6 +20,7 @@ import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.AppDettailsActivity2;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
 import com.huiyun.amnews.util.ApkUtils;
+import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.roundimage.RoundedImageView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -130,13 +131,17 @@ public class AppAdapter extends BaseAdapter{
 
 				if(OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl())!=null){
 					DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
+					if(downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
 //					if (ApkUtils.isAvailable(mContext, new File(downloadInfo.getTargetPath()))) {
-					if (ApkUtils.isAvailable(mContext, ((AppInfo)downloadInfo.getData()).getPackage_name())) {
+						if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
 //						ApkUtils.uninstall(mContext, ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath()));//卸载
 //						ApkUtils.openApp(mContext,ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath()));
-						ApkUtils.openApp(mContext,((AppInfo)downloadInfo.getData()).getPackage_name());
-					} else {
-						ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
+							ApkUtils.openApp(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name());
+						} else {
+							ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
+						}
+					}else{
+						ToastUtil.toastshort(mContext,"已添加到下载队列");
 					}
 				}else {
 					GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());

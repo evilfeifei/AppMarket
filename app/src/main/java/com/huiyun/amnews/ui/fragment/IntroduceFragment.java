@@ -6,18 +6,25 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.huiyun.amnews.R;
+import com.huiyun.amnews.event.ScrolledEvent;
 import com.huiyun.amnews.ui.AppDettailsActivity2;
+import com.huiyun.amnews.util.ToastUtil;
+import com.huiyun.amnews.wight.SmartScrollView;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Administrator on 2016/4/17 0017.
  */
 @SuppressLint("ValidFragment")
-public class IntroduceFragment extends BaseFragment {
+public class IntroduceFragment extends BaseFragment implements SmartScrollView.ISmartScrollChangedListener{
 
     View rootView;
+    SmartScrollView introduce_scrollview;
 
     @Nullable
     @Override
@@ -30,6 +37,8 @@ public class IntroduceFragment extends BaseFragment {
 
     private void initView(View view){
         ((TextView)view.findViewById(R.id.content_tv)).setText(AppDettailsActivity2.appDettailsActivity.appBean.getIntroduction());
+        introduce_scrollview = (SmartScrollView)view.findViewById(R.id.introduce_scrollview);
+        introduce_scrollview.setScanScrollChangedListener(this);
     }
 
     @Override
@@ -42,5 +51,21 @@ public class IntroduceFragment extends BaseFragment {
         super.onClick(v);
         switch (v.getId()){
         }
+    }
+
+    @Override
+    public void onScrolledToBottom() {
+        ToastUtil.toastshort(getActivity(),"onScrolledToBottom");
+        ScrolledEvent scrolledEvent = new ScrolledEvent();
+        scrolledEvent.setScrolledToTop(false);
+        EventBus.getDefault().post(scrolledEvent);
+    }
+
+    @Override
+    public void onScrolledToTop() {
+        ToastUtil.toastshort(getActivity(),"onScrolledToTop");
+        ScrolledEvent scrolledEvent = new ScrolledEvent();
+        scrolledEvent.setScrolledToTop(true);
+        EventBus.getDefault().post(scrolledEvent);
     }
 }

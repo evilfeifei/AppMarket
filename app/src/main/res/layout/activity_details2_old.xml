@@ -90,12 +90,13 @@
             android:layout_height="0.5dp"
             android:background="@color/line_color"/>
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbarlayout"
+        <com.huiyun.amnews.view.DragTopLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/white"
+            android:id="@+id/drag_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:elevation="@dimen/app_bar_elevation">
+            android:layout_height="match_parent"
+            >
 
             <!--top view-->
             <LinearLayout
@@ -103,9 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:background="@color/white">
+                android:orientation="vertical">
 
                 <it.sephiroth.android.library.widget.HListView
                     android:id="@+id/hlistview"
@@ -205,18 +204,21 @@
                     android:layout_height="0.3dp"
                     android:background="@color/gray1"/>
             </LinearLayout>
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:tabIndicatorColor="@color/app_style_color"
-                app:tabTextColor="@color/black_1"
-                app:tabSelectedTextColor="@color/app_style_color"
-                app:tabGravity="fill"/>
 
-        </android.support.design.widget.AppBarLayout>
             <!--content view-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/drag_content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.astuetz.PagerSlidingTabStrip
+                    android:id="@+id/tabs"
+                    app:pstsShouldExpand="true"
+                    app:pstsIndicatorColor="@color/colorPrimary"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_70px"
+                    android:background="@color/white" />
                 <android.support.v4.view.ViewPager
                     android:id="@+id/view_pager"
                     android:background="@color/white"
@@ -224,6 +226,12 @@
                     android:layout_height="match_parent">
 
                 </android.support.v4.view.ViewPager>
+
+            </LinearLayout>
+
+
+
+        </com.huiyun.amnews.view.DragTopLayout>
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/tp_rel"

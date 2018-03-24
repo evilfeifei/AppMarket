@@ -3,6 +3,8 @@ package com.huiyun.amnews.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -18,12 +20,14 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.common.collect.Lists;
 import com.huiyun.amnews.R;
+import com.huiyun.amnews.adapter.AppDetailsAdapter;
 import com.huiyun.amnews.adapter.ImagesAdapter;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.downLoad.LogDownloadListener;
 import com.huiyun.amnews.downLoad.OkDownLoad;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
+import com.huiyun.amnews.event.ScrolledEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.fragment.CommentFragment;
@@ -38,6 +42,7 @@ import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.download.DownloadInfo;
+import com.lzy.okserver.download.DownloadManager;
 
 import org.apache.http.Header;
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +55,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import github.chenupt.multiplemodel.viewpager.ModelPagerAdapter;
 import github.chenupt.multiplemodel.viewpager.PagerModelManager;
 import it.sephiroth.android.library.widget.HListView;
@@ -59,11 +66,14 @@ import it.sephiroth.android.library.widget.HListView;
  */
 public class AppDettailsActivity2 extends BaseActivity {
 
+    @Bind(R.id.appbarlayout)
+    AppBarLayout appbarlayout;
+    @Bind(R.id.tab_layout)
+    TabLayout tabLayout;
+
     public static AppDettailsActivity2 appDettailsActivity;
-    private DragTopLayout dragLayout;
-    private ModelPagerAdapter adapter;
+    private AppDetailsAdapter appDetailsAdapter;
     private ViewPager viewPager;
-    private PagerSlidingTabStrip pagerSlidingTabStrip;
     private String userId,token;
 
     public AppInfo appBean;
@@ -84,6 +94,7 @@ public class AppDettailsActivity2 extends BaseActivity {
         super.onCreate(savedInstanceState);
         appDettailsActivity = this;
         setContentView(R.layout.activity_details2);
+        ButterKnife.bind(this);
 
         initView();
         initData();
@@ -109,6 +120,7 @@ public class AppDettailsActivity2 extends BaseActivity {
             hListView.setAdapter(imagesAdapter);
         }
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());
+        ((TextView)findViewById(R.id.doun_load_num)).setText(appBean.getDownload_count());//下载次数
         ((TextView)findViewById(R.id.time_tv)).setText(DateUtil.timesOne(appBean.getCreatedTime()+""));
         ((TextView)findViewById(R.id.app_score_tv)).setText(appBean.getComment_score()+"分");
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());
@@ -122,15 +134,13 @@ public class AppDettailsActivity2 extends BaseActivity {
     private void initView(){
         EventBus.getDefault().register(this);//订阅
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-        dragLayout = (DragTopLayout) findViewById(R.id.drag_layout);
-        pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         hListView = findView(R.id.hlistview);
 
-        PagerModelManager factory = new PagerModelManager();
-        factory.addCommonFragment(getFragments(), getTitles());
-        adapter = new ModelPagerAdapter(getSupportFragmentManager(), factory);
-        viewPager.setAdapter(adapter);
-        pagerSlidingTabStrip.setViewPager(viewPager);
+        appDetailsAdapter = new AppDetailsAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(appDetailsAdapter);
+        viewPager.setOffscreenPageLimit(appDetailsAdapter.getCount());
+        tabLayout.setupWithViewPager(viewPager);
+
         viewPager.addOnPageChangeListener(new myOnPageChangeListener());
 
         findView(R.id.back_left_liner).setOnClickListener(this);
@@ -148,17 +158,16 @@ public class AppDettailsActivity2 extends BaseActivity {
         ratingBar = findView(R.id.environment_rat);
     }
 
-    private List<String> getTitles(){
-        return Lists.newArrayList("介绍", "评论");
-    }
-
-    private List<Fragment> getFragments(){
-        List<Fragment> list = new ArrayList<>();
-        Fragment listFragment = new IntroduceFragment();
-        Fragment recyclerFragment = new CommentFragment();
-        list.add(listFragment);
-        list.add(recyclerFragment);
-        return list;
+    @Subscribe(threadMode = ThreadMode.MAIN) // 如果滑动到顶部展开、底部折叠
+    public void onScrolledEvent(ScrolledEvent scrolledEvent) {
+        ToastUtil.toastshort(AppDettailsActivity2.this,"接收到");
+        if(scrolledEvent!=null){
+            if(scrolledEvent.isScrolledToTop()){
+                appbarlayout.setExpanded(true);
+            }else{
+                appbarlayout.setExpanded(false);
+            }
+        }
     }
 
     private class myOnPageChangeListener implements ViewPager.OnPageChangeListener {
@@ -392,11 +401,15 @@ public class AppDettailsActivity2 extends BaseActivity {
             case R.id.down_load_tv:
                 if(OkDownLoad.getInstance().getManger().getDownloadInfo(appBean.getDownloadUrl())!=null){
                     DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBean.getDownloadUrl());
-                    if (ApkUtils.isAvailable(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()))) {
+                    if(downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
+                        if (ApkUtils.isAvailable(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()))) {
 //						ApkUtils.uninstall(mContext, ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath()));//卸载
-                        ApkUtils.openApp(AppDettailsActivity2.this,ApkUtils.getPackageName(AppDettailsActivity2.this, downloadInfo.getTargetPath()));
-                    } else {
-                        ApkUtils.install(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()));
+                            ApkUtils.openApp(AppDettailsActivity2.this, ApkUtils.getPackageName(AppDettailsActivity2.this, downloadInfo.getTargetPath()));
+                        } else {
+                            ApkUtils.install(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()));
+                        }
+                    } else{
+                        ToastUtil.toastshort(AppDettailsActivity2.this,"已添加到下载队列");
                     }
                 }else{
                         GetRequest request = OkGo.get(appBean.getDownloadUrl());
@@ -726,11 +739,15 @@ public class AppDettailsActivity2 extends BaseActivity {
     private void getDownLoadState(){
         DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBean.getDownloadUrl());
         if(downloadInfo!=null) {
+            if(downloadInfo.getState() == DownloadManager.FINISH) {
 //            if (ApkUtils.isAvailable(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()))) {
-            if (ApkUtils.isAvailable(AppDettailsActivity2.this, ((AppInfo)downloadInfo.getData()).getPackage_name())) {
-                ((TextView)findView(R.id.down_load_tv)).setText("打开");
-            } else {
-                ((TextView)findView(R.id.down_load_tv)).setText("安装");
+                if (ApkUtils.isAvailable(AppDettailsActivity2.this, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
+                    ((TextView) findView(R.id.down_load_tv)).setText("打开");
+                } else {
+                    ((TextView) findView(R.id.down_load_tv)).setText("安装");
+                }
+            }else{
+                ((TextView)findView(R.id.down_load_tv)).setText("下载");
             }
         }else{
             ((TextView)findView(R.id.down_load_tv)).setText("下载");
