@@ -160,7 +160,6 @@ public class AppDettailsActivity2 extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果滑动到顶部展开、底部折叠
     public void onScrolledEvent(ScrolledEvent scrolledEvent) {
-        ToastUtil.toastshort(AppDettailsActivity2.this,"接收到");
         if(scrolledEvent!=null){
             if(scrolledEvent.isScrolledToTop()){
                 appbarlayout.setExpanded(true);

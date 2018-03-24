@@ -4,52 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.AppDettailsActivity2">
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/title_appdetails"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorAccent"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/title_height"
-            android:background="@color/white" >
+        android:layout_height="@dimen/title_height"
+        android:background="@color/white" >
 
-            <LinearLayout
-                android:id="@+id/back_left_liner"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/item_main_bg_selecter"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="visible" >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/back1_icon"  />
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/t_title"
+        <LinearLayout
+            android:id="@+id/back_left_liner"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/item_main_bg_selecter"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible" >
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="80dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="应用详情"
-                android:textColor="@color/black_1"
-                android:textSize="@dimen/txt_size_28px"
-                android:textStyle="normal" />
+                android:src="@drawable/back1_icon"  />
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/t_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="80dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="应用详情"
+            android:textColor="@color/black_1"
+            android:textSize="@dimen/txt_size_28px"
+            android:textStyle="normal" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true">
             <LinearLayout
                 android:id="@+id/collect_liner"
                 android:layout_width="50dp"
@@ -66,30 +61,38 @@
                     android:src="@drawable/vr_collect_icon"
                     android:visibility="visible"/>
             </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/share_liner"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/title_right_but_selector"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    >
-                    <ImageView
-                        android:id="@+id/share_img"
-                        android:layout_width="@dimen/margin_50px"
-                        android:layout_height="@dimen/margin_50px"
-                        android:src="@drawable/vr_share_icon"
-                        android:visibility="visible"/>
-                </LinearLayout>
+            <LinearLayout
+                android:id="@+id/share_liner"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/title_right_but_selector"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:id="@+id/share_img"
+                    android:layout_width="@dimen/margin_50px"
+                    android:layout_height="@dimen/margin_50px"
+                    android:src="@drawable/vr_share_icon"
+                    android:visibility="visible"/>
             </LinearLayout>
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/line_color"/>
-
+        </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:id="@+id/fdsfdsfds"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line_color"
+        android:layout_below="@+id/title_appdetails"/>
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/fdsfdsfds"
+        >
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbarlayout"
             android:layout_width="match_parent"
@@ -102,7 +105,6 @@
                 android:id="@+id/top_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
                 android:orientation="vertical"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:background="@color/white">
@@ -221,10 +223,11 @@
                     android:id="@+id/view_pager"
                     android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
                 </android.support.v4.view.ViewPager>
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
     <RelativeLayout
         android:id="@+id/tp_rel"
         android:layout_width="match_parent"

@@ -55,7 +55,6 @@ public class IntroduceFragment extends BaseFragment implements SmartScrollView.I
 
     @Override
     public void onScrolledToBottom() {
-        ToastUtil.toastshort(getActivity(),"onScrolledToBottom");
         ScrolledEvent scrolledEvent = new ScrolledEvent();
         scrolledEvent.setScrolledToTop(false);
         EventBus.getDefault().post(scrolledEvent);
@@ -63,7 +62,6 @@ public class IntroduceFragment extends BaseFragment implements SmartScrollView.I
 
     @Override
     public void onScrolledToTop() {
-        ToastUtil.toastshort(getActivity(),"onScrolledToTop");
         ScrolledEvent scrolledEvent = new ScrolledEvent();
         scrolledEvent.setScrolledToTop(true);
         EventBus.getDefault().post(scrolledEvent);

@@ -183,7 +183,6 @@ public class CommentFragment extends BaseFragment implements SwipeRefreshLayout.
 
     @Override
     public void onLoad() {
-
     }
 
     @Override
