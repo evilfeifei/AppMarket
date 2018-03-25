@@ -21,6 +21,7 @@ import com.huiyun.amnews.ui.MyCollectActivity;
 import com.huiyun.amnews.ui.MyPraiseActivity;
 import com.huiyun.amnews.ui.MyTrampleActivity;
 import com.huiyun.amnews.ui.SettingActivity;
+import com.huiyun.amnews.ui.UpdateAppListActivity;
 import com.huiyun.amnews.ui.UserSettingActivity;
 import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.roundimage.RoundedImageView;
@@ -63,9 +64,8 @@ public class MeFragment extends BaseFragment {
         view.findViewById(R.id.user_caiguo_relate).setOnClickListener(this);
         view.findViewById(R.id.user_zanguo_relate).setOnClickListener(this);
         view.findViewById(R.id.user_idea_relate).setOnClickListener(this);
+        view.findViewById(R.id.app_update_relate).setOnClickListener(this);
         my_header_img = (RoundedImageView) view.findViewById(R.id.my_header_img);
-
-
     }
 
     @Override
@@ -80,9 +80,6 @@ public class MeFragment extends BaseFragment {
         if(userId.equals("")){
             rootView.findViewById(R.id.user_line).setVisibility(View.GONE);
             rootView.findViewById(R.id.unlogin_text).setVisibility(View.VISIBLE);
-//            ImageLoaderUtil.getInstance().displayImg(my_header_img,
-//                    Constant.HEAD_URL + avatar);
-
             Glide.with(getActivity())
                     .load(Constant.HEAD_URL + avatar)
                     .placeholder(R.drawable.touxiang)
@@ -93,9 +90,6 @@ public class MeFragment extends BaseFragment {
         }else{
             rootView.findViewById(R.id.user_line).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.unlogin_text).setVisibility(View.GONE);
-
-//            ImageLoaderUtil.getInstance().displayImg(my_header_img,
-//                    Constant.HEAD_URL + avatar);
 
             Glide.with(getActivity())
                     .load(Constant.HEAD_URL + avatar)
@@ -164,9 +158,6 @@ public class MeFragment extends BaseFragment {
                     loadNext(UserSettingActivity.class);
                 }
                 break;
-//            case R.id.my_header_img:
-//                loadNext(AppDettailsActivity2.class);
-//                break;
             case R.id.user_download_relate:
                 Bundle bundle = new Bundle();
                 bundle.putString(PreferenceCode.DOWNLOAD_MANAGER, "dm");
@@ -195,6 +186,9 @@ public class MeFragment extends BaseFragment {
                 break;
             case R.id.user_idea_relate: //意见反馈
                 loadNext(IdeaFeedBackActivity.class);
+                break;
+            case R.id.app_update_relate://应用升级
+                loadNext(UpdateAppListActivity.class);
                 break;
         }
     }

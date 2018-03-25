@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -158,5 +159,16 @@ public class ApkUtils {
             e.printStackTrace();
         }
         return packageInfo != null;
+    }
+
+    public static List<PackageInfo> getInstalledApp(Context context){
+        List<PackageInfo> packs = context.getPackageManager().getInstalledPackages(0);//获取安装程序的包名
+        for (int i = 0; i < packs.size(); i++) {
+            PackageInfo p = packs.get(i);//某个包信息
+            //打印：版本好，版本名，包名....
+            Log.i("", "-------" + p.versionCode + "-------" + p.versionName + "--------"
+                    + p.packageName + "-------" + p.applicationInfo);
+        }
+        return packs;
     }
 }

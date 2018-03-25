@@ -198,28 +198,25 @@
                 android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
 
-
-
         <RelativeLayout
-            android:id="@+id/user_tmall_order_relate"
+            android:id="@+id/app_update_relate"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/title_height"
             android:layout_marginTop="0.5dp"
             android:background="@drawable/bg_round_selecter"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:drawableLeft="@drawable/me_tmall_icon"
+                android:drawableLeft="@drawable/feedback_icon"
                 android:drawablePadding="10dp"
-                android:text="商城订单"
+                android:text="应用升级"
                 android:textColor="@color/text_color"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txt_size_28px" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -229,6 +226,7 @@
                 android:layout_marginRight="20dp"
                 android:src="@drawable/xiangyou_icon" />
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/user_idea_relate"
             android:layout_width="fill_parent"
@@ -297,8 +295,6 @@
         android:layout_marginTop="20dp"
         android:paddingBottom="20dp"
         >
-          
-          
 
     </LinearLayout>
         

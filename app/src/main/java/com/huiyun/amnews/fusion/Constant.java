@@ -118,4 +118,7 @@ public class Constant {
 
 	//十、搜索    （Api/search）
 	public static final String SEARCH_APP_URL =SERVER_URL_NEW  + "Api/search";
+
+	//更新
+	public static final String UPDATE_APP_URL =SERVER_URL_NEW  + "Api/update_app";
 }

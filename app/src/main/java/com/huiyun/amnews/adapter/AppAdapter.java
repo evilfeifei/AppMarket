@@ -80,7 +80,7 @@ public class AppAdapter extends BaseAdapter{
 		return 0;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder holder=null;
 		final int index = position;
 		if(convertView == null){
@@ -104,19 +104,21 @@ public class AppAdapter extends BaseAdapter{
 		String size = df.format(x);
 		holder.sizeTv.setText(size + "M");
 
-		if(OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl())!=null){
-
-			DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
-			if(downloadInfo.getState() == DownloadManager.FINISH){
-//				if (ApkUtils.isAvailable(mContext, new File(downloadInfo.getTargetPath()))) {
-				if (ApkUtils.isAvailable(mContext, ((AppInfo)downloadInfo.getData()).getPackage_name())) {
-					holder.downloadTv.setText("打开");
-				} else {
-					holder.downloadTv.setText("安装");
+		if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
+			if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
+				DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
+				if (downloadInfo.getState() == DownloadManager.FINISH) {
+					if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
+						holder.downloadTv.setText("打开");
+					} else {
+						holder.downloadTv.setText("安装");
+					}
 				}
+			} else {
+				holder.downloadTv.setText("下载");
 			}
 		}else{
-			holder.downloadTv.setText("下载");
+			holder.downloadTv.setText("打开");
 		}
 
 		Glide.with(mContext)
@@ -128,31 +130,31 @@ public class AppAdapter extends BaseAdapter{
 		holder.downloadTv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				if(OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl())!=null){
-					DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
-					if(downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
-//					if (ApkUtils.isAvailable(mContext, new File(downloadInfo.getTargetPath()))) {
-						if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
-//						ApkUtils.uninstall(mContext, ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath()));//卸载
-//						ApkUtils.openApp(mContext,ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath()));
-							ApkUtils.openApp(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name());
+				if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
+					if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
+						DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
+						if (downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
+							if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
+								ApkUtils.openApp(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name());
+							} else {
+								ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
+							}
 						} else {
-							ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
+							ToastUtil.toastshort(mContext, "已添加到下载队列");
 						}
-					}else{
-						ToastUtil.toastshort(mContext,"已添加到下载队列");
-					}
-				}else {
-					GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());
-					OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName() + ".apk", appBeans.get(index), appBeans.get(index).getDownloadUrl(), request, new LogDownloadListener());
-					Intent intent = new Intent(mContext, DownloadManagerActivity.class);
-					mContext.startActivity(intent);
+					} else {
+						GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());
+						OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName() + ".apk", appBeans.get(index), appBeans.get(index).getDownloadUrl(), request, new LogDownloadListener());
+						Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+						mContext.startActivity(intent);
 
-					if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
-						receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
-								AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.TOKEN));
+						if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
+							receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
+									AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.TOKEN));
+						}
 					}
+				}else{
+					ApkUtils.openApp(mContext, appBeans.get(position).getPackage_name());
 				}
 			}
 		});

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_main_bg_selecter"
+    android:layout_marginBottom="0.5dp"
+    android:id="@+id/item_app_rel"
+    >
+        <com.huiyun.amnews.view.roundimage.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_icon"
+            android:layout_width="@dimen/margin_100px"
+            android:layout_height="@dimen/margin_100px"
+            android:adjustViewBounds="false"
+            android:layout_centerVertical="true"
+            android:layout_margin="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/demo_app_icon"
+            app:corner_radius="10dip"
+            app:oval="false" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_icon"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="恐怖医院"
+            android:textColor="@color/black_1"
+            android:textSize="@dimen/txt_size_28px"/>
+        <TextView
+            android:id="@+id/size_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20.9M"
+            android:textColor="@color/gray1"
+            android:textSize="@dimen/txt_size_24px"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/version_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.0"
+            android:textColor="@color/gray1"
+            android:textSize="@dimen/txt_size_24px"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_app_download"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="@dimen/margin_30px"
+        android:paddingTop="@dimen/margin_10px"
+        android:paddingBottom="@dimen/margin_10px"
+        android:paddingRight="@dimen/margin_30px"
+        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_20px"
+        android:text="卸载"
+        android:textSize="@dimen/txt_size_24px" />
+
+</RelativeLayout>

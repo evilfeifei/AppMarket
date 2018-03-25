@@ -40,26 +40,19 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolder>{
+public class UpdateAppAdapter extends  RecyclerView.Adapter<UpdateAppAdapter.ViewHolder>{
 
 	private List<AppInfo> appBeans;
 	private Context mContext;
-	protected AsyncHttpClient ahc;
 
-	public AppAdapterNew(Context context){
+	public UpdateAppAdapter(Context context){
 		this.mContext = context;
 		appBeans = new ArrayList<AppInfo>();
-		if(ahc==null){
-			ahc = new AsyncHttpClient();
-		}
 	}
 
-	public AppAdapterNew(Context context, List<AppInfo> appBeans){
+	public UpdateAppAdapter(Context context, List<AppInfo> appBeans){
 		this.appBeans = appBeans;
 		this.mContext = context;
-		if(ahc==null){
-			ahc = new AsyncHttpClient();
-		}
 	}
 
 	public void refreshData(List<AppInfo> appBeans) {
@@ -97,24 +90,7 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 		double x = Double.valueOf(appBeans.get(position).getSize()) / 1024 / 1024;
 		String size = df.format(x);
 		holder.sizeTv.setText(size + "M");
-		if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
-			if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
-
-				DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
-				if (downloadInfo.getState() == DownloadManager.FINISH) {
-					if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
-						holder.downloadTv.setText("打开");
-					} else {
-						holder.downloadTv.setText("安装");
-					}
-				}
-			} else {
-				holder.downloadTv.setText("下载");
-			}
-		}else{
-			holder.downloadTv.setText("打开");
-		}
-
+		holder.downloadTv.setText("升级");
 		Glide.with(mContext)
 				.load(appBeans.get(position).getThumbnailName())
 				.placeholder(R.drawable.vr_default_img)
@@ -124,15 +100,10 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 		holder.downloadTv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
 					if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
 						DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
 						if (downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
-							if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
-								ApkUtils.openApp(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name());
-							} else {
-								ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
-							}
+							ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
 						} else {
 							ToastUtil.toastshort(mContext, "已添加到下载队列");
 						}
@@ -141,15 +112,7 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 						OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName() + ".apk", appBeans.get(index), appBeans.get(index).getDownloadUrl(), request, new LogDownloadListener());
 						Intent intent = new Intent(mContext, DownloadManagerActivity.class);
 						mContext.startActivity(intent);
-
-						if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
-							receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
-									AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.TOKEN));
-						}
 					}
-				}else{
-					ApkUtils.openApp(mContext, appBeans.get(index).getPackage_name());
-				}
 			}
 		});
 
@@ -195,42 +158,5 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 			intent.putExtras(bundle);
 		}
 		mContext.startActivity(intent);
-	}
-
-	//下载送积分
-	public void receiveScore(Context context,String userId,String token) {
-		RequestParams rp = new RequestParams();
-		rp.put("userId", userId);
-		rp.put("token", token);
-		ahc.post(context, Constant.RECEIVE_SCORE, rp,
-				new JsonHttpResponseHandler(Constant.UNICODE) {
-					@Override
-					public void onSuccess(int statusCode, Header[] headers,
-										  JSONObject response) {
-						super.onSuccess(statusCode, headers, response);
-						if (statusCode == 200) {
-							try {
-								JSONObject jsonObject = response;
-								JSONObject responseMsg = jsonObject.getJSONObject("responseMsg");
-
-								if (!responseMsg.getString("success").equals("S")) {
-									String error = responseMsg.getString("error");
-//									ToastUtil.toastshort(AppDettailsActivity2.this, error);
-								} else {
-								}
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-
-					@Override
-					public void onFailure(int statusCode, Header[] headers,
-										  String responseString, Throwable throwable) {
-						super.onFailure(statusCode, headers, responseString,
-								throwable);
-					}
-				});
 	}
 }

@@ -10,6 +10,7 @@
         android:layout_height="1dp"
         android:background="#f7f7f7"/>
     <RelativeLayout
+        android:id="@+id/header_rel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
