@@ -15,7 +15,6 @@
             android:layout_centerVertical="true"
             android:layout_margin="12dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/demo_app_icon"
             app:corner_radius="10dip"
             app:oval="false" />
     <LinearLayout

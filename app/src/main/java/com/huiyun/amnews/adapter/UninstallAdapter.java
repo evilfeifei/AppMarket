@@ -75,7 +75,7 @@ public class UninstallAdapter extends  RecyclerView.Adapter<UninstallAdapter.Vie
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		ViewHolder holder = null;
-		View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false);
+		View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_uninstall_app, parent, false);
 		holder = new ViewHolder(myView);
 		return holder;
 	}
@@ -87,7 +87,7 @@ public class UninstallAdapter extends  RecyclerView.Adapter<UninstallAdapter.Vie
 		final int index = position;
 		holder.nameTv.setText(appList.get(position).getAppName());
 		holder.versionTv.setText("版本："+appList.get(position).getVersionName());
-		holder.appIcon.setBackground(appList.get(position).appIcon);
+		holder.appIcon.setBackground(appList.get(position).getAppIcon());
 
 		holder.downloadTv.setOnClickListener(new View.OnClickListener() {
 			@Override

@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -35,6 +36,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Handler;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -57,6 +59,18 @@ public class UninstallAppListActivity extends BaseActivity {
     @Bind(R.id.recycler_view)
     HeaderAndFooterRecyclerView recyclerView;
     private UninstallAdapter uninstallAdapter;
+
+    private android.os.Handler mHandler = new android.os.Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 111:
+                    uninstallAdapter.refreshData(appList);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,23 +115,28 @@ public class UninstallAppListActivity extends BaseActivity {
     ArrayList<UninstallAppInfo> appList = new ArrayList<UninstallAppInfo>(); //用来存储获取的应用信息数据
     private void initData(){
         appList.clear();
-        List<PackageInfo> packageInfos = ApkUtils.getInstalledApp(UninstallAppListActivity.this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<PackageInfo> packageInfos = ApkUtils.getInstalledApp(UninstallAppListActivity.this);
 
-        for(int i=0;i<packageInfos.size();i++) {
-            PackageInfo packageInfo = packageInfos.get(i);
-            UninstallAppInfo tmpInfo =new UninstallAppInfo();
-            tmpInfo.appName = packageInfo.applicationInfo.loadLabel(getPackageManager()).toString();
-            tmpInfo.packageName = packageInfo.packageName;
-            tmpInfo.versionName = packageInfo.versionName;
-            tmpInfo.versionCode = packageInfo.versionCode;
-            tmpInfo.appIcon = packageInfo.applicationInfo.loadIcon(getPackageManager());
-            //Only display the non-system app info
-            if((packageInfo.applicationInfo.flags& ApplicationInfo.FLAG_SYSTEM)==0)
-            {
-                appList.add(tmpInfo);//如果非系统应用，则添加至appList
+                for(int i=0;i<packageInfos.size();i++) {
+                    PackageInfo packageInfo = packageInfos.get(i);
+                    UninstallAppInfo tmpInfo =new UninstallAppInfo();
+                    tmpInfo.appName = packageInfo.applicationInfo.loadLabel(getPackageManager()).toString();
+                    tmpInfo.packageName = packageInfo.packageName;
+                    tmpInfo.versionName = packageInfo.versionName;
+                    tmpInfo.versionCode = packageInfo.versionCode;
+                    tmpInfo.appIcon = packageInfo.applicationInfo.loadIcon(getPackageManager());
+                    //Only display the non-system app info
+                    if((packageInfo.applicationInfo.flags& ApplicationInfo.FLAG_SYSTEM)==0)
+                    {
+                        appList.add(tmpInfo);//如果非系统应用，则添加至appList
+                    }
+                    mHandler.sendEmptyMessage(111);
+                }
             }
-        }
-        uninstallAdapter.refreshData(appList);
+        }).start();
     }
 
     @OnClick({R.id.back_left_liner})
