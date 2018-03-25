@@ -21,6 +21,7 @@ import com.huiyun.amnews.ui.MyCollectActivity;
 import com.huiyun.amnews.ui.MyPraiseActivity;
 import com.huiyun.amnews.ui.MyTrampleActivity;
 import com.huiyun.amnews.ui.SettingActivity;
+import com.huiyun.amnews.ui.UninstallAppListActivity;
 import com.huiyun.amnews.ui.UpdateAppListActivity;
 import com.huiyun.amnews.ui.UserSettingActivity;
 import com.huiyun.amnews.util.ToastUtil;
@@ -65,6 +66,7 @@ public class MeFragment extends BaseFragment {
         view.findViewById(R.id.user_zanguo_relate).setOnClickListener(this);
         view.findViewById(R.id.user_idea_relate).setOnClickListener(this);
         view.findViewById(R.id.app_update_relate).setOnClickListener(this);
+        view.findViewById(R.id.app_unistall_relate).setOnClickListener(this);
         my_header_img = (RoundedImageView) view.findViewById(R.id.my_header_img);
     }
 
@@ -190,6 +192,8 @@ public class MeFragment extends BaseFragment {
             case R.id.app_update_relate://应用升级
                 loadNext(UpdateAppListActivity.class);
                 break;
+            case R.id.app_unistall_relate://应用卸载
+                loadNext(UninstallAppListActivity.class);
         }
     }
 }

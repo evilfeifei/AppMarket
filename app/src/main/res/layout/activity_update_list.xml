@@ -9,10 +9,10 @@
     <include
         layout="@layout/title_bar"/>
 
-    <com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="vertical" />
+            <com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:overScrollMode="never"/>
 </LinearLayout>

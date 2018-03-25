@@ -127,6 +127,7 @@
         <activity android:name="com.huiyun.amnews.ui.CategoryListActivity"/>
         <activity android:name="com.huiyun.amnews.ui.IdeaFeedBackActivity"/>
         <activity android:name="com.huiyun.amnews.ui.UpdateAppListActivity"/>
+        <activity android:name="com.huiyun.amnews.ui.UninstallAppListActivity"/>
         <activity android:name="com.huiyun.amnews.ui.fragment.CategoryAppActivity"/>
 
 
