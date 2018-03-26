@@ -166,8 +166,8 @@ public class ApkUtils {
         for (int i = 0; i < packs.size(); i++) {
             PackageInfo p = packs.get(i);//某个包信息
             //打印：版本好，版本名，包名....
-            Log.i("", "-------" + p.versionCode + "-------" + p.versionName + "--------"
-                    + p.packageName + "-------" + p.applicationInfo);
+//            Log.i("", "-------" + p.versionCode + "-------" + p.versionName + "--------"
+//                    + p.packageName + "-------" + p.applicationInfo);
         }
         return packs;
     }

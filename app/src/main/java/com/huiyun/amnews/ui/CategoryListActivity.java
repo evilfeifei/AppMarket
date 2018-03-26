@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.huiyun.amnews.R;
@@ -46,6 +47,8 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
 
     @Bind(R.id.t_title)
     TextView titleTv;
+    @Bind(R.id.back_left_liner)
+    LinearLayout backLeftLiner;
     private String titleName="";
     private int type = 0;
     @Bind(R.id.refresh_layout)
@@ -76,6 +79,7 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
     private void initMyView(){
         EventBus.getDefault().register(this);//订阅
         titleTv.setText(titleName);
+        backLeftLiner.setVisibility(View.VISIBLE);
         final LinearLayoutManager manager = new LinearLayoutManager(CategoryListActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 

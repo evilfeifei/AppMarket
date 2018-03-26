@@ -53,6 +53,8 @@ public class UpdateAppListActivity extends BaseActivity {
 
     @Bind(R.id.t_title)
     TextView titleTv;
+    @Bind(R.id.no_date_tv)
+    TextView no_date_tv;
     @Bind(R.id.back_left_liner)
     LinearLayout backLeftLiner;
 
@@ -152,6 +154,12 @@ public class UpdateAppListActivity extends BaseActivity {
                         appInfoList.clear();
                         appInfoList.addAll(appInfos);
                         appAdapter.refreshData(appInfoList);
+
+                        if(appInfoList.size()>0){
+                            no_date_tv.setVisibility(View.INVISIBLE);
+                        }else{
+                            no_date_tv.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override

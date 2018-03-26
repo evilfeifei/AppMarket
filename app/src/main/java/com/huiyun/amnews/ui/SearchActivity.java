@@ -145,13 +145,21 @@ public class SearchActivity extends BaseActivity {
                         if (dataMap == null) {
                             return;
                         }
-                        List<AppInfo> appInfoApps = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("app_rank")),AppInfo[].class);
-                        List<AppInfo> appInfoGames = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("game_rank")),AppInfo[].class);
-                        List<AppInfo> appInfoHots = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("hot")),AppInfo[].class);
+                        if(dataMap.get("app_rank")!=null) {
+                            List<AppInfo> appInfoApps = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("app_rank")), AppInfo[].class);
+                            appSearchGridviewAdapter.refreshData(appInfoApps);
+                        }
+                        if(dataMap.get("game_rank")!=null){
+                            List<AppInfo> appInfoGames = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("game_rank")),AppInfo[].class);
+                            gameSearchGridviewAdapter.refreshData(appInfoGames);
+                        }
+                        if(dataMap.get("hot")!=null){
+                            List<AppInfo> appInfoHots = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("hot")),AppInfo[].class);
+                            hotSearchGridviewAdapter.refreshData(appInfoHots);
+                        }
 
-                        hotSearchGridviewAdapter.refreshData(appInfoHots);
-                        appSearchGridviewAdapter.refreshData(appInfoApps);
-                        gameSearchGridviewAdapter.refreshData(appInfoGames);
+
+
                     }
 
                     @Override
