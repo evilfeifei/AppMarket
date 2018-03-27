@@ -146,7 +146,7 @@
                         android:id="@+id/fabushijian_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="发布时间："
+                        android:text="更新时间："
                         android:textSize="@dimen/txt_size_32px"
                         android:textColor="@color/black"/>
                     <TextView

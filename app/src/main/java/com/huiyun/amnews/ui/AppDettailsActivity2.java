@@ -121,7 +121,7 @@ public class AppDettailsActivity2 extends BaseActivity {
         }
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());
         ((TextView)findViewById(R.id.doun_load_num)).setText(appBean.getDownload_count());//下载次数
-        ((TextView)findViewById(R.id.time_tv)).setText(DateUtil.timesOne(appBean.getCreatedTime()+""));
+        ((TextView)findViewById(R.id.time_tv)).setText(DateUtil.timesOne(appBean.getLastModifiedTime()+""));
         ((TextView)findViewById(R.id.app_score_tv)).setText(appBean.getComment_score()+"分");
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());

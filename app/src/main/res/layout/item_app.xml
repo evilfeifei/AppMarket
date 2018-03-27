@@ -31,13 +31,28 @@
             android:text="恐怖医院"
             android:textColor="@color/black"
             android:textSize="@dimen/txt_size_28px"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_4px"
+            android:layout_marginBottom="@dimen/margin_4px">
         <TextView
             android:id="@+id/size_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20.9M"
             android:textColor="@color/gray1"
-            android:textSize="@dimen/txt_size_28px"/>
+            android:textSize="@dimen/txt_size_24px"/>
+            <TextView
+                android:id="@+id/down_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0次下载"
+                android:layout_marginLeft="@dimen/margin_30px"
+                android:textColor="@color/gray1"
+                android:textSize="@dimen/txt_size_24px"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

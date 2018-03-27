@@ -89,6 +89,7 @@ public class AppAdapter extends BaseAdapter{
 			holder.appIcon = (RoundedImageView) convertView.findViewById(R.id.iv_icon);
 			holder.nameTv = (TextView)convertView.findViewById(R.id.name_tv);
 			holder.sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
+			holder.downCountTv = (TextView)convertView.findViewById(R.id.down_count_tv);
 			holder.contentTv = (TextView)convertView.findViewById(R.id.content_tv);
 			holder.downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
 			convertView.setTag(holder);
@@ -103,6 +104,7 @@ public class AppAdapter extends BaseAdapter{
 		double x = Double.valueOf(appBeans.get(position).getSize()) / 1024 / 1024;
 		String size = df.format(x);
 		holder.sizeTv.setText(size + "M");
+		holder.downCountTv.setText(appBeans.get(position).getDownload_count()+"次下载");
 
 		if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
 			if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
@@ -118,7 +120,11 @@ public class AppAdapter extends BaseAdapter{
 				holder.downloadTv.setText("下载");
 			}
 		}else{
-			holder.downloadTv.setText("打开");
+			if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
+				holder.downloadTv.setText("升级");
+			}else{
+				holder.downloadTv.setText("打开");
+			}
 		}
 
 		Glide.with(mContext)
@@ -143,18 +149,23 @@ public class AppAdapter extends BaseAdapter{
 							ToastUtil.toastshort(mContext, "已添加到下载队列");
 						}
 					} else {
-						GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());
-						OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName() + ".apk", appBeans.get(index), appBeans.get(index).getDownloadUrl(), request, new LogDownloadListener());
-						Intent intent = new Intent(mContext, DownloadManagerActivity.class);
-						mContext.startActivity(intent);
-
+						addDownLoad(appBeans.get(index));
+//						GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());
+//						OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName() + ".apk", appBeans.get(index), appBeans.get(index).getDownloadUrl(), request, new LogDownloadListener());
+//						Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+//						mContext.startActivity(intent);
 						if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
 							receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
 									AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.TOKEN));
 						}
 					}
 				}else{
-					ApkUtils.openApp(mContext, appBeans.get(position).getPackage_name());
+					//需要升级
+					if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
+						addDownLoad(appBeans.get(index));
+					}else{
+						ApkUtils.openApp(mContext, appBeans.get(position).getPackage_name());
+					}
 				}
 			}
 		});
@@ -175,8 +186,15 @@ public class AppAdapter extends BaseAdapter{
 
 	private static class ViewHolder
 	{
-		TextView nameTv,sizeTv,contentTv,downloadTv;
+		TextView nameTv,sizeTv,downCountTv,contentTv,downloadTv;
 		RoundedImageView appIcon;
+	}
+
+	private void addDownLoad(AppInfo appInfo){
+		GetRequest request = OkGo.get(appInfo.getDownloadUrl());
+		OkDownLoad.getInstance().getManger().addTask(appInfo.getName() + ".apk", appInfo, appInfo.getDownloadUrl(), request, new LogDownloadListener());
+		Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+		mContext.startActivity(intent);
 	}
 
 	public void addData(List<AppInfo> appList) {

@@ -1,6 +1,7 @@
 package com.huiyun.amnews.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,10 @@ import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.util.ApkUtils;
+import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.wight.NumberProgressBar;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okserver.download.DownloadInfo;
 import com.lzy.okserver.download.DownloadManager;
 import com.lzy.okserver.download.DownloadService;
@@ -27,9 +31,15 @@ import com.lzy.okserver.task.ExecutorWithListener;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class DownloadManagerActivity extends BaseActivity implements View.OnClickListener, ExecutorWithListener.OnAllTaskEndListener {
 
@@ -67,11 +77,11 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 	public void onAllTaskEnd() {
 		for (DownloadInfo downloadInfo : allTask) {
 			if (downloadInfo.getState() != DownloadManager.FINISH) {
-				Toast.makeText(DownloadManagerActivity.this, "所有下载线程结束，部分下载未完成", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(DownloadManagerActivity.this, "所有下载线程结束，部分下载未完成", Toast.LENGTH_SHORT).show();
 				return;
 			}
 		}
-		Toast.makeText(DownloadManagerActivity.this, "所有下载任务完成", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(DownloadManagerActivity.this, "所有下载任务完成", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -271,9 +281,10 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 			appInfo.setPackage_name(packageName);
 			downloadInfo.setData(appInfo);
 			DownloadDBManager.INSTANCE.replace(downloadInfo);
-			Toast.makeText(DownloadManagerActivity.this, "下载完成:" + downloadInfo.getTargetPath(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(DownloadManagerActivity.this, "下载完成", Toast.LENGTH_SHORT).show();
 			EventBus.getDefault().post(new DownLoadFinishEvent());
 
+			setDownLoadCount(appInfo);
 			ApkUtils.install(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()));
 		}
 
@@ -281,5 +292,29 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 		public void onError(DownloadInfo downloadInfo, String errorMsg, Exception e) {
 			if (errorMsg != null) Toast.makeText(DownloadManagerActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	//下载
+	public void setDownLoadCount(AppInfo appInfo) {
+		HashMap<String, Object> params = new HashMap<>();
+		params.put("app_id",appInfo.getId());
+		String jsonData = JsonUtil.objectToJson(params);
+		OkGo.post(Constant.DOWN_LOAD_COUNT_URL)
+				.tag(this)
+				.upJson(jsonData)
+				.execute(new StringCallback() {
+					@Override
+					public void onSuccess(String s, Call call, Response response) {
+						if (TextUtils.isEmpty(s)) return;
+						Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(s);
+						if (dataMap == null) {
+							return;
+						}
+					}
+
+					@Override
+					public void onError(Call call, Response response, Exception e) {
+					}
+				});
 	}
 }

@@ -121,4 +121,7 @@ public class Constant {
 
 	//更新
 	public static final String UPDATE_APP_URL =SERVER_URL_NEW  + "Api/update_app";
+
+	//十二、增加下载次数    （User/download_count）
+	public static final String DOWN_LOAD_COUNT_URL =SERVER_URL_NEW  + "User/add_count";
 }

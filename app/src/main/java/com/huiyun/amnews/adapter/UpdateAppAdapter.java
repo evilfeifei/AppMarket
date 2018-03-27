@@ -84,12 +84,14 @@ public class UpdateAppAdapter extends  RecyclerView.Adapter<UpdateAppAdapter.Vie
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		final int index = position;
 		holder.nameTv.setText(appBeans.get(position).getName());
-		holder.contentTv.setText(appBeans.get(position).getIntroduction());
+//		holder.contentTv.setText(appBeans.get(position).getIntroduction());
+		holder.contentTv.setText("版本："+appBeans.get(position).getVersion());
 
 		DecimalFormat df = new DecimalFormat("#.0");
 		double x = Double.valueOf(appBeans.get(position).getSize()) / 1024 / 1024;
 		String size = df.format(x);
 		holder.sizeTv.setText(size + "M");
+		holder.downCountTv.setText(appBeans.get(position).getDownload_count()+"次下载");
 		holder.downloadTv.setText("升级");
 		Glide.with(mContext)
 				.load(appBeans.get(position).getThumbnailName())
@@ -131,7 +133,7 @@ public class UpdateAppAdapter extends  RecyclerView.Adapter<UpdateAppAdapter.Vie
 
 
 	class ViewHolder extends RecyclerView.ViewHolder {
-		TextView nameTv,sizeTv,contentTv,downloadTv;
+		TextView nameTv,sizeTv,downCountTv,contentTv,downloadTv;
 		RoundedImageView appIcon;
 		RelativeLayout item_app_rel;
 
@@ -140,6 +142,7 @@ public class UpdateAppAdapter extends  RecyclerView.Adapter<UpdateAppAdapter.Vie
 			appIcon = (RoundedImageView) convertView.findViewById(R.id.iv_icon);
 			nameTv = (TextView)convertView.findViewById(R.id.name_tv);
 			sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
+			downCountTv = (TextView)convertView.findViewById(R.id.down_count_tv);
 			contentTv = (TextView)convertView.findViewById(R.id.content_tv);
 			downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
 			item_app_rel = (RelativeLayout) convertView.findViewById(R.id.item_app_rel);
