@@ -13,6 +13,7 @@ public class Classify implements Serializable {
     private String level;
     private String category_id;
     private String is_del;
+    private String url;
 
     public String getId() {
         return id;
@@ -52,5 +53,13 @@ public class Classify implements Serializable {
 
     public void setIs_del(String is_del) {
         this.is_del = is_del;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

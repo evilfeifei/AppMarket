@@ -1,24 +1,36 @@
 package com.huiyun.amnews.ui;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.bumptech.glide.Glide;
+import com.huiyun.amnews.Constants;
 import com.huiyun.amnews.R;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.util.FormatTools;
 import com.huiyun.amnews.util.GetUuid;
+import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.util.NetworkUtil;
 import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.roundimage.RoundedImageView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -36,7 +48,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -53,6 +69,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import okhttp3.Call;
+import okhttp3.Response;
+
 public class UserSettingActivity extends BaseActivity implements OnClickListener {
 	private RelativeLayout myaccount_btn1;// 头像
 	private RelativeLayout myaccount_btn2;// 昵称
@@ -68,7 +87,6 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 	private String avatar;
 	private Button security_new_ok;
 	private RoundedImageView imgHeadpictureSmall;
-	public String key;
 	private String path = "";
 	private PopupWindow selectPopupWindow;
 	private View mPopView;
@@ -76,6 +94,27 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 	private RelativeLayout myaccount_user_phone;
 	private RelativeLayout myaccount_shop_adress;   //收货地址
 	private static final int REQUEST_CODE_CHOOSE = 23;
+
+
+	Handler myHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case 222:
+					String result = (String) msg.obj;
+					if(!TextUtils.isEmpty(result)){
+						Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(result);
+						if(dataMap!=null){
+							String url = dataMap.get("url").toString();
+							if(!TextUtils.isEmpty(url)){
+								changeAvatar(url);
+							}
+						}
+					}
+					break;
+			}
+			super.handleMessage(msg);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -189,86 +228,74 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 			if(paths!=null&&paths.size()>0){
 				path = paths.get(0);
 				showImg(UserSettingActivity.this,path,imgHeadpictureSmall,0);
-				getToken(userId);
+				uploadImg(path);
 			}
 		}
 	}
 
-	private void getToken(final String userId) {
-		RequestParams rp = new RequestParams();
-		ahc.post(this, Constant.QINIU_TOKEN, rp, new JsonHttpResponseHandler(
-				Constant.UNICODE) {
+	private String fileName;  //报文中的文件名参数
+	private void uploadImg(final String mImagePath){
+		new Thread(new Runnable() {
 			@Override
-			public void onSuccess(int statusCode, Header[] headers,
-								  JSONObject response) {
-				super.onSuccess(statusCode, headers, response);
-				if (statusCode == 200) {
-					JSONObject jsonObject = response;
-					try {
-						JSONObject responseMsg = jsonObject
-								.getJSONObject("responseMsg");
-						if (responseMsg.getString("success").equals("S")) {
-							String qiniutoken = responseMsg
-									.getString("qiniuToken");
-							key = GetUuid.getUuid().toString();
-							if (NetworkUtil.isNetworkConnected(UserSettingActivity.this)) {
-								uploadImage(path, key, qiniutoken, context);
-							} else {
-								ToastUtil.toastshort(UserSettingActivity.this, "当前无网络");
-							}
-
-						} else {
-							String error = responseMsg.getString("error");
-							ToastUtil.toastshort(context, error);
-						}
-
-					} catch (JSONException e) {
-						e.printStackTrace();
+			public void run() {
+				fileName = System.currentTimeMillis() + ".jpg";  //报文中的文件名参数
+				String end = "\r\n";
+				String twoHyphens = "--";
+				String boundary = "*****";
+				try {
+					URL url = new URL(Constant.UPLOAD_FILE_URL);
+					HttpURLConnection con = (HttpURLConnection) url.openConnection();
+					con.setDoOutput(true);
+					con.setDoInput(true);
+					con.setUseCaches(false);
+					con.setRequestMethod("POST");
+					con.setRequestProperty("Connection", "Keep-Alive");
+					con.setRequestProperty("Charset", "UTF-8");
+					con.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+					StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+					DataOutputStream ds = new DataOutputStream(con.getOutputStream());  //output to the connection
+					ds.writeBytes(twoHyphens + boundary + end);
+					ds.writeBytes("Content-Disposition: form-data; " +
+							"name=\"file\";filename=\"" +
+							fileName + "\"" + end);
+					ds.writeBytes(end);
+					FileInputStream fStream = new FileInputStream(mImagePath);
+					int bufferSize = 8192;
+					byte[] buffer = new byte[bufferSize];   //8k
+					int length = -1;
+					while ((length = fStream.read(buffer)) != -1) {
+						ds.write(buffer, 0, length);
 					}
+					ds.writeBytes(end);
+					ds.writeBytes(twoHyphens + boundary + twoHyphens + end);
+					fStream.close();
+					ds.close();
+					BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+					String line = "";
+					String result = "";
+					while (null != (line = br.readLine())) {
+						result += line;
+					}
+					Log.e("接到的数据: " , result);
+					Message message = new Message();
+					message.what = 222;
+					message.obj = result;
+					myHandler.sendMessage(message);
+					br.close();
+
+				} catch (Exception e) {
 				}
 			}
+		}).start();
 
-			@Override
-			public void onFailure(int statusCode, Header[] headers,
-								  String responseString, Throwable throwable) {
-				super.onFailure(statusCode, headers, responseString, throwable);
-				throwable.printStackTrace();
-				Toast.makeText(context, "请检查网络!", Toast.LENGTH_SHORT).show();
-			}
-		});
 	}
 
-	public void uploadImage(String data, String key, final String qiniutoken,
-			final Context context) {
-		UploadManager uploadManager = new UploadManager();
-		uploadManager.put(data, key, qiniutoken, new UpCompletionHandler() {
-			public void complete(String key, ResponseInfo info,
-								 JSONObject response) {
-				Log.i("qiniu", key);
-				Log.i("qiniu", info.toString());
-				Log.i("qiniu", response.toString());
-				if (getError(info.toString()).equals("null")) {
-					endLoading();
-					ToastUtil.toastshort(context, "上传成功！");
-					if (NetworkUtil.isNetworkConnected(UserSettingActivity.this)) {
-						changeAvatar();
-					} else {
-						ToastUtil.toastshort(UserSettingActivity.this, "当前无网络");
-					}
-				} else {
-					ToastUtil.toastshort(context, getError(info.toString()));
-					endLoading();
-				}
-			}
-
-		}, null);
-	}
-
-	private void changeAvatar() {
+	private void changeAvatar(final String path) {
 		RequestParams rp = new RequestParams();
+
 		rp.put("userId", userId);
 		rp.put("token", token);
-		rp.put("avatar", key);
+		rp.put("avatar", path);
 		ahc.post(context, Constant.CHANGE_AVATAR_URL, rp,
 				new JsonHttpResponseHandler(Constant.UNICODE) {
 					@Override
@@ -286,7 +313,7 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 									ToastUtil.toastshort(context, "修改成功");
 									AppmarketPreferences.getInstance(context)
 											.setStringKey(
-													PreferenceCode.AVATAR, key);
+													PreferenceCode.AVATAR, path);
 								} else {
 									String error = responseMsg
 											.getString("error");

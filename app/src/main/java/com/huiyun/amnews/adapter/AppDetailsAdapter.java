@@ -14,7 +14,7 @@ import java.util.List;
 public class AppDetailsAdapter extends FragmentPagerAdapter {
 
     private static final String[] titles = {
-            "系统要求",
+            "详情",
             "评论"
     };
 

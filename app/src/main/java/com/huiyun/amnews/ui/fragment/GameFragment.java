@@ -24,6 +24,7 @@ import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.CategoryListActivity;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
+import com.huiyun.amnews.ui.MyWebViewActivity;
 import com.huiyun.amnews.ui.SearchActivity;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.AbListView;
@@ -109,6 +110,21 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
         paraRight.width = width;
         paraRight.height = (int) (width*((double)400/1080));
         loopViewPager.setLayoutParams(paraRight);
+
+        loopViewPager.setOnPagerClickLisenter(new LoopViewPager.OnPagerClickLisenter() {
+            @Override
+            public void onPagerClickLisenter(int clickPosition) {
+                if(dataListAd!=null&&dataListAd.size()>0){
+                    Intent intent = new Intent(getActivity(), MyWebViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type",1);
+                    bundle.putString("title_name",dataListAd.get(clickPosition).get("title").toString());
+                    bundle.putString("html_data",dataListAd.get(clickPosition).get("content").toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void initData(){
@@ -182,7 +198,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
 
     @Override
     public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-        if (y <= 0) {
+        /*if (y <= 0) {
             insearchLay.setBackgroundColor(Color.argb((int) 0, 255,255,255));//AGB由相关工具获得，或者美工提供
             home_search_lin.setBackgroundResource(R.drawable.search_home_gray_bg);
         } else if (y > 0 && y <= imageHeight) {
@@ -193,7 +209,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
         } else {
             insearchLay.setBackgroundColor(Color.argb((int) 255, 255,255,255));
             home_search_lin.setBackgroundResource(R.drawable.search_home_gray_bg);
-        }
+        }*/
     }
 
     @Override
@@ -212,6 +228,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
                 bundle = new Bundle();
                 bundle.putString(PreferenceCode.CATEGORY_TITLE, "游戏");
                 bundle.putInt(PreferenceCode.CATEGORY_TYPE, DefaultValues.APP_TYPE_GAME);
+                bundle.putInt(PreferenceCode.CATEGORY_ID, DefaultValues.CATEGORY_GAME_ID);
                 switchActivity(CategoryListActivity.class, bundle);
                 break;
         }
@@ -228,11 +245,22 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
 //        intent.putExtras(bundle);
 //        getActivity().startActivity(intent);
 
-        int typeId = (int) (double) (Double.parseDouble(classify.getId()));
-        Bundle bundle = new Bundle();
-        bundle.putString(PreferenceCode.CATEGORY_TITLE, classify.getName());
-        bundle.putInt(PreferenceCode.CATEGORY_TYPE, typeId);
-        switchActivity(CategoryListActivity.class, bundle);
+        if(TextUtils.isEmpty(classify.getUrl())) {
+            int typeId = (int) (double) (Double.parseDouble(classify.getId()));
+            Bundle bundle = new Bundle();
+            bundle.putString(PreferenceCode.CATEGORY_TITLE, classify.getName());
+            bundle.putInt(PreferenceCode.CATEGORY_TYPE, typeId);
+            bundle.putInt(PreferenceCode.CATEGORY_ID, DefaultValues.CATEGORY_GAME_ID);
+            switchActivity(CategoryListActivity.class, bundle);
+        }else{
+            Intent intent = new Intent(getActivity(), MyWebViewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type",1);
+            bundle.putString("title_name",classify.getName().toString());
+            bundle.putString("html_data",classify.getUrl());
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表

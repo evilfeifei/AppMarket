@@ -92,7 +92,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         initView(rootView);
         initListeners();
         getGameList();
-        getAppMoreList(page, DefaultValues.APP_TYPE_APPLICATION);
+        getAppMoreList(page, DefaultValues.JINGPIN_TYPE,DefaultValues.CATEGORY_APP_ID);
         getAdList();
         addListener();
         return rootView;
@@ -193,10 +193,11 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
      * @param page
      * @param type:更多类型 1：精品应用 2：精品游戏
      */
-    private void getAppMoreList(int page,int type) {
+    private void getAppMoreList(int page,int type,int category_id) {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page",page);
         params.put("type",type);
+        params.put("category_id",category_id);
         String jsonData = JsonUtil.objectToJson(params);
         OkGo.post(Constant.MORE_APP_LIST_URL)
                 .tag(this)
@@ -317,6 +318,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                 bundle = new Bundle();
                 bundle.putString(PreferenceCode.CATEGORY_TITLE, "游戏");
                 bundle.putInt(PreferenceCode.CATEGORY_TYPE, DefaultValues.APP_TYPE_GAME);
+                bundle.putInt(PreferenceCode.CATEGORY_ID, DefaultValues.CATEGORY_GAME_ID);
                 switchActivity(CategoryListActivity.class, bundle);
                 break;
         }
@@ -335,7 +337,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
 
     @Override
     public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-        if (y <= 0) {
+       /* if (y <= 0) {
             insearchLay.setBackgroundColor(Color.argb((int) 0, 255,255,255));//AGB由相关工具获得，或者美工提供
             home_search_lin.setBackgroundResource(R.drawable.search_home_gray_bg);
         } else if (y > 0 && y <= imageHeight) {
@@ -346,6 +348,6 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         } else {
             insearchLay.setBackgroundColor(Color.argb((int) 255, 255,255,255));
             home_search_lin.setBackgroundResource(R.drawable.search_home_gray_bg);
-        }
+        }*/
     }
 }

@@ -49,6 +49,8 @@ public class AppInfo implements Serializable {
 	private String isTrample;
 	private String comment_count;
 	private String comment_score;
+	private String auth; //授权
+	private String system_require;
 	private boolean isChoiced;
 
 
@@ -404,5 +406,21 @@ public class AppInfo implements Serializable {
 
 	public void setChoiced(boolean choiced) {
 		isChoiced = choiced;
+	}
+
+	public String getAuth() {
+		return auth;
+	}
+
+	public void setAuth(String auth) {
+		this.auth = auth;
+	}
+
+	public String getSystem_require() {
+		return system_require;
+	}
+
+	public void setSystem_require(String system_require) {
+		this.system_require = system_require;
 	}
 }

@@ -56,9 +56,9 @@ public class ClassifyActivity extends BaseActivity {
         findViewById(R.id.down_right_liner).setOnClickListener(this);
         findViewById(R.id.search_edit).setOnClickListener(this);
         findViewById(R.id.back_img).setOnClickListener(this);
-        fragmentList.add(new CategoryChildAppFragment("", DefaultValues.APP_TYPE_HOME_BIBEI));
-        fragmentList.add(new CategoryChildAppFragment("", DefaultValues.APP_TYPE_HOME_JINGXUAN));
-        fragmentList.add(new CategoryChildAppFragment("", DefaultValues.APP_TYPE_HOME_REMEN));
+        fragmentList.add(new CategoryChildAppFragment(DefaultValues.CATEGORY_APP_ID+"", DefaultValues.APP_TYPE_HOME_BIBEI));
+        fragmentList.add(new CategoryChildAppFragment(DefaultValues.CATEGORY_APP_ID+"", DefaultValues.APP_TYPE_HOME_JINGXUAN));
+        fragmentList.add(new CategoryChildAppFragment(DefaultValues.CATEGORY_APP_ID+"", DefaultValues.APP_TYPE_HOME_REMEN));
         fragmentList.add(new ClassifyFragment());
         fragmentList.add(new RankingListContainersFragment());
         titles.add("必备");

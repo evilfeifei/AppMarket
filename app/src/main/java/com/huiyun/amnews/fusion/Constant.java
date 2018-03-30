@@ -124,4 +124,10 @@ public class Constant {
 
 	//十二、增加下载次数    （User/download_count）
 	public static final String DOWN_LOAD_COUNT_URL =SERVER_URL_NEW  + "User/add_count";
+
+	//启动页 十四、启动页图片    （Api/boot）
+	public static final String SPLASH_IMG_ =SERVER_URL_NEW  + "Api/boot";
+
+	//上传文件
+	public static final String UPLOAD_FILE_URL =SERVER_URL_NEW  + "User/upload";
 }

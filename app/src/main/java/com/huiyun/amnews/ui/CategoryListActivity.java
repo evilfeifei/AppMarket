@@ -51,6 +51,7 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
     LinearLayout backLeftLiner;
     private String titleName="";
     private int type = 0;
+    private int category_id = 0;
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
 
@@ -71,6 +72,7 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
         if(getIntent()!=null){
             titleName = getIntent().getExtras().getString(PreferenceCode.CATEGORY_TITLE);
             type = getIntent().getExtras().getInt(PreferenceCode.CATEGORY_TYPE);
+            category_id = getIntent().getExtras().getInt(PreferenceCode.CATEGORY_ID);
 
         }
         initMyView();
@@ -112,6 +114,7 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
         HashMap<String, Object> params = new HashMap<>();
         params.put("page",page);
         params.put("type",type);
+        params.put("category_id",category_id);
         String jsonData = JsonUtil.objectToJson(params);
         OkGo.post(Constant.MORE_APP_LIST_URL)
                 .tag(this)

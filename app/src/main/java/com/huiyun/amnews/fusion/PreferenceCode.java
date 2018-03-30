@@ -24,5 +24,6 @@ public class PreferenceCode {
 	 public static final String CURRENTITEM="currentItem";
 	 public static final String CATEGORY_TITLE="name";
 	 public static final String CATEGORY_TYPE="category_type";
+	 public static final String CATEGORY_ID="category_id";
 
 }

@@ -13,6 +13,9 @@ android {
         targetSdkVersion 25
         versionCode 7
         versionName "1.0.6"
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
 
     buildTypes {

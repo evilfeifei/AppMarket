@@ -10,13 +10,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
+    <TextView
+        android:id="@+id/auth_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/txt_size_28px"
+        android:text="授权"
+        android:layout_marginLeft="@dimen/margin_20px"
+        android:layout_marginTop="@dimen/margin_20px"
+        />
+    <TextView
+        android:id="@+id/system_req_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/txt_size_28px"
+        android:text="授权"
+        android:layout_marginLeft="@dimen/margin_20px"
+        android:layout_marginTop="@dimen/margin_10px"
+        />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <View
-            android:layout_width="@dimen/margin_32px"
-            android:layout_height="@dimen/margin_32px"
+            android:layout_width="@dimen/margin_20px"
+            android:layout_height="@dimen/margin_20px"
             android:background="@color/breakpoint_color"
             android:layout_margin="10dp"/>
         <TextView
@@ -25,7 +43,7 @@
             android:textColor="@color/black"
             android:text="简介"
             android:layout_gravity="center_vertical"
-            android:textSize="@dimen/txt_size_32px"/>
+            android:textSize="@dimen/txt_size_28px"/>
     </LinearLayout>
     <TextView
         android:id="@+id/content_tv"
@@ -33,10 +51,10 @@
         android:layout_height="wrap_content"
         android:text="简介"
         android:layout_gravity="center_vertical"
-        android:textSize="@dimen/txt_size_32px"
+        android:textSize="@dimen/txt_size_28px"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
-        android:paddingBottom="@dimen/margin_100px"/>
+        android:paddingBottom="@dimen/margin_200px"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

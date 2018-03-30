@@ -7,6 +7,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.downLoad.LogDownloadListener;
 import com.huiyun.amnews.downLoad.OkDownLoad;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
+import com.huiyun.amnews.event.OneKeyShareCallback;
 import com.huiyun.amnews.event.ScrolledEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
@@ -52,11 +54,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import github.chenupt.multiplemodel.viewpager.ModelPagerAdapter;
 import github.chenupt.multiplemodel.viewpager.PagerModelManager;
 import it.sephiroth.android.library.widget.HListView;
@@ -120,9 +124,16 @@ public class AppDettailsActivity2 extends BaseActivity {
             hListView.setAdapter(imagesAdapter);
         }
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());
-        ((TextView)findViewById(R.id.doun_load_num)).setText(appBean.getDownload_count());//下载次数
+        ((TextView)findViewById(R.id.doun_load_num)).setText(appBean.getDownload_count()+"次下载");//下载次数
         ((TextView)findViewById(R.id.time_tv)).setText(DateUtil.timesOne(appBean.getLastModifiedTime()+""));
         ((TextView)findViewById(R.id.app_score_tv)).setText(appBean.getComment_score()+"分");
+
+        DecimalFormat df = new DecimalFormat("#.0");
+        double x = Double.valueOf(appBean.getSize()) / 1024 / 1024;
+        String size = df.format(x);
+        ((TextView)findViewById(R.id.app_size_tv)).setText(size + "MB");
+
+
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());
         ((TextView)findViewById(R.id.name_tv)).setText(appBean.getName());
         trampleTv.setText("踩（" + appBean.getTrampleCount() + "）");
@@ -143,13 +154,14 @@ public class AppDettailsActivity2 extends BaseActivity {
 
         viewPager.addOnPageChangeListener(new myOnPageChangeListener());
 
-        findView(R.id.back_left_liner).setOnClickListener(this);
+        findView(R.id.back_details_liner).setOnClickListener(this);
         findView(R.id.collect_liner).setOnClickListener(this);
         findView(R.id.trample_line).setOnClickListener(this);
         findView(R.id.praise_line).setOnClickListener(this);
         findView(R.id.comment_tv).setOnClickListener(this);
         findView(R.id.down_load_tv).setOnClickListener(this);
         findView(R.id.send_comment_tv).setOnClickListener(this);
+        findView(R.id.share_liner).setOnClickListener(this);
         collectImg = findView(R.id.collect_img);
         trampleTv = findView(R.id.trample_tv);
         trampleImg = findView(R.id.trample_img);
@@ -165,6 +177,7 @@ public class AppDettailsActivity2 extends BaseActivity {
                 appbarlayout.setExpanded(true);
             }else{
                 appbarlayout.setExpanded(false);
+                ToastUtil.toastshort(AppDettailsActivity2.this,"到底部了");
             }
         }
     }
@@ -365,7 +378,10 @@ public class AppDettailsActivity2 extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.back_left_liner:
+            case R.id.share_liner:
+                showShare("应用市场","应用市场","www.baidu.com","http://dashboard.mob.com/images/common/default_app_icon.png");
+                break;
+            case R.id.back_details_liner:
                 finish();
                 break;
             case R.id.collect_liner:
@@ -762,5 +778,32 @@ public class AppDettailsActivity2 extends BaseActivity {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);//解除订阅
+    }
+
+    private void showShare(String title,String text,String shareurl,String shareimage) {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+        // title标题，印象笔记、邮箱、信息、微信、人人网、QQ和QQ空间使用
+        oks.setTitle(title);
+        // titleUrl是标题的网络链接，仅在Linked-in,QQ和QQ空间使用
+        oks.setTitleUrl(shareurl);
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(text);
+        //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
+        oks.setImageUrl(shareimage);
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl(shareurl);
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment(title);
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite("ShareSDK");
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl(shareurl);
+        oks.setCallback(new OneKeyShareCallback(AppDettailsActivity2.this));
+        // 启动分享GUI
+        oks.show(AppDettailsActivity2.this);
     }
 }

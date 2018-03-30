@@ -37,6 +37,8 @@ public class IntroduceFragment extends BaseFragment implements SmartScrollView.I
 
     private void initView(View view){
         ((TextView)view.findViewById(R.id.content_tv)).setText(AppDettailsActivity2.appDettailsActivity.appBean.getIntroduction());
+        ((TextView)view.findViewById(R.id.auth_tv)).setText("授权："+AppDettailsActivity2.appDettailsActivity.appBean.getAuth());
+        ((TextView)view.findViewById(R.id.system_req_tv)).setText("系统要求："+AppDettailsActivity2.appDettailsActivity.appBean.getSystem_require());
         introduce_scrollview = (SmartScrollView)view.findViewById(R.id.introduce_scrollview);
         introduce_scrollview.setScanScrollChangedListener(this);
     }

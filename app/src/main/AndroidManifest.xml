@@ -131,6 +131,42 @@
         <activity android:name="com.huiyun.amnews.ui.fragment.CategoryAppActivity"/>
 
 
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <data android:scheme="tencent1106142863" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 微信分享回调 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- ShareSDK MOB相关配置 -->
+        <meta-data
+            android:name="Mob-AppKey"
+            android:value="24f38c41d1384" />
+        <meta-data
+            android:name="Mob-AppSecret"
+            android:value="07f940761fdd3ceb4af45d03af3f9fdd" />
+
         <!-- 友盟更新 -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -138,6 +174,7 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Wandoujia" />
+
 
 
 

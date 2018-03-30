@@ -11,7 +11,7 @@
         android:background="@color/white" >
 
         <LinearLayout
-            android:id="@+id/back_left_liner"
+            android:id="@+id/back_details_liner"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
@@ -65,17 +65,16 @@
                 android:id="@+id/share_liner"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/title_right_but_selector"
+                android:background="@drawable/item_main_bg_selecter"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
                 <ImageView
                     android:id="@+id/share_img"
-                    android:layout_width="@dimen/margin_50px"
-                    android:layout_height="@dimen/margin_50px"
-                    android:src="@drawable/vr_share_icon"
+                    android:layout_width="@dimen/margin_40px"
+                    android:layout_height="@dimen/margin_40px"
+                    android:src="@drawable/share_details_icon"
                     android:visibility="visible"/>
             </LinearLayout>
         </LinearLayout>
@@ -129,19 +128,49 @@
                         android:text="name"
                         android:textSize="@dimen/txt_size_32px"
                         android:textColor="@color/black"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/name_tv"
+                        android:layout_marginTop="@dimen/margin_10px"
+                        android:layout_marginBottom="@dimen/margin_20px">
                     <TextView
-                        android:layout_toRightOf="@+id/name_tv"
+                        android:id="@+id/app_score_tv"
+                        android:layout_toRightOf="@+id/pinfen_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text=""
-                        android:textSize="@dimen/txt_size_28px"
+                        android:text="5.9分"
+                        android:textSize="@dimen/txt_size_24px"
                         />
+                        <TextView
+                            android:id="@+id/doun_load_num"
+                            android:layout_toRightOf="@+id/jiangli_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0次下载"
+                            android:layout_marginLeft="@dimen/margin_20px"
+                            android:layout_centerVertical="true"
+                            android:textSize="@dimen/txt_size_24px"
+                            />
+
+                        <TextView
+                            android:id="@+id/app_size_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0次下载"
+                            android:layout_marginLeft="@dimen/margin_20px"
+                            android:layout_centerVertical="true"
+                            android:textSize="@dimen/txt_size_24px"
+                            />
+                    </LinearLayout>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp">
+                    android:layout_marginLeft="10dp"
+                    android:visibility="gone">
                     <TextView
                         android:id="@+id/fabushijian_tv"
                         android:layout_width="wrap_content"
@@ -156,49 +185,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="name"
-                        android:textSize="@dimen/txt_size_28px"
-                        />
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp">
-                    <TextView
-                        android:id="@+id/pinfen_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="应用评分："
-                        android:textSize="@dimen/txt_size_32px"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/app_score_tv"
-                        android:layout_toRightOf="@+id/pinfen_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="5.9分"
-                        android:textSize="@dimen/txt_size_28px"
-                        />
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="10dp">
-                    <TextView
-                        android:id="@+id/jiangli_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="下载次数："
-                        android:textSize="@dimen/txt_size_32px"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/doun_load_num"
-                        android:layout_toRightOf="@+id/jiangli_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:layout_centerVertical="true"
                         android:textSize="@dimen/txt_size_28px"
                         />
                 </RelativeLayout>
