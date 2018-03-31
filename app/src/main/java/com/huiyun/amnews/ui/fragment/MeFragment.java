@@ -1,8 +1,11 @@
 package com.huiyun.amnews.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.huiyun.amnews.MainActivity;
 import com.huiyun.amnews.R;
+import com.huiyun.amnews.been.AppInfo;
+import com.huiyun.amnews.been.UpdateApp;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
@@ -24,14 +30,25 @@ import com.huiyun.amnews.ui.SettingActivity;
 import com.huiyun.amnews.ui.UninstallAppListActivity;
 import com.huiyun.amnews.ui.UpdateAppListActivity;
 import com.huiyun.amnews.ui.UserSettingActivity;
+import com.huiyun.amnews.util.ApkUtils;
+import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.roundimage.RoundedImageView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * 我的
@@ -46,6 +63,7 @@ public class MeFragment extends BaseFragment {
     private String nickname = "";
     private String score = "";
     private RoundedImageView my_header_img;
+    private View undate_view;
 
     @Nullable
     @Override
@@ -53,6 +71,7 @@ public class MeFragment extends BaseFragment {
         rootView = inflater.inflate(R.layout.fragment_me, container, false);
 
         initView(rootView);
+        getUpdateAppCount();
         return rootView;
     }
 
@@ -68,6 +87,57 @@ public class MeFragment extends BaseFragment {
         view.findViewById(R.id.app_update_relate).setOnClickListener(this);
         view.findViewById(R.id.app_unistall_relate).setOnClickListener(this);
         my_header_img = (RoundedImageView) view.findViewById(R.id.my_header_img);
+        undate_view = (View) view.findViewById(R.id.undate_view);
+        undate_view.setVisibility(View.GONE);
+    }
+
+    List<UpdateApp> updateAppList = new ArrayList<>();
+    private void getUpdateAppCount(){
+        updateAppList.clear();
+        List<PackageInfo> packageInfos = ApkUtils.getInstalledApp(getActivity());
+        if(packageInfos!=null){
+            for(int i=0;i<packageInfos.size();i++){
+                UpdateApp updateApp = new UpdateApp();
+                updateApp.setPackage_name(packageInfos.get(i).packageName);
+                updateApp.setVersion_name(packageInfos.get(i).versionName);
+
+                if((packageInfos.get(i).applicationInfo.flags& ApplicationInfo.FLAG_SYSTEM)==0)
+                {
+                    updateAppList.add(updateApp);//如果非系统应用，则添加至appList
+                }
+            }
+            getAppMoreList(updateAppList);
+        }
+    }
+
+    /**
+     * 更新
+     */
+    private void getAppMoreList(final List<UpdateApp> updateAppList) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("data",updateAppList);
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.UPDATE_APP_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        List<AppInfo> appInfos = JsonUtil.stringToArray(s,AppInfo[].class);
+                        if(appInfos==null){
+                            return;
+                        }
+                        if(appInfos!=null&&appInfos.size()>0){
+                            undate_view.setVisibility(View.VISIBLE);
+                        }else{
+                            undate_view.setVisibility(View.GONE);
+                        }
+                    }
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
     }
 
     @Override
@@ -83,7 +153,7 @@ public class MeFragment extends BaseFragment {
             rootView.findViewById(R.id.user_line).setVisibility(View.GONE);
             rootView.findViewById(R.id.unlogin_text).setVisibility(View.VISIBLE);
             Glide.with(getActivity())
-                    .load(Constant.HEAD_URL + avatar)
+                    .load(avatar)
                     .placeholder(R.drawable.touxiang)
                     .dontAnimate()
                     .into(my_header_img);
@@ -94,7 +164,7 @@ public class MeFragment extends BaseFragment {
             rootView.findViewById(R.id.unlogin_text).setVisibility(View.GONE);
 
             Glide.with(getActivity())
-                    .load(Constant.HEAD_URL + avatar)
+                    .load( avatar)
                     .placeholder(R.drawable.touxiang)
                     .dontAnimate()
                     .into(my_header_img);

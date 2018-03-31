@@ -29,4 +29,18 @@
             android:layout_height="49dp"
             android:background="#e3e1e1" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/updata_count_tv"
+        android:layout_width="@dimen/margin_40px"
+        android:layout_height="@dimen/margin_40px"
+        android:layout_alignParentBottom="true"
+        android:text="0"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="@dimen/txt_size_20px"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/margin_50px"
+        android:layout_marginRight="@dimen/margin_50px"
+        android:background="@drawable/rad_dian"
+        android:visibility="gone"/>
 </RelativeLayout>

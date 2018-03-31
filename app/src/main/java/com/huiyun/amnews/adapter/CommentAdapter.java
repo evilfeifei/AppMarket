@@ -59,7 +59,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 		holder.timeTv.setText(DateUtil.timesOne(comments.get(position).getCreated_time()));
 
 		Glide.with(mContext)
-				.load(Constant.HEAD_URL + comments.get(position).getAvatar())
+				.load(comments.get(position).getAvatar())
 				.dontAnimate()
 				.into(holder.headIc);
 	}

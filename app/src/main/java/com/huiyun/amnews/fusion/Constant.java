@@ -18,7 +18,6 @@ public class Constant {
 //	 public static final String THUMBNAIL_URL_PREFIX = "http://139.196.24.150/Public/djh/thumbnail/";
 //	 public static final String THUMBNAIL_URL_PREFIX = "http://112.74.79.96:88/php/vr/Public/djh/thumbnail/";
 
-	 public static final String HEAD_URL = "http://freefood.qiniudn.com/";
 	 public static final String QINIU_TOKEN = SERVER_URL + "User/gerQiniuToken";
 	 public static final String LOGIN = SERVER_URL + "User/login";
 	 public static final String REGISTER1_URL = SERVER_URL + "User/register";

@@ -168,7 +168,7 @@ public class UserSettingActivity extends BaseActivity implements OnClickListener
 		txtNickName = (TextView) findViewById(R.id.myaccount_nickname);
 
 		Glide.with(UserSettingActivity.this)
-				.load(Constant.HEAD_URL + avatar)
+				.load(avatar)
 				.placeholder(R.drawable.touxiang)
 				.dontAnimate()
 				.into(imgHeadpictureSmall);

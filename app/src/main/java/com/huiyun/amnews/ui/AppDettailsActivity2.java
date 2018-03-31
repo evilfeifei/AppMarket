@@ -39,6 +39,7 @@ import com.huiyun.amnews.util.DateUtil;
 import com.huiyun.amnews.util.NetworkUtil;
 import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.DragTopLayout;
+import com.huiyun.amnews.view.roundimage.RoundedImageView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
@@ -74,6 +75,8 @@ public class AppDettailsActivity2 extends BaseActivity {
     AppBarLayout appbarlayout;
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
+    @Bind(R.id.iv_icon)
+    RoundedImageView ivIcon;
 
     public static AppDettailsActivity2 appDettailsActivity;
     private AppDetailsAdapter appDetailsAdapter;
@@ -127,6 +130,8 @@ public class AppDettailsActivity2 extends BaseActivity {
         ((TextView)findViewById(R.id.doun_load_num)).setText(appBean.getDownload_count()+"次下载");//下载次数
         ((TextView)findViewById(R.id.time_tv)).setText(DateUtil.timesOne(appBean.getLastModifiedTime()+""));
         ((TextView)findViewById(R.id.app_score_tv)).setText(appBean.getComment_score()+"分");
+        ((TextView)findViewById(R.id.system_req_tv)).setText(appBean.getSystem_require());
+        showImg(AppDettailsActivity2.this,appBean.getThumbnailName(),ivIcon,0);
 
         DecimalFormat df = new DecimalFormat("#.0");
         double x = Double.valueOf(appBean.getSize()) / 1024 / 1024;

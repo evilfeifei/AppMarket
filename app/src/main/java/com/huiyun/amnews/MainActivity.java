@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,17 +24,20 @@ import android.widget.Toast;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.Classify;
 import com.huiyun.amnews.been.MainEvent;
+import com.huiyun.amnews.been.UpdateApp;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.myview.dialogview.DialogTips;
 import com.huiyun.amnews.ui.BaseActivity;
+import com.huiyun.amnews.ui.UpdateAppListActivity;
 import com.huiyun.amnews.ui.dialog.WelcomeDialog;
 import com.huiyun.amnews.ui.fragment.GameFragment;
 import com.huiyun.amnews.ui.fragment.MainFragment;
 import com.huiyun.amnews.ui.fragment.MeFragment;
 import com.huiyun.amnews.ui.fragment.NewsContainersFragment;
+import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.util.MyProvider;
 import com.huiyun.amnews.util.PhoneUtils;
@@ -84,6 +89,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     public int categoryIndex=0;
     private static final int REQUEST_CODE_CAMERA = 112; //权限请求码
 
+    private TextView updata_count_tv;
+
 
 
     @Override
@@ -102,6 +109,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             initWelcomeDialog();
         }
         checkServerUpdate(PhoneUtils.getVersionName(MainActivity.this));
+        getUpdateAppCount();
     }
 
     /**
@@ -120,6 +128,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     protected void init() {
         mContext = this;
         mTabHost = (FragmentTabHost) findViewById(R.id.tab_host);
+        updata_count_tv = findView(R.id.updata_count_tv);
+        updata_count_tv.setVisibility(View.GONE);
         mTabHost.setup(mContext, getSupportFragmentManager(), R.id.container);
         mTabHost.getTabWidget().setDividerDrawable(null);
         for (int i = 0; i < titleArray.length; i++) {
@@ -144,6 +154,56 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             }
         });
 
+    }
+
+    List<UpdateApp> updateAppList = new ArrayList<>();
+    private void getUpdateAppCount(){
+        updateAppList.clear();
+        List<PackageInfo> packageInfos = ApkUtils.getInstalledApp(MainActivity.this);
+        if(packageInfos!=null){
+            for(int i=0;i<packageInfos.size();i++){
+                UpdateApp updateApp = new UpdateApp();
+                updateApp.setPackage_name(packageInfos.get(i).packageName);
+                updateApp.setVersion_name(packageInfos.get(i).versionName);
+
+                if((packageInfos.get(i).applicationInfo.flags& ApplicationInfo.FLAG_SYSTEM)==0)
+                {
+                    updateAppList.add(updateApp);//如果非系统应用，则添加至appList
+                }
+            }
+            getAppMoreList(updateAppList);
+        }
+    }
+
+    /**
+     * 更新
+     */
+    private void getAppMoreList(final List<UpdateApp> updateAppList) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("data",updateAppList);
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.UPDATE_APP_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        List<AppInfo> appInfos = JsonUtil.stringToArray(s,AppInfo[].class);
+                        if(appInfos==null){
+                            return;
+                        }
+                        if(appInfos!=null&&appInfos.size()>0){
+                            updata_count_tv.setVisibility(View.VISIBLE);
+                            updata_count_tv.setText(appInfos.size()+"");
+                        }else{
+                            updata_count_tv.setVisibility(View.GONE);
+                        }
+                    }
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
     }
 
     public void setCurrentTab(int currFragmentIndex,int categoryIndex){
@@ -199,39 +259,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         public void onError(Call call, Response response, Exception e) {
                         }
                     });
-
-     /*   RequestParams rp = new RequestParams();
-        ahc.post(this, Constant.APP_UPDATE+version, rp,
-                new JsonHttpResponseHandler(Constant.UNICODE) {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers,
-                                          JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        if (statusCode == 200) {
-                            try {
-                                JSONObject jsonObject = response;
-                                if(jsonObject!=null&&!jsonObject.toString().equals("")){
-                                    String url  = jsonObject.getString("url");
-                                    if(url!=null&&!url.equals("")){
-                                        isUpdate(url);
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers,
-                                          String responseString, Throwable throwable) {
-                        super.onFailure(statusCode, headers, responseString,
-                                throwable);
-                        Toast.makeText(MainActivity.this, "请检查网络!",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });*/
     }
 
     ProgressDialog pBar;

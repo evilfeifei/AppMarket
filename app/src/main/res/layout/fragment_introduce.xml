@@ -18,6 +18,7 @@
         android:text="授权"
         android:layout_marginLeft="@dimen/margin_20px"
         android:layout_marginTop="@dimen/margin_20px"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/system_req_tv"
@@ -27,6 +28,7 @@
         android:text="授权"
         android:layout_marginLeft="@dimen/margin_20px"
         android:layout_marginTop="@dimen/margin_10px"
+        android:visibility="gone"
         />
     <LinearLayout
         android:layout_width="wrap_content"
