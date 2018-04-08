@@ -95,8 +95,8 @@ public class NewsAdapter extends RecyclerView.Adapter{
             }
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ((Type1ViewHolder) holder).imageView.getLayoutParams();
-            params.width = (width-SystemUtils.dip2px(activity,20));
-            params.height = params.width*3/5;
+            params.height = SystemUtils.dip2px(activity,70);
+            params.width = params.height*5/3;
             ((Type1ViewHolder) holder).imageView.setLayoutParams(params);
             ((Type1ViewHolder) holder).item_new_lin.setOnClickListener(new View.OnClickListener() {
                 @Override

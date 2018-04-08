@@ -6,12 +6,15 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huiyun.amnews.R;
@@ -127,6 +130,25 @@ public class SearchActivity extends BaseActivity {
                 }else{
                     deleteImg.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        searchEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                    //完成自己的事件
+                    String name = searchEt.getText().toString();
+                    if(TextUtils.isEmpty(name)){
+                        ToastUtil.toastshort(SearchActivity.this,"请输入关键字");
+                        searchEt.setFocusable(true);
+                        searchEt.setFocusableInTouchMode(true);
+                        searchEt.requestFocus();
+                    }else {
+                        searchApp(name);
+                    }
+                }
+                return false;
             }
         });
     }

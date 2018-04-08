@@ -43,7 +43,10 @@
         android:textColorHint="#9F9F9F"
         android:hint="请搜索"
         android:maxLines="1"
-        android:textSize="@dimen/txt_size_24px" />
+        android:textSize="@dimen/txt_size_24px"
+        android:inputType="text"
+        android:singleLine="true"
+        android:imeOptions="actionSearch" />
     <ImageView
         android:id="@+id/delete_img"
         android:layout_width="@dimen/margin_70px"

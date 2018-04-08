@@ -29,7 +29,7 @@
             android:singleLine="true"
             android:layout_marginRight="@dimen/margin_20px"
             android:layout_toRightOf="@+id/back_img"
-            android:textSize="@dimen/txt_size_28px"
+            android:textSize="@dimen/txt_size_32px"
             android:textColor="@color/gray_3"
             android:padding="@dimen/margin_20px"/>
     </RelativeLayout>

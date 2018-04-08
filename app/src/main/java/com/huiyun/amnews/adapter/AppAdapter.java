@@ -3,11 +3,13 @@ package com.huiyun.amnews.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.huiyun.amnews.R;
@@ -15,6 +17,7 @@ import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
 import com.huiyun.amnews.downLoad.LogDownloadListener;
 import com.huiyun.amnews.downLoad.OkDownLoad;
+import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
 import com.huiyun.amnews.ui.AppDettailsActivity2;
@@ -29,8 +32,11 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.download.DownloadInfo;
 import com.lzy.okserver.download.DownloadManager;
+import com.lzy.okserver.download.db.DownloadDBManager;
+import com.lzy.okserver.listener.DownloadListener;
 
 import org.apache.http.Header;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +44,9 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.huiyun.amnews.R.id.downloadSize;
+import static com.huiyun.amnews.R.id.netSpeed;
 
 public class AppAdapter extends BaseAdapter{
 
@@ -85,13 +94,7 @@ public class AppAdapter extends BaseAdapter{
 		final int index = position;
 		if(convertView == null){
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.item_app, null);
-			holder = new ViewHolder();
-			holder.appIcon = (RoundedImageView) convertView.findViewById(R.id.iv_icon);
-			holder.nameTv = (TextView)convertView.findViewById(R.id.name_tv);
-			holder.sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
-			holder.downCountTv = (TextView)convertView.findViewById(R.id.down_count_tv);
-			holder.contentTv = (TextView)convertView.findViewById(R.id.content_tv);
-			holder.downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
+			holder = new ViewHolder(convertView);
 			convertView.setTag(holder);
 		}else{
 			holder = (ViewHolder)convertView.getTag();
@@ -133,6 +136,7 @@ public class AppAdapter extends BaseAdapter{
 				.dontAnimate()
 				.into(holder.appIcon);
 
+		final ViewHolder finalHolder = holder;
 		holder.downloadTv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -150,10 +154,7 @@ public class AppAdapter extends BaseAdapter{
 						}
 					} else {
 						addDownLoad(appBeans.get(index));
-//						GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());
-//						OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName() + ".apk", appBeans.get(index), appBeans.get(index).getDownloadUrl(), request, new LogDownloadListener());
-//						Intent intent = new Intent(mContext, DownloadManagerActivity.class);
-//						mContext.startActivity(intent);
+//						addDownLoad(appBeans.get(index), finalHolder);
 						if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
 							receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
 									AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.TOKEN));
@@ -163,6 +164,7 @@ public class AppAdapter extends BaseAdapter{
 					//需要升级
 					if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
 						addDownLoad(appBeans.get(index));
+//						addDownLoad(appBeans.get(index), finalHolder);
 					}else{
 						ApkUtils.openApp(mContext, appBeans.get(position).getPackage_name());
 					}
@@ -184,10 +186,53 @@ public class AppAdapter extends BaseAdapter{
 		return convertView;
 	}
 
-	private static class ViewHolder
+	private class ViewHolder
 	{
+		private DownloadInfo downloadInfo;
 		TextView nameTv,sizeTv,downCountTv,contentTv,downloadTv;
 		RoundedImageView appIcon;
+
+		public ViewHolder(View convertView) {
+			appIcon = (RoundedImageView) convertView.findViewById(R.id.iv_icon);
+			nameTv = (TextView)convertView.findViewById(R.id.name_tv);
+			sizeTv = (TextView)convertView.findViewById(R.id.size_tv);
+			downCountTv = (TextView)convertView.findViewById(R.id.down_count_tv);
+			contentTv = (TextView)convertView.findViewById(R.id.content_tv);
+			downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
+		}
+
+		public void refresh(DownloadInfo downloadInfo) {
+			this.downloadInfo = downloadInfo;
+			refresh();
+		}
+
+		//对于实时更新的进度ui，放在这里，例如进度的显示，而图片加载等，不要放在这，会不停的重复回调
+		//也会导致内存泄漏
+		private void refresh() {
+			String downloadLength = Formatter.formatFileSize(mContext, downloadInfo.getDownloadLength());
+			String totalLength = Formatter.formatFileSize(mContext, downloadInfo.getTotalLength());
+//			downloadTv.setText(downloadLength + "/" + totalLength);
+			if (downloadInfo.getState() == DownloadManager.NONE) {
+				downloadTv.setText("下载");
+			} else if (downloadInfo.getState() == DownloadManager.PAUSE) {
+				downloadTv.setText("继续");
+			} else if (downloadInfo.getState() == DownloadManager.ERROR) {
+				downloadTv.setText("出错");
+			} else if (downloadInfo.getState() == DownloadManager.WAITING) {
+				downloadTv.setText("等待");
+			} else if (downloadInfo.getState() == DownloadManager.FINISH) {
+//				if (ApkUtils.isAvailable(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()))) {
+				if (ApkUtils.isAvailable(mContext, ((AppInfo)downloadInfo.getData()).getPackage_name())) {
+					downloadTv.setText("卸载");
+				} else {
+					downloadTv.setText("安装");
+				}
+			} else if (downloadInfo.getState() == DownloadManager.DOWNLOADING) {
+				String networkSpeed = Formatter.formatFileSize(mContext, downloadInfo.getNetworkSpeed());
+				downloadTv.setText("暂停");
+			}
+			downloadTv.setText((Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 100) + "%");
+		}
 	}
 
 	private void addDownLoad(AppInfo appInfo){
@@ -197,9 +242,16 @@ public class AppAdapter extends BaseAdapter{
 		mContext.startActivity(intent);
 	}
 
-	public void addData(List<AppInfo> appList) {
-		this.appBeans.addAll(appList);
-		this.notifyDataSetChanged();
+	private void addDownLoad(AppInfo appInfo,ViewHolder holder){
+		GetRequest request = OkGo.get(appInfo.getDownloadUrl());
+		DownloadListener downloadListener = new MyDownloadListener();
+		downloadListener.setUserTag(holder);
+		OkDownLoad.getInstance().getManger().addTask(appInfo.getName() + ".apk", appInfo, appInfo.getDownloadUrl(), request, new LogDownloadListener());
+//		Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+//		mContext.startActivity(intent);
+		DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appInfo.getDownloadUrl());
+		holder.refresh(downloadInfo);
+		downloadInfo.setListener(downloadListener);
 	}
 
 	protected void switchActivity(Class<?> clazz,Bundle bundle){
@@ -245,5 +297,33 @@ public class AppAdapter extends BaseAdapter{
 								throwable);
 					}
 				});
+	}
+
+	private class MyDownloadListener extends DownloadListener {
+
+		@Override
+		public void onProgress(DownloadInfo downloadInfo) {
+			if (getUserTag() == null) return;
+			AppAdapter.ViewHolder holder = (AppAdapter.ViewHolder) getUserTag();
+			holder.refresh();  //这里不能使用传递进来的 DownloadInfo，否者会出现条目错乱的问题
+		}
+
+		@Override
+		public void onFinish(DownloadInfo downloadInfo) {
+			String packageName = ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath());
+			AppInfo appInfo = (AppInfo) downloadInfo.getData();
+			appInfo.setPackage_name(packageName);
+			downloadInfo.setData(appInfo);
+			DownloadDBManager.INSTANCE.replace(downloadInfo);
+			Toast.makeText(mContext, "下载完成", Toast.LENGTH_SHORT).show();
+			EventBus.getDefault().post(new DownLoadFinishEvent());
+
+//			ApkUtils.install(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()));
+		}
+
+		@Override
+		public void onError(DownloadInfo downloadInfo, String errorMsg, Exception e) {
+			if (errorMsg != null) Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+		}
 	}
 }

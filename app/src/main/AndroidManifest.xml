@@ -32,9 +32,10 @@
     <application
         android:name="com.huiyun.amnews.MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/vr_logo"
+        android:icon="@drawable/app_logo_new"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
         <provider
             android:name="com.huiyun.amnews.util.MyProvider"
             android:authorities="com.huiyun.amnews.fileprovider"
@@ -120,7 +121,8 @@
         <activity android:name="com.huiyun.amnews.ui.ForgetPwdActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name="com.huiyun.amnews.ui.MyWebViewActivity"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"/>
 
         <!--/***********************************新加***************************************/-->
         <activity android:name="com.huiyun.amnews.ui.ClassifyActivity"/>

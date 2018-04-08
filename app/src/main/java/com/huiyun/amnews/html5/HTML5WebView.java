@@ -70,7 +70,8 @@ public class HTML5WebView extends WebView {
 	    
 	    // enable Web Storage: localStorage, sessionStorage
 	    s.setDomStorageEnabled(true);
-	    
+	    s.setAppCacheEnabled(true);
+
 	    mContentView.addView(this);
 	}
 

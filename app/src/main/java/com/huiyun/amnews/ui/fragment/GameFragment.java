@@ -3,6 +3,7 @@ package com.huiyun.amnews.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -260,6 +261,12 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
             bundle.putString("html_data",classify.getUrl());
             intent.putExtras(bundle);
             startActivity(intent);
+
+//            Intent intent = new Intent();
+//            intent.setAction("android.intent.action.VIEW");
+//            Uri content_url = Uri.parse(classify.getUrl());
+//            intent.setData(content_url);
+//            startActivity(intent);
         }
     }
 

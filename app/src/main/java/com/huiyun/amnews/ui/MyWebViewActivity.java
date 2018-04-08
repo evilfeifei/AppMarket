@@ -3,6 +3,7 @@ package com.huiyun.amnews.ui;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,8 +80,16 @@ public class MyWebViewActivity extends BaseActivity {
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setDisplayZoomControls(false);
+        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
 
         mWebView.setVerticalScrollBarEnabled(false);
+        mWebView.getSettings().setAllowFileAccess(true);//支持引用文件
+        mWebView.getSettings().setAppCacheEnabled(true);//设置支持本地存储
+        mWebView.getSettings().setDomStorageEnabled(true);//可以手动开启DOM Storage
+        if (Build.VERSION.SDK_INT >= 17) {// 不需要请求控制直接播放媒体文件
+            //即可以自动播放音乐
+            mWebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        }
 
         //支持javascript
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -178,6 +187,8 @@ public class MyWebViewActivity extends BaseActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            mWebView.loadUrl("javascript:(function() { var videos = document.getElementsByTagName('video'); for(var i=0;i<videos.length;i++){videos[i].play();}})()");
         }
     }
+
 }
