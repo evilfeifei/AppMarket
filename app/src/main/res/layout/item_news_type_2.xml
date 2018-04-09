@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:padding="@dimen/margin_20px"
-        android:textSize="@dimen/txt_size_30px"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="@dimen/txt_size_36px"
         android:text="dd"/>
     <LinearLayout
         android:layout_width="match_parent"
