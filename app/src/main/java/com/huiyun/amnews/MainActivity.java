@@ -6,12 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -262,29 +266,46 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
     ProgressDialog pBar;
-    private void isUpdate(final String updateUrl){
-        DialogTips dialog = new DialogTips(this,"检测到有新版本是否更新?","立即更新","取消", "温馨提示",false);
-        dialog.SetOnSuccessListener(new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int userId) {
-//                Toast.makeText(MainActivity.this,"dddd",Toast.LENGTH_SHORT).show();
-//                PhoneUtils.loadAppMarketPage(MainActivity.this, updateUrl);
-
-                pBar = new ProgressDialog(MainActivity.this);
-                pBar.setTitle("正在下载");
-                pBar.setMessage("请稍候...");
-                pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                downFile(updateUrl);
-        }
-        });
-
-        dialog.SetOnCancelListener(new DialogInterface.OnClickListener() {
+    String url;
+    private static int REQUEST_EXTERNAL_STRONGE = 111;
+    private void isUpdate(final String url){
+        this.url = url;
+        final android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+        alertDialog.setTitle("发现新版本");
+        alertDialog.setCancelable(false);
+        alertDialog.setNegativeButton("以后再说", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                System.exit(0);
+                if(true){
+                    System.exit(0);
+                }else {
+                    dialog.dismiss();
+                }
             }
         });
-        // 显示确认对话框
-        dialog.show();
+        alertDialog.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pBar = new ProgressDialog(MainActivity.this);
+                pBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
+                pBar.setCancelable(true);// 设置是否可以通过点击Back键取消
+                pBar.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+                pBar.setTitle("正在下载");
+                pBar.setMax(100);
+                pBar.setProgress(0);
+
+
+                //获取SD路径
+                //判断是否有SD卡
+                if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STRONGE);
+                }//REQUEST_EXTERNAL_STRONGE是自定义个的一个对应码，用来验证请求是否通过
+                else {
+                    downFile(url);
+                }
+            }
+        });
+        alertDialog.show();
     }
 
     private void downFile(String apkUrl){
@@ -306,6 +327,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 int pro = (int) (progress*100);
                 pBar.setProgress(pro);
                 pBar.setMessage("请稍候"+pro+"%...");
+                Log.e("fds","请稍候"+pro+"%...");
+                Log.e("totalSize=",totalSize+"");
             }
 
             @Override
@@ -360,6 +383,18 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         final WelcomeDialog welcomeDialogV = welcomeDialog.create();
         welcomeDialogV.setCanceledOnTouchOutside(false);// 点击外部区域关闭
         welcomeDialogV.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //根据请求是否通过的返回码进行判断，然后进一步运行程序
+        if (grantResults.length > 0 && requestCode == REQUEST_EXTERNAL_STRONGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if(url!=null) {
+                downFile(url);
+            }
+        }
+
     }
 
 }

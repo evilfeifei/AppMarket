@@ -6,6 +6,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.cookie.store.PersistentCookieStore;
+import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.request.HeadRequest;
 import com.squareup.okhttp.Request;
 
@@ -56,6 +57,7 @@ public class MyApplication extends Application{
 //              .setCookieStore(new MemoryCookieStore())            //cookie使用内存缓存（app退出后，cookie消失）
 					.setCookieStore(new PersistentCookieStore())        //cookie持久化存储，如果cookie不过期，则一直有效
 //			        Request request = new Request.Builder().addHeader("Accept-Encoding", "identity")
+//					.addCommonHeaders(new HttpHeaders("Accept-Encoding", "identity"))  //设置全局公共头
 					//可以设置https的证书,以下几种方案根据需要自己设置
 					.setCertificates();                                  //方法一：信任所有证书,不安全有风险
 //              .setCertificates(new SafeTrustManager())            //方法二：自定义信任规则，校验服务端证书
