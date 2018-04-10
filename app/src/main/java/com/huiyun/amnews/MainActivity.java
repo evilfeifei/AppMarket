@@ -276,7 +276,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         alertDialog.setNegativeButton("以后再说", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(true){
+                if(false){
                     System.exit(0);
                 }else {
                     dialog.dismiss();
