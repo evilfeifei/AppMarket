@@ -19,6 +19,7 @@ import com.huiyun.amnews.configuration.DefaultValues;
 import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
+import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.lzy.okgo.OkGo;
@@ -167,7 +168,7 @@ public class CategoryListActivity extends BaseActivity implements SwipeRefreshLa
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
-        appAdapter.notifyDataSetChanged();
+        appAdapter.myNotifyDataSetChanged();
     }
 
     @Override

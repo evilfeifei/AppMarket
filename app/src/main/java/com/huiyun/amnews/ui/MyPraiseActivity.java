@@ -12,14 +12,19 @@ import com.huiyun.amnews.R;
 import com.huiyun.amnews.adapter.AppAdapter;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.configuration.AppmarketPreferences;
+import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.fusion.PreferenceCode;
+import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.RefreshLayout;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -59,6 +64,7 @@ public class MyPraiseActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initView(){
+        EventBus.getDefault().register(this);//订阅
         t_title = findView(R.id.t_title);
         t_title.setText("我赞过的");
         back_liner = findView(R.id.back_left_liner);
@@ -111,7 +117,6 @@ public class MyPraiseActivity extends BaseActivity implements SwipeRefreshLayout
                                 if (page == 1) {
                                     appBeans = new ArrayList<AppInfo>();
                                 }
-
                                 appBeans.addAll(appBeanList);
 
                                 if (appAdapter == null) {
@@ -143,6 +148,17 @@ public class MyPraiseActivity extends BaseActivity implements SwipeRefreshLayout
                         Toast.makeText(MyPraiseActivity.this, "请检查网络!", Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
+    public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
+        appAdapter.myNotifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);//解除订阅
     }
 
     @Override

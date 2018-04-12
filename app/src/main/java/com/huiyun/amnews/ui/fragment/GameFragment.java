@@ -27,6 +27,7 @@ import com.huiyun.amnews.ui.CategoryListActivity;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
 import com.huiyun.amnews.ui.MyWebViewActivity;
 import com.huiyun.amnews.ui.SearchActivity;
+import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.AbListView;
 import com.huiyun.amnews.view.LoopViewPager;
@@ -171,6 +172,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
                         List<AppInfo> appInfosSelection = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("selection")),AppInfo[].class); //精选
                         List<AppInfo> appInfosRecommend = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("recommend")),AppInfo[].class); //推荐
                         List<Classify> classifys = JsonUtil.stringToArray(JsonUtil.objectToJson(dataMap.get("categories")),Classify[].class); //游戏分类
+
                         appInfoListGame.addAll(appInfosSelection);
                         mainHotGameAdapter.refreshData(appInfoListGame);
 
@@ -272,7 +274,7 @@ public class GameFragment extends BaseFragment implements ObservableScrollView.S
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
-        getAppAdapterFinal.notifyDataSetChanged();
+        getAppAdapterFinal.myNotifyDataSetChanged();
     }
 
     @Override

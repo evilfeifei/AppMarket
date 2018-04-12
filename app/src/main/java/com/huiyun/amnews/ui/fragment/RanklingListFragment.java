@@ -17,12 +17,17 @@ import com.huiyun.amnews.adapter.RankingAdapter;
 import com.huiyun.amnews.been.AppInfo;
 import com.huiyun.amnews.been.News;
 import com.huiyun.amnews.been.NewsData;
+import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.wight.LoadMoreFooter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.takwolf.android.hfrecyclerview.HeaderAndFooterRecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,11 +67,23 @@ public class RanklingListFragment extends BaseFragment {
     }
 
     private void initMyView(){
+        EventBus.getDefault().register(this);//订阅
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         rankingAdapter = new RankingAdapter(getActivity(), appInfoList);
         recyclerView.setAdapter(rankingAdapter);
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
+    public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
+        rankingAdapter.myNotifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);//解除订阅
     }
 
 }

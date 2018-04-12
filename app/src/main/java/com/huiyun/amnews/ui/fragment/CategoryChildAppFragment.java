@@ -22,6 +22,7 @@ import com.huiyun.amnews.event.DownLoadFinishEvent;
 import com.huiyun.amnews.fusion.Constant;
 import com.huiyun.amnews.ui.CategoryListActivity;
 import com.huiyun.amnews.ui.VRCategoryActivity;
+import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.RefreshLayout;
 import com.huiyun.amnews.view.Tag;
@@ -174,7 +175,7 @@ public class CategoryChildAppFragment extends BaseFragment implements SwipeRefre
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
-        appAdapter.notifyDataSetChanged();
+        appAdapter.myNotifyDataSetChanged();
     }
 
     @Override

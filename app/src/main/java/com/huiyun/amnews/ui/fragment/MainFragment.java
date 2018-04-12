@@ -29,6 +29,7 @@ import com.huiyun.amnews.ui.ClassifyActivity;
 import com.huiyun.amnews.ui.DownloadManagerActivity;
 import com.huiyun.amnews.ui.MyWebViewActivity;
 import com.huiyun.amnews.ui.SearchActivity;
+import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.view.AbListView;
 import com.huiyun.amnews.view.LoopViewPager;
@@ -207,8 +208,10 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
                     public void onSuccess(String s, Call call, Response response) {
                         if (TextUtils.isEmpty(s)) return;
                         List<AppInfo> appInfos = JsonUtil.stringToArray(s,AppInfo[].class);
-                        mAppInfoList.addAll(appInfos);
-                        getAppAdapterFinal.refreshData(appInfos);
+                        if(appInfos!=null&&appInfos.size()>0){
+                            mAppInfoList.addAll(appInfos);
+                            getAppAdapterFinal.refreshData(appInfos);
+                        }
                     }
 
                     @Override
@@ -326,7 +329,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
-        getAppAdapterFinal.notifyDataSetChanged();
+        getAppAdapterFinal.myNotifyDataSetChanged();
     }
 
     @Override

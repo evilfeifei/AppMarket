@@ -54,6 +54,13 @@ public class AppInfo implements Serializable {
 	private boolean isChoiced;
 
 
+
+	private boolean isAvailable; //是否安装
+	private boolean isUpdate; //是否升级
+
+
+
+
 	public String getPackage_name() {
 		return package_name;
 	}
@@ -422,5 +429,21 @@ public class AppInfo implements Serializable {
 
 	public void setSystem_require(String system_require) {
 		this.system_require = system_require;
+	}
+
+	public boolean isAvailable() {
+		return isAvailable;
+	}
+
+	public void setAvailable(boolean available) {
+		isAvailable = available;
+	}
+
+	public boolean isUpdate() {
+		return isUpdate;
+	}
+
+	public void setUpdate(boolean update) {
+		isUpdate = update;
 	}
 }

@@ -75,6 +75,23 @@ public class AppAdapter extends BaseAdapter{
 		notifyDataSetChanged();
 	}
 
+	public void myNotifyDataSetChanged(){
+		if(appBeans==null)return;
+		for(AppInfo appInfo:appBeans){
+			if (ApkUtils.isAvailable(mContext, appInfo.getPackage_name())) { //已安装
+				appInfo.setAvailable(true);
+				if(ApkUtils.isUpdate(mContext,appInfo.getPackage_name(),appInfo.getVersion())){ //x需要升级
+					appInfo.setUpdate(true);
+				}else{
+					appInfo.setUpdate(false);
+				}
+			}else{
+				appInfo.setAvailable(false);
+			}
+		}
+		notifyDataSetChanged();
+	}
+
 	public int getCount() {
 		return appBeans.size();
 	}
@@ -109,7 +126,8 @@ public class AppAdapter extends BaseAdapter{
 		holder.sizeTv.setText(size + "M");
 		holder.downCountTv.setText(appBeans.get(position).getDownload_count()+"次下载");
 
-		if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
+//		if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
+		if (!appBeans.get(index).isAvailable()) {
 			if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
 				DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
 				if (downloadInfo.getState() == DownloadManager.FINISH) {
@@ -123,7 +141,8 @@ public class AppAdapter extends BaseAdapter{
 				holder.downloadTv.setText("下载");
 			}
 		}else{
-			if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
+//			if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
+			if(appBeans.get(index).isUpdate()){
 				holder.downloadTv.setText("升级");
 			}else{
 				holder.downloadTv.setText("打开");
