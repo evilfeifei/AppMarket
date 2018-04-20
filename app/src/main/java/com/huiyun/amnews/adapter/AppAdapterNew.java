@@ -65,7 +65,7 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 
 	public void refreshData(List<AppInfo> appBeans) {
 		this.appBeans = appBeans;
-		notifyDataSetChanged();
+		myNotifyDataSetChanged();
 	}
 
 	public void myNotifyDataSetChanged(){
@@ -160,15 +160,12 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 								ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
 							}
 						} else {
-							ToastUtil.toastshort(mContext, "已添加到下载队列");
+//							ToastUtil.toastshort(mContext, "已添加到下载队列");
+							gotoDetails(index,true);
 						}
 					} else {
 
-						addDownLoad(appBeans.get(index));
-//						GetRequest request = OkGo.get(appBeans.get(index).getDownloadUrl());
-//						OkDownLoad.getInstance().getManger().addTask(appBeans.get(index).getName() + ".apk", appBeans.get(index), appBeans.get(index).getDownloadUrl(), request, new LogDownloadListener());
-//						Intent intent = new Intent(mContext, DownloadManagerActivity.class);
-//						mContext.startActivity(intent);
+						addDownLoad(appBeans.get(index),index);
 
 						if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
 							receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
@@ -178,7 +175,7 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 				}else{
 					//需要升级
 					if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
-						addDownLoad(appBeans.get(index));
+						addDownLoad(appBeans.get(index),index);
 					}else{
 						ApkUtils.openApp(mContext, appBeans.get(index).getPackage_name());
 					}
@@ -189,14 +186,19 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 		holder.item_app_rel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, AppDettailsActivity2.class);
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(PreferenceCode.APP_INFO, appBeans.get(index));
-				intent.putExtras(bundle);
-				mContext.startActivity(intent);
+				gotoDetails(index,false);
 			}
 		});
 
+	}
+
+	private void gotoDetails(int index,boolean isDownload){
+		Intent intent = new Intent(mContext, AppDettailsActivity2.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(PreferenceCode.APP_INFO, appBeans.get(index));
+		bundle.putBoolean("isDownload",isDownload);
+		intent.putExtras(bundle);
+		mContext.startActivity(intent);
 	}
 
 
@@ -218,11 +220,13 @@ public class AppAdapterNew extends  RecyclerView.Adapter<AppAdapterNew.ViewHolde
 
 	}
 
-	private void addDownLoad(AppInfo appInfo){
+	private void addDownLoad(AppInfo appInfo,int index){
 		GetRequest request = OkGo.get(appInfo.getDownloadUrl());
 		OkDownLoad.getInstance().getManger().addTask(appInfo.getName() + ".apk", appInfo, appInfo.getDownloadUrl(), request, new LogDownloadListener());
-		Intent intent = new Intent(mContext, DownloadManagerActivity.class);
-		mContext.startActivity(intent);
+//		Intent intent = new Intent(mContext, DownloadManagerActivity.class);
+//		mContext.startActivity(intent);
+		myNotifyDataSetChanged();
+		gotoDetails(index,true);
 	}
 
 	public void addData(List<AppInfo> appList) {

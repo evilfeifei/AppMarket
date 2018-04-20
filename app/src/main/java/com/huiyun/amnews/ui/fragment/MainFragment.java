@@ -31,6 +31,7 @@ import com.huiyun.amnews.ui.MyWebViewActivity;
 import com.huiyun.amnews.ui.SearchActivity;
 import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.JsonUtil;
+import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.AbListView;
 import com.huiyun.amnews.view.LoopViewPager;
 import com.huiyun.amnews.wight.NoScrollGridView;
@@ -96,6 +97,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
         getAppMoreList(page, DefaultValues.JINGPIN_TYPE,DefaultValues.CATEGORY_APP_ID);
         getAdList();
         addListener();
+        getVisit();
         return rootView;
     }
 
@@ -330,6 +332,7 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
         getAppAdapterFinal.myNotifyDataSetChanged();
+        ToastUtil.toastshort(getActivity(),"刷新");
     }
 
     @Override
@@ -353,4 +356,34 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
             home_search_lin.setBackgroundResource(R.drawable.search_home_gray_bg);
         }*/
     }
+
+    //首页访问人数统计
+    public void getVisit(){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("userId",AppmarketPreferences.getInstance(getActivity()).getStringKey(PreferenceCode.USERID));
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.VISIT_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(s);
+                        if (dataMap == null) {
+                            return;
+                        }
+                        String error = (String) dataMap.get("error");
+                        if (error == null || error.equals("")) {
+
+                        } else {
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
+    }
+
 }

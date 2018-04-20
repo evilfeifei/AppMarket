@@ -127,9 +127,10 @@
                         app:corner_radius="10dip"
                         app:oval="false" />
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/margin_20px"
                         android:orientation="vertical">
                         <TextView
                             android:id="@+id/name_tv"
@@ -206,6 +207,19 @@
                                 android:textSize="@dimen/txt_size_24px"
                                 />
                         </LinearLayout>
+                        <com.huiyun.amnews.wight.NumberProgressBar
+                            android:id="@+id/pbProgress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:progress_reached_bar_height="2dp"
+                            app:progress_reached_color="@color/colorPrimary_p"
+                            app:progress_text_color="@color/colorPrimary_p"
+                            android:layout_marginTop="@dimen/margin_4px"
+                            android:layout_marginRight="@dimen/margin_40px"
+                            app:progress_text_size="12sp"
+                            app:progress_unreached_bar_height="0.75dp"
+                            app:progress_unreached_color="#CCCCCC"
+                            android:visibility="gone"/>
                     </LinearLayout>
                 </LinearLayout>
                 <it.sephiroth.android.library.widget.HListView
@@ -285,8 +299,25 @@
             android:layout_marginLeft="70dp"
             android:layout_marginRight="70dp"
             android:background="@drawable/gray_btn_selector"
-            android:text="下载"/>
-
+            android:text="下载"
+            android:visibility="gone"/>
+        <com.huiyun.amnews.wight.ProgressButton
+            android:layout_centerInParent="true"
+            android:id="@+id/progressButton"
+            app:progressColor="@color/colorPrimary"
+            app:progressBgColor="@color/gray_3"
+            app:buttonNormalColor="@color/colorPrimary"
+            app:buttonPressedColor="@color/colorPrimary"
+            app:buttonCornerRadius="3dp"
+            app:showProgressNum="true"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_80px"
+            android:text="下载"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:layout_marginTop="@dimen/margin_10px"
+            android:layout_marginBottom="@dimen/margin_10px"/>
         <LinearLayout
             android:id="@+id/praise_line"
             android:layout_width="wrap_content"

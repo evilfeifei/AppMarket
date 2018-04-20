@@ -129,4 +129,7 @@ public class Constant {
 
 	//上传文件
 	public static final String UPLOAD_FILE_URL =SERVER_URL_NEW  + "User/upload";
+
+	//首页访问人数统计    （Api/visit）
+	public static final String VISIT_URL =SERVER_URL_NEW  + "Api/visit";
 }

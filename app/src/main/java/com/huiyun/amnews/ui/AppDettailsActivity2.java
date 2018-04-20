@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.common.collect.Lists;
 import com.huiyun.amnews.R;
+import com.huiyun.amnews.adapter.AppAdapterOld;
 import com.huiyun.amnews.adapter.AppDetailsAdapter;
 import com.huiyun.amnews.adapter.ImagesAdapter;
 import com.huiyun.amnews.been.AppInfo;
@@ -36,16 +37,23 @@ import com.huiyun.amnews.ui.fragment.CommentFragment;
 import com.huiyun.amnews.ui.fragment.IntroduceFragment;
 import com.huiyun.amnews.util.ApkUtils;
 import com.huiyun.amnews.util.DateUtil;
+import com.huiyun.amnews.util.JsonUtil;
 import com.huiyun.amnews.util.NetworkUtil;
 import com.huiyun.amnews.util.ToastUtil;
 import com.huiyun.amnews.view.DragTopLayout;
 import com.huiyun.amnews.view.roundimage.RoundedImageView;
+import com.huiyun.amnews.wight.NumberProgressBar;
+import com.huiyun.amnews.wight.ProgressButton;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.download.DownloadInfo;
 import com.lzy.okserver.download.DownloadManager;
+import com.lzy.okserver.download.DownloadService;
+import com.lzy.okserver.download.db.DownloadDBManager;
+import com.lzy.okserver.listener.DownloadListener;
 
 import org.apache.http.Header;
 import org.greenrobot.eventbus.EventBus;
@@ -57,7 +65,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,6 +75,8 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 import github.chenupt.multiplemodel.viewpager.ModelPagerAdapter;
 import github.chenupt.multiplemodel.viewpager.PagerModelManager;
 import it.sephiroth.android.library.widget.HListView;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by admin on 2016/5/26.
@@ -84,17 +96,21 @@ public class AppDettailsActivity2 extends BaseActivity {
     private String userId,token;
 
     public AppInfo appBean;
+    private boolean isDownLoad = false;
     private String[] imageNames;
     private HListView hListView;
     private ImagesAdapter imagesAdapter;
     private ImageView collectImg;
     private TextView trampleTv,praiseTv,commentTv;//踩，赞,评论
     private ImageView trampleImg,praiseImg;
+    private NumberProgressBar pbProgress;
+    private ProgressButton progressButton;
 
     private boolean isShow;
     private RatingBar ratingBar;
 
     public static String SENDMESSAGE="vr_ref_comment";
+    private DownloadManager downloadManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +123,44 @@ public class AppDettailsActivity2 extends BaseActivity {
         initData();
     }
 
+    private void initView(){
+        EventBus.getDefault().register(this);//订阅
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        hListView = findView(R.id.hlistview);
+
+        appDetailsAdapter = new AppDetailsAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(appDetailsAdapter);
+        viewPager.setOffscreenPageLimit(appDetailsAdapter.getCount());
+        tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new myOnPageChangeListener());
+
+        findView(R.id.back_details_liner).setOnClickListener(this);
+        findView(R.id.collect_liner).setOnClickListener(this);
+        findView(R.id.trample_line).setOnClickListener(this);
+        findView(R.id.praise_line).setOnClickListener(this);
+        findView(R.id.comment_tv).setOnClickListener(this);
+        findView(R.id.down_load_tv).setOnClickListener(this);
+        findView(R.id.send_comment_tv).setOnClickListener(this);
+        findView(R.id.share_liner).setOnClickListener(this);
+        collectImg = findView(R.id.collect_img);
+        trampleTv = findView(R.id.trample_tv);
+        trampleImg = findView(R.id.trample_img);
+        praiseTv = findView(R.id.praise_tv);
+        praiseImg = findView(R.id.praise_img);
+        ratingBar = findView(R.id.environment_rat);
+        pbProgress = findView(R.id.pbProgress);
+
+        progressButton = findView(R.id.progressButton);
+        progressButton.setOnClickListener(this);
+    }
+
     private void initData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             appBean = (AppInfo) bundle.get(PreferenceCode.APP_INFO);
+            isDownLoad = bundle.getBoolean("isDownload");
         }
 
         if(NetworkUtil.isNetworkConnected(this)){
@@ -147,33 +196,7 @@ public class AppDettailsActivity2 extends BaseActivity {
         getDownLoadState();
     }
 
-    private void initView(){
-        EventBus.getDefault().register(this);//订阅
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        hListView = findView(R.id.hlistview);
 
-        appDetailsAdapter = new AppDetailsAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(appDetailsAdapter);
-        viewPager.setOffscreenPageLimit(appDetailsAdapter.getCount());
-        tabLayout.setupWithViewPager(viewPager);
-
-        viewPager.addOnPageChangeListener(new myOnPageChangeListener());
-
-        findView(R.id.back_details_liner).setOnClickListener(this);
-        findView(R.id.collect_liner).setOnClickListener(this);
-        findView(R.id.trample_line).setOnClickListener(this);
-        findView(R.id.praise_line).setOnClickListener(this);
-        findView(R.id.comment_tv).setOnClickListener(this);
-        findView(R.id.down_load_tv).setOnClickListener(this);
-        findView(R.id.send_comment_tv).setOnClickListener(this);
-        findView(R.id.share_liner).setOnClickListener(this);
-        collectImg = findView(R.id.collect_img);
-        trampleTv = findView(R.id.trample_tv);
-        trampleImg = findView(R.id.trample_img);
-        praiseTv = findView(R.id.praise_tv);
-        praiseImg = findView(R.id.praise_img);
-        ratingBar = findView(R.id.environment_rat);
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果滑动到顶部展开、底部折叠
     public void onScrolledEvent(ScrolledEvent scrolledEvent) {
@@ -418,28 +441,33 @@ public class AppDettailsActivity2 extends BaseActivity {
                     Toast.makeText(AppDettailsActivity2.this,"请先登录后发表评论",Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.down_load_tv:
-                if(OkDownLoad.getInstance().getManger().getDownloadInfo(appBean.getDownloadUrl())!=null){
-                    DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBean.getDownloadUrl());
+//            case R.id.down_load_tv:
+            case R.id.progressButton:
+                if(downloadInfo!=null){
                     if(downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
                         if (ApkUtils.isAvailable(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()))) {
-//						ApkUtils.uninstall(mContext, ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath()));//卸载
                             ApkUtils.openApp(AppDettailsActivity2.this, ApkUtils.getPackageName(AppDettailsActivity2.this, downloadInfo.getTargetPath()));
                         } else {
                             ApkUtils.install(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()));
                         }
                     } else{
-                        ToastUtil.toastshort(AppDettailsActivity2.this,"已添加到下载队列");
+                        if(downloadInfo.getState()==DownloadManager.NONE||downloadInfo.getState()==DownloadManager.PAUSE||downloadInfo.getState()==DownloadManager.WAITING) {
+                            downloadManager.addTask(downloadInfo.getUrl(), downloadInfo.getRequest(), downloadInfo.getListener());
+                            ((TextView) findView(R.id.down_load_tv)).setText("暂停");
+                            progressButton.setText("暂停");
+                        }else if(downloadInfo.getState()==DownloadManager.DOWNLOADING){
+                            downloadManager.pauseTask(downloadInfo.getUrl());
+                            ((TextView) findView(R.id.down_load_tv)).setText("继续");
+                            progressButton.setText("继续");
+                        }
                     }
                 }else{
-                        GetRequest request = OkGo.get(appBean.getDownloadUrl());
-                        OkDownLoad.getInstance().getManger().addTask(appBean.getName() + ".apk", appBean, appBean.getDownloadUrl(), request, new LogDownloadListener());
-                        Intent intent = new Intent(AppDettailsActivity2.this, DownloadManagerActivity.class);
-                        startActivity(intent);
-
-                        if (!AppmarketPreferences.getInstance(this).getStringKey(PreferenceCode.USERID).equals("")) {
-                            receiveScore();
-                        }
+                    GetRequest request = OkGo.get(appBean.getDownloadUrl());
+                    OkDownLoad.getInstance().getManger().addTask(appBean.getName() + ".apk", appBean, appBean.getDownloadUrl(), request, new LogDownloadListener());
+                    getDownLoadState();
+                    if (!AppmarketPreferences.getInstance(this).getStringKey(PreferenceCode.USERID).equals("")) {
+                        receiveScore();
+                    }
                     }
                 break;
             case R.id.send_comment_tv:
@@ -756,21 +784,45 @@ public class AppDettailsActivity2 extends BaseActivity {
         return false;
     }
 
+    DownloadInfo downloadInfo;
     private void getDownLoadState(){
-        DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBean.getDownloadUrl());
+        downloadManager = DownloadService.getDownloadManager();
+        downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBean.getDownloadUrl());
         if(downloadInfo!=null) {
+            DownloadListener downloadListener = new MyDownloadListener();
+            downloadInfo.setListener(downloadListener);
             if(downloadInfo.getState() == DownloadManager.FINISH) {
-//            if (ApkUtils.isAvailable(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()))) {
                 if (ApkUtils.isAvailable(AppDettailsActivity2.this, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
                     ((TextView) findView(R.id.down_load_tv)).setText("打开");
+                    progressButton.setText("打开");
                 } else {
                     ((TextView) findView(R.id.down_load_tv)).setText("安装");
+                    progressButton.setText("安装");
                 }
-            }else{
-                ((TextView)findView(R.id.down_load_tv)).setText("下载");
+            }else if(downloadInfo.getState()==DownloadManager.NONE||downloadInfo.getState()==DownloadManager.PAUSE||downloadInfo.getState()==DownloadManager.WAITING){
+                if(!isDownLoad) {
+                    ((TextView) findView(R.id.down_load_tv)).setText("继续");
+                    progressButton.setText("继续");
+                }else{
+                    downloadManager.addTask(downloadInfo.getUrl(), downloadInfo.getRequest(), downloadInfo.getListener());
+                    ((TextView) findView(R.id.down_load_tv)).setText("暂停");
+                    progressButton.setText("暂停");
+                }
+            }else if(downloadInfo.getState()==DownloadManager.DOWNLOADING){
+                ((TextView)findView(R.id.down_load_tv)).setText("暂停");
+                progressButton.setText("暂停");
+            }else if(downloadInfo.getState()==DownloadManager.ERROR){
+                ((TextView)findView(R.id.down_load_tv)).setText("出错");
+                progressButton.setText("出错");
             }
+            pbProgress.setVisibility(View.GONE);
+            pbProgress.setMax(10000);
+            pbProgress.setProgress((int) (Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 1));
+            progressButton.setProgress((int) (Math.round(downloadInfo.getProgress() * 100) * 1.0f / 1));
         }else{
             ((TextView)findView(R.id.down_load_tv)).setText("下载");
+            progressButton.setText("下载");
+            pbProgress.setVisibility(View.GONE);
         }
     }
 
@@ -810,5 +862,53 @@ public class AppDettailsActivity2 extends BaseActivity {
         oks.setCallback(new OneKeyShareCallback(AppDettailsActivity2.this));
         // 启动分享GUI
         oks.show(AppDettailsActivity2.this);
+    }
+
+    private class MyDownloadListener extends DownloadListener {
+
+        @Override
+        public void onProgress(DownloadInfo downloadInfo) {
+            pbProgress.setMax(10000);
+            pbProgress.setProgress((int) (Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 1));
+            Log.e("pbProgress",(int) (Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 1)+"");
+            progressButton.setProgress((int) (Math.round(downloadInfo.getProgress() * 100) * 1.0f / 1));
+        }
+
+        @Override
+        public void onFinish(DownloadInfo downloadInfo) {
+            Toast.makeText(AppDettailsActivity2.this, "下载完成", Toast.LENGTH_SHORT).show();
+            EventBus.getDefault().post(new DownLoadFinishEvent());
+            ApkUtils.install(AppDettailsActivity2.this, new File(downloadInfo.getTargetPath()));
+            setDownLoadCount(appBean);
+        }
+
+        @Override
+        public void onError(DownloadInfo downloadInfo, String errorMsg, Exception e) {
+            if (errorMsg != null) Toast.makeText(AppDettailsActivity2.this, errorMsg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //下载
+    public void setDownLoadCount(AppInfo appInfo) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("app_id",appInfo.getId());
+        String jsonData = JsonUtil.objectToJson(params);
+        OkGo.post(Constant.DOWN_LOAD_COUNT_URL)
+                .tag(this)
+                .upJson(jsonData)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (TextUtils.isEmpty(s)) return;
+                        Map<String, Object> dataMap = (Map<String, Object>) JsonUtil.jsonToMap(s);
+                        if (dataMap == null) {
+                            return;
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                    }
+                });
     }
 }

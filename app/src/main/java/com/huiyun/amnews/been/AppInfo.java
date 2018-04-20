@@ -1,5 +1,7 @@
 package com.huiyun.amnews.been;
 
+import com.lzy.okserver.download.DownloadInfo;
+
 import java.io.Serializable;
 
 public class AppInfo implements Serializable {
@@ -57,6 +59,7 @@ public class AppInfo implements Serializable {
 
 	private boolean isAvailable; //是否安装
 	private boolean isUpdate; //是否升级
+	private boolean hasDownLOadInfo; //是否有下载信息
 
 
 
@@ -445,5 +448,13 @@ public class AppInfo implements Serializable {
 
 	public void setUpdate(boolean update) {
 		isUpdate = update;
+	}
+
+	public boolean isHasDownLOadInfo() {
+		return hasDownLOadInfo;
+	}
+
+	public void setHasDownLOadInfo(boolean hasDownLOadInfo) {
+		this.hasDownLOadInfo = hasDownLOadInfo;
 	}
 }

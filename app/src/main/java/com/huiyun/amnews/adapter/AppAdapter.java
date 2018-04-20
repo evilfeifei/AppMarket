@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.download.DownloadInfo;
 import com.lzy.okserver.download.DownloadManager;
+import com.lzy.okserver.download.DownloadService;
 import com.lzy.okserver.download.db.DownloadDBManager;
 import com.lzy.okserver.listener.DownloadListener;
 
@@ -43,7 +45,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.huiyun.amnews.R.id.downloadSize;
 import static com.huiyun.amnews.R.id.netSpeed;
@@ -72,7 +76,7 @@ public class AppAdapter extends BaseAdapter{
 
 	public void refreshData(List<AppInfo> appBeans) {
 		this.appBeans = appBeans;
-		notifyDataSetChanged();
+		myNotifyDataSetChanged();
 	}
 
 	public void myNotifyDataSetChanged(){
@@ -126,28 +130,27 @@ public class AppAdapter extends BaseAdapter{
 		holder.sizeTv.setText(size + "M");
 		holder.downCountTv.setText(appBeans.get(position).getDownload_count()+"次下载");
 
-//		if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
-		if (!appBeans.get(index).isAvailable()) {
-			if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
-				DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
-				if (downloadInfo.getState() == DownloadManager.FINISH) {
-					if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
-						holder.downloadTv.setText("打开");
-					} else {
-						holder.downloadTv.setText("安装");
-					}
-				}
-			} else {
-				holder.downloadTv.setText("下载");
-			}
-		}else{
-//			if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
-			if(appBeans.get(index).isUpdate()){
-				holder.downloadTv.setText("升级");
-			}else{
-				holder.downloadTv.setText("打开");
-			}
-		}
+        if (!appBeans.get(index).isAvailable()) {
+            if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
+
+                DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
+                if (downloadInfo.getState() == DownloadManager.FINISH) {
+                    if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
+                        holder.downloadTv.setText("打开");
+                    } else {
+                        holder.downloadTv.setText("安装");
+                    }
+                }
+            } else {
+                holder.downloadTv.setText("下载");
+            }
+        }else{
+            if(appBeans.get(index).isUpdate()){
+                holder.downloadTv.setText("升级");
+            }else{
+                holder.downloadTv.setText("打开");
+            }
+        }
 
 		Glide.with(mContext)
 				.load(appBeans.get(position).getThumbnailName())
@@ -155,54 +158,63 @@ public class AppAdapter extends BaseAdapter{
 				.dontAnimate()
 				.into(holder.appIcon);
 
-		final ViewHolder finalHolder = holder;
-		holder.downloadTv.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
-					if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
-						DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
-						if (downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
-							if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
-								ApkUtils.openApp(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name());
-							} else {
-								ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
-							}
-						} else {
-							ToastUtil.toastshort(mContext, "已添加到下载队列");
-						}
-					} else {
-						addDownLoad(appBeans.get(index));
-//						addDownLoad(appBeans.get(index), finalHolder);
-						if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
-							receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
-									AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.TOKEN));
-						}
-					}
-				}else{
-					//需要升级
-					if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
-						addDownLoad(appBeans.get(index));
-//						addDownLoad(appBeans.get(index), finalHolder);
-					}else{
-						ApkUtils.openApp(mContext, appBeans.get(position).getPackage_name());
-					}
-				}
-			}
-		});
+        holder.downloadTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ApkUtils.isAvailable(mContext, appBeans.get(index).getPackage_name())) {
+                    if (OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl()) != null) {
+                        DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appBeans.get(index).getDownloadUrl());
+                        if (downloadInfo.getState() == DownloadManager.FINISH) { //已经下载完成
+                            if (ApkUtils.isAvailable(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name())) {
+                                ApkUtils.openApp(mContext, ((AppInfo) downloadInfo.getData()).getPackage_name());
+                            } else {
+                                ApkUtils.install(mContext, new File(downloadInfo.getTargetPath()));
+                            }
+                        } else {
+							gotoDetails(index,true);
+                        }
+                    } else {
+
+                        addDownLoad(appBeans.get(index),index);
+
+                        if (!AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID).equals("")) {
+                            receiveScore(mContext, AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.USERID),
+                                    AppmarketPreferences.getInstance(mContext).getStringKey(PreferenceCode.TOKEN));
+                        }
+                    }
+                }else{
+                    //需要升级
+                    if(ApkUtils.isUpdate(mContext,appBeans.get(index).getPackage_name(),appBeans.get(index).getVersion())){
+                        addDownLoad(appBeans.get(index),index);
+                    }else{
+                        ApkUtils.openApp(mContext, appBeans.get(index).getPackage_name());
+                    }
+                }
+            }
+        });
 
 		convertView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, AppDettailsActivity2.class);
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(PreferenceCode.APP_INFO, appBeans.get(index));
-				intent.putExtras(bundle);
-				mContext.startActivity(intent);
+				gotoDetails(index,false);
+//				Intent intent = new Intent(mContext, AppDettailsActivity2.class);
+//				Bundle bundle = new Bundle();
+//				bundle.putSerializable(PreferenceCode.APP_INFO, appBeans.get(index));
+//				intent.putExtras(bundle);
+//				mContext.startActivity(intent);
 			}
 		});
 
 		return convertView;
+	}
+
+	private void gotoDetails(int index,boolean isDownload){
+		Intent intent = new Intent(mContext, AppDettailsActivity2.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(PreferenceCode.APP_INFO, appBeans.get(index));
+		bundle.putBoolean("isDownload",isDownload);
+		intent.putExtras(bundle);
+		mContext.startActivity(intent);
 	}
 
 	private class ViewHolder
@@ -219,58 +231,15 @@ public class AppAdapter extends BaseAdapter{
 			contentTv = (TextView)convertView.findViewById(R.id.content_tv);
 			downloadTv = (TextView)convertView.findViewById(R.id.tv_download);
 		}
-
-		public void refresh(DownloadInfo downloadInfo) {
-			this.downloadInfo = downloadInfo;
-			refresh();
-		}
-
-		//对于实时更新的进度ui，放在这里，例如进度的显示，而图片加载等，不要放在这，会不停的重复回调
-		//也会导致内存泄漏
-		private void refresh() {
-			String downloadLength = Formatter.formatFileSize(mContext, downloadInfo.getDownloadLength());
-			String totalLength = Formatter.formatFileSize(mContext, downloadInfo.getTotalLength());
-//			downloadTv.setText(downloadLength + "/" + totalLength);
-			if (downloadInfo.getState() == DownloadManager.NONE) {
-				downloadTv.setText("下载");
-			} else if (downloadInfo.getState() == DownloadManager.PAUSE) {
-				downloadTv.setText("继续");
-			} else if (downloadInfo.getState() == DownloadManager.ERROR) {
-				downloadTv.setText("出错");
-			} else if (downloadInfo.getState() == DownloadManager.WAITING) {
-				downloadTv.setText("等待");
-			} else if (downloadInfo.getState() == DownloadManager.FINISH) {
-//				if (ApkUtils.isAvailable(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()))) {
-				if (ApkUtils.isAvailable(mContext, ((AppInfo)downloadInfo.getData()).getPackage_name())) {
-					downloadTv.setText("卸载");
-				} else {
-					downloadTv.setText("安装");
-				}
-			} else if (downloadInfo.getState() == DownloadManager.DOWNLOADING) {
-				String networkSpeed = Formatter.formatFileSize(mContext, downloadInfo.getNetworkSpeed());
-				downloadTv.setText("暂停");
-			}
-			downloadTv.setText((Math.round(downloadInfo.getProgress() * 10000) * 1.0f / 100) + "%");
-		}
 	}
 
-	private void addDownLoad(AppInfo appInfo){
+	private void addDownLoad(AppInfo appInfo,int index){
 		GetRequest request = OkGo.get(appInfo.getDownloadUrl());
-		OkDownLoad.getInstance().getManger().addTask(appInfo.getName() + ".apk", appInfo, appInfo.getDownloadUrl(), request, new LogDownloadListener());
-		Intent intent = new Intent(mContext, DownloadManagerActivity.class);
-		mContext.startActivity(intent);
-	}
-
-	private void addDownLoad(AppInfo appInfo,ViewHolder holder){
-		GetRequest request = OkGo.get(appInfo.getDownloadUrl());
-		DownloadListener downloadListener = new MyDownloadListener();
-		downloadListener.setUserTag(holder);
 		OkDownLoad.getInstance().getManger().addTask(appInfo.getName() + ".apk", appInfo, appInfo.getDownloadUrl(), request, new LogDownloadListener());
 //		Intent intent = new Intent(mContext, DownloadManagerActivity.class);
 //		mContext.startActivity(intent);
-		DownloadInfo downloadInfo = OkDownLoad.getInstance().getManger().getDownloadInfo(appInfo.getDownloadUrl());
-		holder.refresh(downloadInfo);
-		downloadInfo.setListener(downloadListener);
+		myNotifyDataSetChanged();
+		gotoDetails(index,true);
 	}
 
 	protected void switchActivity(Class<?> clazz,Bundle bundle){
@@ -318,31 +287,4 @@ public class AppAdapter extends BaseAdapter{
 				});
 	}
 
-	private class MyDownloadListener extends DownloadListener {
-
-		@Override
-		public void onProgress(DownloadInfo downloadInfo) {
-			if (getUserTag() == null) return;
-			AppAdapter.ViewHolder holder = (AppAdapter.ViewHolder) getUserTag();
-			holder.refresh();  //这里不能使用传递进来的 DownloadInfo，否者会出现条目错乱的问题
-		}
-
-		@Override
-		public void onFinish(DownloadInfo downloadInfo) {
-			String packageName = ApkUtils.getPackageName(mContext, downloadInfo.getTargetPath());
-			AppInfo appInfo = (AppInfo) downloadInfo.getData();
-			appInfo.setPackage_name(packageName);
-			downloadInfo.setData(appInfo);
-			DownloadDBManager.INSTANCE.replace(downloadInfo);
-			Toast.makeText(mContext, "下载完成", Toast.LENGTH_SHORT).show();
-			EventBus.getDefault().post(new DownLoadFinishEvent());
-
-//			ApkUtils.install(DownloadManagerActivity.this, new File(downloadInfo.getTargetPath()));
-		}
-
-		@Override
-		public void onError(DownloadInfo downloadInfo, String errorMsg, Exception e) {
-			if (errorMsg != null) Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
-		}
-	}
 }
