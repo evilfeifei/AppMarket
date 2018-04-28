@@ -407,7 +407,7 @@ public class AppDettailsActivity2 extends BaseActivity {
         super.onClick(v);
         switch (v.getId()){
             case R.id.share_liner:
-                showShare("应用市场","应用市场","www.baidu.com","http://dashboard.mob.com/images/common/default_app_icon.png");
+                showShare(appBean.getName(),appBean.getName(),appBean.getDownloadUrl(),appBean.getThumbnailName());
                 break;
             case R.id.back_details_liner:
                 finish();
@@ -892,6 +892,7 @@ public class AppDettailsActivity2 extends BaseActivity {
     public void setDownLoadCount(AppInfo appInfo) {
         HashMap<String, Object> params = new HashMap<>();
         params.put("app_id",appInfo.getId());
+        params.put("userId",userId);
         String jsonData = JsonUtil.objectToJson(params);
         OkGo.post(Constant.DOWN_LOAD_COUNT_URL)
                 .tag(this)

@@ -14,7 +14,7 @@
         android:layout_height="100dp"
         android:layout_marginTop="40dp"
         android:layout_below="@+id/r_title_bar"
-        android:src="@drawable/vr_logo"
+        android:src="@drawable/app_logo_new"
         android:layout_centerHorizontal="true"
         />
 

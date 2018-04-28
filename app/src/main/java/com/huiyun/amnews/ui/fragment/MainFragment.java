@@ -332,7 +332,6 @@ public class MainFragment extends BaseFragment implements ObservableScrollView.S
     @Subscribe(threadMode = ThreadMode.MAIN) // 如果有课程下载完成 刷新列表
     public void onDownLoadFinishEvent(DownLoadFinishEvent downLoadFinishEvent) {
         getAppAdapterFinal.myNotifyDataSetChanged();
-        ToastUtil.toastshort(getActivity(),"刷新");
     }
 
     @Override

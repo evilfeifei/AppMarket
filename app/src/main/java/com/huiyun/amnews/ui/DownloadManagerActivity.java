@@ -298,6 +298,7 @@ public class DownloadManagerActivity extends BaseActivity implements View.OnClic
 	public void setDownLoadCount(AppInfo appInfo) {
 		HashMap<String, Object> params = new HashMap<>();
 		params.put("app_id",appInfo.getId());
+		params.put("userId",userId);
 		String jsonData = JsonUtil.objectToJson(params);
 		OkGo.post(Constant.DOWN_LOAD_COUNT_URL)
 				.tag(this)
