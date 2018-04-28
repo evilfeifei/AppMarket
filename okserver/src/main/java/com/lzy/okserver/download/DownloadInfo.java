@@ -24,7 +24,7 @@ import java.io.Serializable;
  * 修订历史：
  * ================================================
  */
-public class DownloadInfo implements Comparable<DownloadInfo> {
+public class DownloadInfo implements Comparable<DownloadInfo>,Serializable {
 
     //表中的字段
     public static final String ID = "_id";
