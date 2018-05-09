@@ -127,8 +127,14 @@ public class SearchActivity extends BaseActivity {
                 if(TextUtils.isEmpty(name)){
                     deleteImg.setVisibility(View.GONE);
                     scrollView.setVisibility(View.VISIBLE);
+
+                    appInfoList.clear();
+                    findView(R.id.lin_no_data).setVisibility(View.GONE);
+                    appAdapter.refreshData(appInfoList);
                 }else{
                     deleteImg.setVisibility(View.VISIBLE);
+
+                    searchApp(name);
                 }
             }
         });

@@ -22,7 +22,7 @@
 <LinearLayout
     android:layout_width="0dp"
     android:layout_weight="1"
-    android:layout_height="@dimen/margin_50px"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:orientation="horizontal"
     android:focusable="true"
@@ -38,6 +38,8 @@
         android:background="@null"
         android:layout_gravity="center_vertical"
         android:paddingLeft="@dimen/margin_20px"
+        android:paddingTop="@dimen/margin_16px"
+        android:paddingBottom="@dimen/margin_16px"
         android:layout_toLeftOf="@+id/tt_msg_iv"
         android:layout_toRightOf="@+id/tt_scan_iv"
         android:textColorHint="#9F9F9F"
