@@ -134,7 +134,7 @@ public class SearchActivity extends BaseActivity {
                 }else{
                     deleteImg.setVisibility(View.VISIBLE);
 
-                    searchApp(name);
+//                    searchApp(name);
                 }
             }
         });

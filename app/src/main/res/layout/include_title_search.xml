@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/title_height"
+    android:layout_height="@dimen/margin_100px"
     android:orientation="horizontal"
     android:background="@color/white">
     <LinearLayout
@@ -22,7 +22,7 @@
 <LinearLayout
     android:layout_width="0dp"
     android:layout_weight="1"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:layout_gravity="center_vertical"
     android:orientation="horizontal"
     android:focusable="true"
@@ -34,18 +34,16 @@
         android:id="@+id/search_et"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@null"
         android:layout_gravity="center_vertical"
         android:paddingLeft="@dimen/margin_20px"
-        android:paddingTop="@dimen/margin_16px"
-        android:paddingBottom="@dimen/margin_16px"
         android:layout_toLeftOf="@+id/tt_msg_iv"
         android:layout_toRightOf="@+id/tt_scan_iv"
         android:textColorHint="#9F9F9F"
         android:hint="请搜索"
         android:maxLines="1"
-        android:textSize="@dimen/txt_size_24px"
+        android:textSize="@dimen/txt_size_28px"
         android:inputType="text"
         android:singleLine="true"
         android:imeOptions="actionSearch" />
@@ -61,15 +59,16 @@
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/white"/>
+
     <ImageView
         android:id="@+id/search_img"
-        android:layout_width="@dimen/margin_40px"
-        android:layout_height="@dimen/margin_40px"
+        android:layout_width="@dimen/margin_60px"
+        android:layout_height="@dimen/margin_60px"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin_20px"
         android:layout_marginRight="@dimen/margin_20px"
-        android:layout_gravity="center_vertical"
         android:onClick="onClick"
-        android:layout_centerVertical="true"
         android:src="@drawable/search_blue_icon" />
 </LinearLayout>
 </LinearLayout>
